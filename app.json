@@ -25,6 +25,7 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
+    "newArchEnabled": true,
     "plugins": [
       "expo-router"
     ]
