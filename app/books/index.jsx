@@ -5,6 +5,13 @@ import { listFiles, initializeAnonymousSession } from '../../lib/appwrite';
 import { client } from '../../lib/appwrite';
 import Loader from '../../components/Loader';
 import alert from '../../components/alert';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreAllLogs([
+  'Warning: TRenderEngineProvider:',
+  'Warning: MemoizedTNodeRenderer:',
+  'Warning: TNodeChildrenRenderer:'
+]);
 
 export default function Books() {
   const router = useRouter();

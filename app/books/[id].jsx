@@ -53,16 +53,20 @@ export default function BookScreen() {
       contentContainerStyle={{ direction: 'rtl' }}
     >
       {metadata && (
-        <View className="p-4 border-b border-gray-700">
-          <Text className="text-text text-2xl text-right" style={{ writingDirection: 'rtl' }}>
+        <View className="p-4 bg-gray-900 border-b border-gray-800">
+          <Text className="text-text text-2xl font-bold text-right mb-2" 
+                style={{ writingDirection: 'rtl' }}>
             {metadata.book}
           </Text>
-          <Text className="text-text text-xl text-right mt-1" style={{ writingDirection: 'rtl' }}>
+          <Text className="text-text text-xl text-right" 
+                style={{ writingDirection: 'rtl' }}>
             {metadata.episode}
           </Text>
-          <Text className="text-text text-lg text-right mt-1 opacity-75" style={{ writingDirection: 'rtl' }}>
-            {metadata.category}
-          </Text>
+          <View className="flex-row justify-end mt-2">
+            <Text className="text-gray-400 text-sm px-3 py-1 bg-gray-800 rounded-full">
+              {metadata.category}
+            </Text>
+          </View>
         </View>
       )}
       <View className="p-4">
@@ -78,4 +82,5 @@ export default function BookScreen() {
       </View>
     </ScrollView>
   );
+
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { LogBox } from 'react-native';
 import "../global.css";
 import { Tabs } from 'expo-router';
 import { Head } from 'expo-router';
@@ -7,55 +8,63 @@ import { useColorScheme } from 'nativewind';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+// Suppress specific warnings
+LogBox.ignoreLogs([
+  'Support for defaultProps will be removed',
+  'TRenderEngineProvider:',
+  'MemoizedTNodeRenderer:',
+  'TNodeChildrenRenderer:'
+]);
+
 export default function Layout() {
-const { setColorScheme } = useColorScheme();
+  const { setColorScheme } = useColorScheme();
 
-// Force dark mode
-React.useEffect(() => {
+  // Force dark mode
+  React.useEffect(() => {
     setColorScheme('dark');
-}, []);
+  }, []);
 
-return (
+  return (
     <SafeAreaProvider>
-    <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
         <Tabs
-        screenOptions={{
+          screenOptions={{
             headerShown: false,
             tabBarStyle: {
-            backgroundColor: '#1a1a1a',
-            elevation: 5,
-            shadowColor: "#000",
-            shadowOffset: {
+              backgroundColor: '#1a1a1a',
+              elevation: 5,
+              shadowColor: "#000",
+              shadowOffset: {
                 width: 0,
                 height: -2
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 3.84,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
             },
             tabBarActiveTintColor: '#ffffff',
             tabBarInactiveTintColor: '#666666'
-        }}
+          }}
         >
-        <Tabs.Screen
+          <Tabs.Screen
             name="index"
             options={{
-            title: 'בית',
-            tabBarIcon: ({ color, size }) => (
+              title: 'בית',
+              tabBarIcon: ({ color, size }) => (
                 <Ionicons name="home" size={size} color={color} />
-            ),
+              ),
             }}
-        />
-        <Tabs.Screen
+          />
+          <Tabs.Screen
             name="books"
             options={{
-            title: 'ספרים',
-            tabBarIcon: ({ color, size }) => (
+              title: 'ספרים',
+              tabBarIcon: ({ color, size }) => (
                 <Ionicons name="book" size={size} color={color} />
-            ),
+              ),
             }}
-        />
+          />
         </Tabs>
-    </GestureHandlerRootView>
+      </GestureHandlerRootView>
     </SafeAreaProvider>
-);
+  );
 }
