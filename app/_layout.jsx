@@ -1,10 +1,7 @@
 import React from 'react';
-import { LogBox } from 'react-native';
+import { LogBox, StatusBar } from 'react-native';
 import "../global.css";
-import { Tabs } from 'expo-router';
-import { Head } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { useColorScheme } from 'nativewind';
+import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -13,57 +10,36 @@ LogBox.ignoreLogs([
   'Support for defaultProps will be removed',
   'TRenderEngineProvider:',
   'MemoizedTNodeRenderer:',
-  'TNodeChildrenRenderer:'
+  'TNodeChildrenRenderer:',
+  'Warning: props.pointerEvents is deprecated',
+  '"shadow*" style props are deprecated'
 ]);
 
-export default function Layout() {
-  const { setColorScheme } = useColorScheme();
-
-  // Force dark mode
-  React.useEffect(() => {
-    setColorScheme('dark');
-  }, []);
-
+export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <Tabs
+        <Stack
           screenOptions={{
             headerShown: false,
-            tabBarStyle: {
-              backgroundColor: '#1a1a1a',
-              elevation: 5,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: -2
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-            },
-            tabBarActiveTintColor: '#ffffff',
-            tabBarInactiveTintColor: '#666666'
+            gestureEnabled: false,
           }}
         >
-          <Tabs.Screen
-            name="index"
+          <Stack.Screen 
+            name="splash"
             options={{
-              title: 'בית',
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="home" size={size} color={color} />
-              ),
-            }}
+              headerShown: false,
+              gestureEnabled: false,
+            }} 
           />
-          <Tabs.Screen
-            name="books"
+          <Stack.Screen 
+            name="(books)" 
             options={{
-              title: 'ספרים',
-              tabBarIcon: ({ color, size }) => (
-                <Ionicons name="book" size={size} color={color} />
-              ),
-            }}
+              headerShown: false,
+              gestureEnabled: true,
+            }} 
           />
-        </Tabs>
+        </Stack>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

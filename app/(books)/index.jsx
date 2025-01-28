@@ -49,7 +49,7 @@ export default function Books() {
   };
 
   const navigateToBook = (bookId) => {
-    router.replace(`./books/${bookId}`);
+    router.replace(`./${bookId}`);
   };
 
   if (loading) return <Loader isLoading={loading} />;
@@ -57,16 +57,20 @@ export default function Books() {
   return (
     <ScrollView className="flex-1 bg-background p-4">
       {Object.entries(books).map(([category, categoryBooks]) => (
-        <View key={category} className="mb-8">
-          <Text className="text-text text-2xl text-right mb-4">{category}</Text>
+        <View key={category} className="mb-8 bg-gray-900 rounded-lg p-4">
+          <Text className="text-text text-2xl font-bold text-right mb-4 border-b border-gray-800 pb-2">
+            {category}
+          </Text>
           {Object.entries(categoryBooks).map(([bookName, episodes]) => (
-            <View key={bookName} className="mb-4">
-              <Text className="text-text text-xl text-right mb-2">{bookName}</Text>
+            <View key={bookName} className="mb-6 bg-gray-800 rounded-lg p-3">
+              <Text className="text-text text-xl font-semibold text-right mb-3 border-b border-gray-700 pb-2">
+                {bookName}
+              </Text>
               {episodes.map((episode) => (
                 <Pressable 
                   key={episode.$id}
                   onPress={() => navigateToBook(episode.$id)}
-                  className="py-2"
+                  className="py-3 px-4 mb-2 bg-gray-700 rounded-md active:bg-gray-600"
                 >
                   <Text className="text-text text-lg text-right">
                     {episode.episode}

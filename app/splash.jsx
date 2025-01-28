@@ -1,10 +1,9 @@
-import "../global.css";
 import { View, Text, Image, Animated } from 'react-native';
-import { Redirect } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useState, useEffect, useRef } from 'react';
 
-export default function App() {
-  const [isReady, setIsReady] = useState(false);
+export default function SplashScreen() {
+  const router = useRouter();
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -14,16 +13,12 @@ export default function App() {
         duration: 1000,
         useNativeDriver: true,
       }).start(() => {
-        setIsReady(true);
+        router.replace('/(books)');
       });
     }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
-
-  if (isReady) {
-    return <Redirect href="/books" />;
-  }
 
   return (
     <Animated.View 

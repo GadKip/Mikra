@@ -17,26 +17,30 @@ export default function BooksLayout() {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-        headerLeft: () => (
-          <Pressable onPress={() => router.back()} style={{ marginLeft: 16 }}>
-            <Ionicons name="arrow-back" size={24} color="#ffffff" />
-          </Pressable>
-        ),
       }}
     >
       <Stack.Screen 
         name="index"
         options={{ 
           title: "ספרים",
-          headerLeft: () => null, // Hide back button on main books page
+          headerShown: false,
         }}
       />
       <Stack.Screen 
         name="[id]"
-        options={{ 
-          title: "ספר",
+        dir='rtl'
+        options={({ route }) => ({ 
           animation: 'slide_from_right',
-        }}
+          headerLeft: () => (
+            <Pressable 
+              onPress={() => router.back()}
+              style={{ marginLeft: 16 }}
+              dir='rtl'
+            >
+              <Ionicons name="arrow-back" size={24} color="#ffffff" />
+            </Pressable>
+          ),
+        })}
       />
     </Stack>
   );
