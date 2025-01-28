@@ -1,6 +1,6 @@
-import { View, ActivityIndicator, Dimensions, Platform } from "react-native";
+import { View, ActivityIndicator, Dimensions, Platform, Text } from "react-native";
 
-const Loader = ({ isLoading }) => {
+const Loader = ({ isLoading, message = 'טוען...' }) => {
   const osName = Platform.OS;
   const screenHeight = Dimensions.get("screen").height;
 
@@ -16,7 +16,11 @@ const Loader = ({ isLoading }) => {
       <ActivityIndicator
         animating={isLoading}
         color="#fff"
+        size="large"
       />
+      <Text className="text-white mt-4 text-lg font-semibold tracking-wide">
+        {message}
+      </Text>
     </View>
   );
 };

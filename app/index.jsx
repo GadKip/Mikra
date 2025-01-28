@@ -30,11 +30,6 @@ export default function App() {
       className="flex-1 items-center justify-center bg-background p-4"
       style={{ opacity: fadeAnim }}
     >
-      <Image
-        source={require('../assets/logo.png')}
-        className="w-32 h-32 mb-8"
-        resizeMode="contain"
-      />
       <Text className="text-text text-3xl mb-4 text-center">מקרא</Text>
       <Text className="text-text text-lg mb-2 text-center">
         ספר הספרים העברי הראשון

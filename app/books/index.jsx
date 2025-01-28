@@ -36,9 +36,13 @@ export default function Books() {
   const fetchBooks = async () => {
     try {
       const files = await listFiles(client);
+      if (!files) {
+        throw new Error('No books data received');
+      }
       setBooks(files);
     } catch (error) {
-      alert('Error', 'Could not fetch books');
+      console.error('Error fetching books:', error);
+      alert('Error', error.message || 'Could not fetch books');
     } finally {
       setLoading(false);
     }
