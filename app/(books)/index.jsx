@@ -6,6 +6,7 @@ import { client } from '../../lib/appwrite';
 import Loader from '../../components/Loader';
 import alert from '../../components/alert';
 import { LogBox } from 'react-native';
+import { useTheme } from '../../context/ThemeContext';
 
 LogBox.ignoreAllLogs([
   'Warning: TRenderEngineProvider:',
@@ -15,8 +16,11 @@ LogBox.ignoreAllLogs([
 
 export default function Books() {
   const router = useRouter();
+  const { theme } = useTheme();
   const [books, setBooks] = useState({});
   const [loading, setLoading] = useState(true);
+  const [expandedCategories, setExpandedCategories] = useState({});
+  const [expandedBooks, setExpandedBooks] = useState({});
 
   useEffect(() => {
     initializeAndFetch();
@@ -52,21 +56,50 @@ export default function Books() {
     router.replace(`./${bookId}`);
   };
 
+  const toggleCategory = (category) => {
+    setExpandedCategories(prev => ({
+      ...prev,
+      [category]: !prev[category]
+    }));
+  };
+
+  const toggleBook = (category, book) => {
+    const key = `${category}-${book}`;
+    setExpandedBooks(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
   if (loading) return <Loader isLoading={loading} />;
 
   return (
-    <ScrollView className="flex-1 bg-background p-4">
+    <ScrollView className="flex-1 p-4" style={{ backgroundColor: theme.background }}>
       {Object.entries(books).map(([category, categoryBooks]) => (
-        <View key={category} className="mb-8 bg-gray-900 rounded-lg p-4">
-          <Text className="text-text text-2xl font-bold text-right mb-4 border-b border-gray-800 pb-2">
-            {category}
-          </Text>
-          {Object.entries(categoryBooks).map(([bookName, episodes]) => (
+        <View key={category} style={{ 
+          backgroundColor: theme.card,
+          borderColor: theme.border 
+        }} className="mb-8 rounded-lg p-4">
+          <Pressable onPress={() => toggleCategory(category)} className="flex-row-reverse justify-between items-center mb-4">
+            <Text style={{ color: theme.text }} className="text-2xl font-bold text-right">
+              {category}
+            </Text>
+            <Text style={{ color: theme.text }}>{expandedCategories[category] ? '▼' : '▶'}</Text>
+          </Pressable>
+          
+          {expandedCategories[category] && Object.entries(categoryBooks).map(([bookName, episodes]) => (
             <View key={bookName} className="mb-6 bg-gray-800 rounded-lg p-3">
-              <Text className="text-text text-xl font-semibold text-right mb-3 border-b border-gray-700 pb-2">
-                {bookName}
-              </Text>
-              {episodes.map((episode) => (
+              <Pressable 
+                onPress={() => toggleBook(category, bookName)} 
+                className="flex-row-reverse justify-between items-center mb-3 border-b border-gray-700 pb-2"
+              >
+                <Text className="text-text text-xl font-semibold text-right">
+                  {bookName}
+                </Text>
+                <Text className="text-text">{expandedBooks[`${category}-${bookName}`] ? '▼' : '▶'}</Text>
+              </Pressable>
+
+              {expandedBooks[`${category}-${bookName}`] && episodes.map((episode) => (
                 <Pressable 
                   key={episode.$id}
                   onPress={() => navigateToBook(episode.$id)}

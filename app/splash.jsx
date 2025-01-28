@@ -1,6 +1,6 @@
-import { View, Text, Image, Animated } from 'react-native';
+import { View, Text, Animated } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -8,11 +8,13 @@ export default function SplashScreen() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
+      // Fade out animation
       Animated.timing(fadeAnim, {
         toValue: 0,
         duration: 1000,
         useNativeDriver: true,
       }).start(() => {
+        // Navigate to books screen after fade
         router.replace('/(books)');
       });
     }, 2000);

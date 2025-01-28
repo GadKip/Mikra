@@ -4,6 +4,7 @@ import "../global.css";
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ThemeProvider } from '../context/ThemeContext';
 
 // Suppress specific warnings
 LogBox.ignoreLogs([
@@ -17,30 +18,32 @@ LogBox.ignoreLogs([
 
 export default function RootLayout() {
   return (
-    <SafeAreaProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Stack
-          screenOptions={{
-            headerShown: false,
-            gestureEnabled: false,
-          }}
-        >
-          <Stack.Screen 
-            name="splash"
-            options={{
+    <ThemeProvider>
+      <SafeAreaProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <Stack
+            screenOptions={{
               headerShown: false,
               gestureEnabled: false,
-            }} 
-          />
-          <Stack.Screen 
-            name="(books)" 
-            options={{
-              headerShown: false,
-              gestureEnabled: true,
-            }} 
-          />
-        </Stack>
-      </GestureHandlerRootView>
-    </SafeAreaProvider>
+            }}
+          >
+            <Stack.Screen 
+              name="splash"
+              options={{
+                headerShown: false,
+                gestureEnabled: false,
+              }} 
+            />
+            <Stack.Screen 
+              name="(books)" 
+              options={{
+                headerShown: false,
+                gestureEnabled: true,
+              }} 
+            />
+          </Stack>
+        </GestureHandlerRootView>
+      </SafeAreaProvider>
+    </ThemeProvider>
   );
 }

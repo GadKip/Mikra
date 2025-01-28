@@ -6,8 +6,13 @@ import CustomRenderHTML from '../../components/CustomRenderHTML';
 import { getDocumentContent } from '../../lib/appwrite';
 import { useRouter, useNavigation, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '../../context/ThemeContext';
 
-export default function BookScreen() {
+/**
+ * BookScreen - Displays a single book's content with metadata
+ * Handles RTL layout and themed styling
+ */
+export default function BookScreen() {  // Changed back to BookScreen
   const { id } = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const [content, setContent] = useState('');
@@ -15,12 +20,12 @@ export default function BookScreen() {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const router = useRouter();
-  useEffect(() => {
-    // Force RTL layout
-    I18nManager.allowRTL(true);
-    I18nManager.forceRTL(true);
-  }, []);
+  const { theme } = useTheme();
 
+  /**
+   * Fetches book content and metadata from Appwrite
+   * Sets error content if fetch fails
+   */
   const fetchContent = async () => {
     setLoading(true);
     try {
@@ -43,62 +48,57 @@ export default function BookScreen() {
     }
   };
 
+  // Initial content fetch on component mount or id change
   useEffect(() => {
     fetchContent();
   }, [id]);
 
+  // Update navigation header with hierarchical title and back button
   useEffect(() => {
     if (metadata) {
       navigation.setOptions({
-        title: metadata.episode
+        title: `${metadata.category} > ${metadata.book} > ${metadata.episode}`,
+        headerLeft: () => (
+          <Pressable 
+            onPress={() => router.back()} 
+            style={({ pressed }) => ({
+              marginLeft: 16,
+              padding: 8,
+              opacity: pressed ? 0.5 : 1,
+              zIndex: 1
+            })}
+            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          >
+            <Ionicons 
+              name={I18nManager.isRTL ? "arrow-forward" : "arrow-back"} 
+              size={24} 
+              color={theme.text} 
+            />
+          </Pressable>
+        )
       });
     }
-  }, [metadata]);
+  }, [metadata, theme]);
 
+  // Show loader while content is being fetched
   if (loading) return <Loader isLoading={loading} />;
 
   return (
-    <>
-      <ScrollView 
-        className="flex-1 bg-background"
-        contentContainerStyle={{ direction: 'rtl' }}
-      >
-        <Pressable 
-          onPress={() => router.replace('/(books)')}
-          style={{ marginLeft: 16 }}
-        >
-          <Ionicons name="arrow-back" size={24} color="#ffffff" />
-        </Pressable>
-        {metadata && (
-          <View className="p-4 bg-gray-900 border-b border-gray-800">
-            <Text className="text-text text-2xl font-bold text-right mb-2" 
-                  style={{ writingDirection: 'rtl' }}>
-              {metadata.book}
-            </Text>
-            <Text className="text-text text-xl text-right" 
-                  style={{ writingDirection: 'rtl' }}>
-              {metadata.episode}
-            </Text>
-            <View className="flex-row justify-end mt-2">
-              <Text className="text-gray-400 text-sm px-3 py-1 bg-gray-800 rounded-full">
-                {metadata.category}
-              </Text>
-            </View>
-          </View>
-        )}
-        <View className="p-4">
-          <CustomRenderHTML
-            contentWidth={width}
-            source={{ html: content }}
-            baseStyle={{ 
-              direction: 'rtl',
-              textAlign: 'right',
-              writingDirection: 'rtl'
-            }}
-          />
-        </View>
-      </ScrollView>
-    </>
+    <ScrollView 
+      // Main container with RTL support
+      style={{ backgroundColor: theme.background }}
+      className="flex-1"
+      contentContainerStyle={{ direction: 'rtl' }}
+    >
+      
+      {/* Book content section with HTML rendering */}
+      <View className="p-4">
+        <CustomRenderHTML
+          contentWidth={width}
+          source={{ html: content }}
+        />
+      </View>
+    </ScrollView>
   );
 
 }
