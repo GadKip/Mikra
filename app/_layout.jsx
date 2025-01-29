@@ -1,46 +1,42 @@
 import React from 'react';
-import { LogBox, StatusBar } from 'react-native';
+import { StatusBar } from 'react-native';
 import "../global.css";
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { ThemeProvider, useTheme } from '../context/ThemeContext';
 
-// Suppress specific warnings
-LogBox.ignoreLogs([
-  'Support for defaultProps will be removed',
-  'TRenderEngineProvider:',
-  'MemoizedTNodeRenderer:',
-  'TNodeChildrenRenderer:',
-  'Warning: props.pointerEvents is deprecated',
-  '"shadow*" style props are deprecated'
-]);
+function AppLayout() {
+  const { colors, theme } = useTheme();
+
+  const screenOptions = {
+    headerShown: false,
+    gestureEnabled: false,
+    contentStyle: {
+      backgroundColor: colors.background
+    }
+  };
+
+  return (
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.background }}>
+        <StatusBar 
+          backgroundColor="transparent"
+          barStyle={colors.statusBar}
+        />
+        <Stack screenOptions={screenOptions}>
+          <Stack.Screen name="index" />  // Splash
+          <Stack.Screen name="(categories)" />
+        </Stack>
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
+  );
+}
 
 export default function RootLayout() {
   return (
-      <SafeAreaProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              gestureEnabled: false,
-            }}
-          >
-            <Stack.Screen 
-              name="splash"
-              options={{
-                headerShown: false,
-                gestureEnabled: false,
-              }} 
-            />
-            <Stack.Screen 
-              name="(books)" 
-              options={{
-                headerShown: false,
-                gestureEnabled: true,
-              }} 
-            />
-          </Stack>
-        </GestureHandlerRootView>
-      </SafeAreaProvider>
+    <ThemeProvider>
+      <AppLayout />
+    </ThemeProvider>
   );
 }
