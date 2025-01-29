@@ -4,7 +4,6 @@ import "../global.css";
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { ThemeProvider } from '../context/ThemeContext';
 
 // Suppress specific warnings
 LogBox.ignoreLogs([
@@ -18,7 +17,6 @@ LogBox.ignoreLogs([
 
 export default function RootLayout() {
   return (
-    <ThemeProvider>
       <SafeAreaProvider>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <Stack
@@ -44,6 +42,5 @@ export default function RootLayout() {
           </Stack>
         </GestureHandlerRootView>
       </SafeAreaProvider>
-    </ThemeProvider>
   );
 }

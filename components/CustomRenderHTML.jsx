@@ -1,10 +1,8 @@
 import { RenderHTML } from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
 
 export default function CustomRenderHTML({ source }) {
   const { width } = useWindowDimensions();
-  const { theme, isDarkMode } = useTheme();
   
   const systemFonts = ['David', 'Guttman Keren', 'Ezra SIL SR', 'Times New Roman', 'Arial', 'System'];
   
@@ -26,10 +24,7 @@ export default function CustomRenderHTML({ source }) {
         }
       }}
       tagsStyles={{
-        body: {
-          color: theme.text,
-          backgroundColor: theme.background
-        },
+
         col: {
           width: '45%' // Default width
         },

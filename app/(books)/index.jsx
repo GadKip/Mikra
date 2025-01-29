@@ -6,7 +6,6 @@ import { client } from '../../lib/appwrite';
 import Loader from '../../components/Loader';
 import alert from '../../components/alert';
 import { LogBox } from 'react-native';
-import { useTheme } from '../../context/ThemeContext';
 
 LogBox.ignoreAllLogs([
   'Warning: TRenderEngineProvider:',
@@ -16,7 +15,6 @@ LogBox.ignoreAllLogs([
 
 export default function Books() {
   const router = useRouter();
-  const { theme } = useTheme();
   const [books, setBooks] = useState({});
   const [loading, setLoading] = useState(true);
   const [expandedCategories, setExpandedCategories] = useState({});
@@ -74,17 +72,14 @@ export default function Books() {
   if (loading) return <Loader isLoading={loading} />;
 
   return (
-    <ScrollView className="flex-1 p-4" style={{ backgroundColor: theme.background }}>
+    <ScrollView className="flex-1 p-4">
       {Object.entries(books).map(([category, categoryBooks]) => (
-        <View key={category} style={{ 
-          backgroundColor: theme.card,
-          borderColor: theme.border 
-        }} className="mb-8 rounded-lg p-4">
+        <View key={category} className="mb-8 rounded-lg p-4">
           <Pressable onPress={() => toggleCategory(category)} className="flex-row-reverse justify-between items-center mb-4">
-            <Text style={{ color: theme.text }} className="text-2xl font-bold text-right">
+            <Text className="text-2xl font-bold text-right">
               {category}
             </Text>
-            <Text style={{ color: theme.text }}>{expandedCategories[category] ? '▼' : '▶'}</Text>
+            <Text>{expandedCategories[category] ? '▼' : '▶'}</Text>
           </Pressable>
           
           {expandedCategories[category] && Object.entries(categoryBooks).map(([bookName, episodes]) => (

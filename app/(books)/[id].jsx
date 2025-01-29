@@ -6,13 +6,8 @@ import CustomRenderHTML from '../../components/CustomRenderHTML';
 import { getDocumentContent } from '../../lib/appwrite';
 import { useRouter, useNavigation, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '../../context/ThemeContext';
 
-/**
- * BookScreen - Displays a single book's content with metadata
- * Handles RTL layout and themed styling
- */
-export default function BookScreen() {  // Changed back to BookScreen
+export default function FileViewer() { 
   const { id } = useLocalSearchParams();
   const { width } = useWindowDimensions();
   const [content, setContent] = useState('');
@@ -20,7 +15,6 @@ export default function BookScreen() {  // Changed back to BookScreen
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const router = useRouter();
-  const { theme } = useTheme();
 
   /**
    * Fetches book content and metadata from Appwrite
@@ -72,13 +66,12 @@ export default function BookScreen() {  // Changed back to BookScreen
             <Ionicons 
               name={I18nManager.isRTL ? "arrow-forward" : "arrow-back"} 
               size={24} 
-              color={theme.text} 
             />
           </Pressable>
         )
       });
     }
-  }, [metadata, theme]);
+  }, [metadata]);
 
   // Show loader while content is being fetched
   if (loading) return <Loader isLoading={loading} />;
@@ -86,7 +79,6 @@ export default function BookScreen() {  // Changed back to BookScreen
   return (
     <ScrollView 
       // Main container with RTL support
-      style={{ backgroundColor: theme.background }}
       className="flex-1"
       contentContainerStyle={{ direction: 'rtl' }}
     >
