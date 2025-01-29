@@ -21,7 +21,6 @@ export default function CategoriesLayout() {
 
   return (
     <Stack screenOptions={screenOptions}>
-      {/* Main categories list */}
       <Stack.Screen 
         name="index" 
         options={{ 
@@ -29,26 +28,20 @@ export default function CategoriesLayout() {
           headerTitleAlign: 'center',
         }} 
       />
-
-      {/* Individual category view */}
       <Stack.Screen 
-        name="[category]"
+        name="[category]/index"
         options={{
           headerTitleAlign: 'center',
-          animation: 'slide_from_left'
+          animation: 'slide_from_right'
         }}
       />
-
-      {/* Book episodes list */}
       <Stack.Screen 
-        name="[category]/[book]"
+        name="[category]/[book]/index"
         options={{
           headerTitleAlign: 'center',
-          animation: 'slide_from_left'
+          animation: 'slide_from_right'
         }}
       />
-
-      {/* Episode view */}
       <Stack.Screen 
         name="[category]/[book]/[episode]/[id]"
         options={{

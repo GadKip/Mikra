@@ -1,21 +1,13 @@
 import React from 'react';
 import { StatusBar } from 'react-native';
 import "../global.css";
-import { Stack } from 'expo-router';
+import { Slot, Stack } from 'expo-router'; // Add Slot import
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useTheme } from '../context/ThemeContext';
 
 function AppLayout() {
-  const { colors, theme } = useTheme();
-
-  const screenOptions = {
-    headerShown: false,
-    gestureEnabled: false,
-    contentStyle: {
-      backgroundColor: colors.background
-    }
-  };
+  const { colors } = useTheme();
 
   return (
     <SafeAreaProvider>
@@ -24,10 +16,8 @@ function AppLayout() {
           backgroundColor="transparent"
           barStyle={colors.statusBar}
         />
-        <Stack screenOptions={screenOptions}>
-          <Stack.Screen name="index" />  // Splash
-          <Stack.Screen name="(categories)" />
-        </Stack>
+        <Slot />
+        
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );

@@ -26,7 +26,7 @@ export default function SplashScreen() {
         duration: 1000,
         useNativeDriver: true,
       }).start(() => {
-        router.replace('/(categories)');
+        router.push('/(categories)');
       });
     }, 3400);
 
