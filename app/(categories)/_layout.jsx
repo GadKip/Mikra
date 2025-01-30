@@ -21,6 +21,7 @@ export default function CategoriesLayout() {
 
   return (
     <Stack screenOptions={screenOptions}>
+      {/* Main categories list */}
       <Stack.Screen 
         name="index" 
         options={{ 
@@ -28,6 +29,8 @@ export default function CategoriesLayout() {
           headerTitleAlign: 'center',
         }} 
       />
+
+      {/* Category route */}
       <Stack.Screen 
         name="[category]/index"
         options={{
@@ -35,6 +38,8 @@ export default function CategoriesLayout() {
           animation: 'slide_from_right'
         }}
       />
+
+      {/* Book route */}
       <Stack.Screen 
         name="[category]/[book]/index"
         options={{
@@ -42,6 +47,9 @@ export default function CategoriesLayout() {
           animation: 'slide_from_right'
         }}
       />
+
+
+      {/* New Episode route */}
       <Stack.Screen 
         name="[category]/[book]/[episode]/[id]"
         options={{

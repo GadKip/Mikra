@@ -1,6 +1,6 @@
-import { View, ScrollView, useWindowDimensions } from 'react-native';
+import { View, ScrollView, useWindowDimensions, Animated } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Loader from '../../../../../components/Loader';
 import { getDocumentContent } from '../../../../../lib/appwrite';
 import { useNavigation } from 'expo-router';
@@ -12,15 +12,21 @@ export default function FileViewer() {
   const [loading, setLoading] = useState(true);
   const [tableData, setTableData] = useState(null);
   const navigation = useNavigation();
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  // Header animation
+  const headerHeight = scrollY.interpolate({
+    inputRange: [0, 100],
+    outputRange: [60, 0],
+    extrapolate: 'clamp'
+  });
 
   const fetchContent = async () => {
     setLoading(true);
     try {
       const response = await getDocumentContent(id);
       if (response && response.content) {
-        console.log('Raw content:', response.content); // Add this
         const jsonContent = JSON.parse(response.content);
-        console.log('Parsed JSON:', jsonContent); // Add this
         setTableData(jsonContent);
         setMetadata({
           book: response.book,
@@ -44,21 +50,32 @@ export default function FileViewer() {
   useEffect(() => {
     if (metadata) {
       navigation.setOptions({
-        title: `${metadata.category} > ${metadata.book} > ${metadata.episode}`,
+        headerStyle: {
+          height: headerHeight,
+          opacity: headerHeight.interpolate({
+            inputRange: [0, 60],
+            outputRange: [0, 1]
+          })
+        }
       });
     }
-  }, [metadata]);
+  }, [metadata, headerHeight]);
 
   if (loading) return <Loader isLoading={loading} />;
 
   return (
-    <ScrollView 
+    <Animated.ScrollView 
       className="flex-1"
       contentContainerStyle={{ direction: 'rtl' }}
+      onScroll={Animated.event(
+        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+        { useNativeDriver: false }
+      )}
+      scrollEventThrottle={16}
     >
-      <View className="p-4">
+      <View className="flex-1">
         <TableViewer data={tableData} />
       </View>
-    </ScrollView>
+    </Animated.ScrollView>
   );
 }
