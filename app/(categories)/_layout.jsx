@@ -7,7 +7,7 @@ export default function CategoriesLayout() {
   const screenOptions = {
     headerShown: true,
     headerStyle: {
-      backgroundColor: colors.background,
+      backgroundColor: colors.card // Change from background to card
     },
     headerTitleStyle: {
       fontWeight: 'bold',
@@ -53,8 +53,16 @@ export default function CategoriesLayout() {
       <Stack.Screen 
         name="[category]/[book]/[episode]/[id]"
         options={{
+          headerShown: false,
           headerTitleAlign: 'center',
-          animation: 'slide_from_right'
+          animation: 'slide_from_right',
+          headerStyle: {
+            backgroundColor: colors.card
+          },
+          headerTintColor: colors.text,
+          headerTitleStyle: {
+            color: colors.text
+          }
         }}
       />
     </Stack>

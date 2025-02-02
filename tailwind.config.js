@@ -12,6 +12,12 @@ module.exports = {
         card: 'var(--card)',
         border: 'var(--border)',
       },
+      fontFamily: {
+        'ezra': ['"Ezra SIL SR"'],
+        'guttman': ['"Guttman Keren"'],
+        'david': ['David'],
+        'davidbd': ['DavidBD'],
+      }
     },
   },
   plugins: [],

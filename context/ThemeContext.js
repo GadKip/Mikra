@@ -2,10 +2,11 @@ import React, { createContext, useContext, useState } from 'react';
 
 const ThemeContext = createContext();
 
+// context/ThemeContext.js
 export const themes = {
   light: {
-    background: '#FFFFFF',
     text: '#000000',
+    background: '#FFFFFF',
     primary: '#2196F3',
     secondary: '#646464',
     card: '#F5F5F5',
@@ -13,8 +14,8 @@ export const themes = {
     statusBar: 'dark-content'
   },
   dark: {
-    background: '#121212',
     text: '#FFFFFF',
+    background: '#121212',
     primary: '#1976D2',
     secondary: '#424242',
     card: '#1E1E1E',

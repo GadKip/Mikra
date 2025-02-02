@@ -1,56 +1,103 @@
-// components/TableViewer.jsx
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
-const CellContent = ({ content, styles = {}, columnIndex }) => {
-    const { colors } = useTheme();
-    let textStyle = [
-        baseStyles.cellText, 
-        { 
-            color: colors.text,
-            className: 'text-right text-justify',
-            fontFamily: styles.fontFamily || 'Ezra SIL SR',
-            textAlign: 'right',
-            writingDirection: 'rtl',
-            fontSize: (() => {
-                if (columnIndex === 0) {
-                    return styles.bold 
-                        ? baseStyles.cellText.fontSize * 0.8
-                        : baseStyles.cellText.fontSize * 0.35
-                }
-                if (columnIndex === 1) {
-                    return baseStyles.cellText.fontSize * 0.5
-                }
-                return baseStyles.cellText.fontSize
-            })()
-        }
-    ];
+const CellContent = ({ content, styles = {}, columnIndex, rowData, rowIndex }) => {
+    const { colors, theme } = useTheme();
     
-    if (styles.textSize) {
-        textStyle.push({ fontSize: textStyle[0].fontSize * styles.textSize });
-    }
-    if (styles.bold) textStyle.push({ fontWeight: 'bold' });
-    if (styles.italic) textStyle.push({ fontStyle: 'italic' });
-    if (styles.underline) textStyle.push({ textDecorationLine: 'underline' });
-    if (styles.isHeading1) textStyle.push({ fontSize: textStyle[0].fontSize * 1.5, fontWeight: 'bold' });
-    if (styles.isHeading2) textStyle.push({ fontSize: textStyle[0].fontSize * 1.25, fontWeight: 'bold' });
+    // Check if col2 is empty for this row
+    const isCol2Empty = !rowData.row[1]?.cell?.trim();
+    
+    // Base classes for all cells
+    const baseClasses = "flex-1";
+    
+    // Dynamic classes based on column index
+    const columnClasses = (() => {
+
+        if (columnIndex === 0) {
+            return styles.bold 
+                ? "text-[19px] font-davidbd" // Use David for bold text
+                : "text-[8px]"
+        }
+        if (columnIndex === 1) {
+            return rowIndex === 0 ? "text-3xl" : "text-[12px]"
+        }
+        if (columnIndex === 3) {
+            return "text-2xl" // Larger font size for column 4
+        }
+        if (columnIndex === 2 && rowIndex === 0) {
+            return "text-3xl"
+        }
+        return "text-xl"
+    })();
+
+    // Text style classes
+    const styleClasses = [
+        styles.bold && "font-davidbd",
+        styles.italic && "italic",
+        styles.underline && "underline",
+        styles.isHeading1 && "text-3xl font-davidbd",
+        styles.isHeading2 && "text-2xl font-davidbd",
+    ].filter(Boolean).join(" ");
+
+    const renderTextWithParentheses = (text) => {
+        const parts = text.split(/(\([^)]+\))/);
+        return (
+            <>
+                {parts.map((part, index) => {
+                    if (part.match(/^\([^)]+\)$/)) {
+                        return (
+                            <Text key={index} className="font-david">
+                                {part}
+                            </Text>
+                        );
+                    }
+                    return <Text key={index}>{part}</Text>;
+                })}
+            </>
+        );
+    };
+
+    const fontClass = columnIndex === 3 
+    ? (isCol2Empty 
+        ? "font-davidbd text-3xl" 
+        : "font-guttman"
+    ) 
+    : "font-ezra";
 
     return (
         <Text 
-            style={textStyle} 
+            className={`
+                ${baseClasses}
+                ${columnClasses}
+                ${styleClasses}
+                ${fontClass}
+            `}
+            style={{ 
+                color: colors.text,
+                textAlign: 'justify',
+                writingDirection: 'rtl',
+                textAlignVertical: 'center',
+                flexWrap: 'wrap',
+                flexShrink: 1,
+                textAlignLast: 'right',
+                paddingTop: 4    // Add some top padding specifically for text
+            }}
             numberOfLines={0}
-            adjustsFontSizeToFit={true}
+            adjustsFontSizeToFit
             minimumFontScale={0.5}
-            allowFontScaling={true}
+            allowFontScaling
         >
-            {content}
+            {columnIndex === 3 && !isCol2Empty 
+                ? renderTextWithParentheses(content)
+                : content
+            }
         </Text>
     );
 };
 
 export const TableViewer = ({ data }) => {
-    const { colors } = useTheme();
+    const { colors, theme } = useTheme();
     
     return (
         <ScrollView style={styles.container}>
@@ -66,13 +113,18 @@ export const TableViewer = ({ data }) => {
                                         cellIndex === 0 && styles.firstColumn,
                                         cellIndex === 1 && styles.secondColumn,
                                         cellIndex === 2 && styles.thirdColumn,
-                                        cellIndex === 3 && [styles.fourthColumn, { backgroundColor: colors.secondary }],
+                                        cellIndex === 3 && [
+                                            styles.fourthColumn,
+                                            { backgroundColor: theme === 'light' ? '#e5e5e5' : '#2d2d2d' }
+                                        ]
                                     ]}
                                 >
                                     <CellContent 
                                         content={cellData.cell || ' '} 
                                         styles={cellData.styles} 
                                         columnIndex={cellIndex}
+                                        rowData={rowData}
+                                        rowIndex={rowIndex}
                                     />
                                 </View>
                             ))}
@@ -109,17 +161,18 @@ const styles = StyleSheet.create({
     },
     cell: {
         padding: 5,
-        justifyContent: 'center',
-        alignItems: 'flex-end',  // Align content to the right
-        flexShrink: 0,  // Prevent cell shrinking
+        justifyContent: 'flex-end', // Align content to the end (right in RTL)
+        alignItems: 'stretch', // Stretch content to fill width
+        flexShrink: 0,
+        width: '100%' // Ensure cell takes full width
     },
     firstColumn: {
-        minWidth: '8.5%',  // Increased from 6%
+        minWidth: '8%',  // Increased from 6%
         flex: 1,
         flexWrap: 'wrap',
     },
     secondColumn: {
-        minWidth: '8.5%',  // Increased from 4%
+        minWidth: '6%',  // Increased from 4%
         flex: 1,
         flexWrap: 'wrap',
     },
