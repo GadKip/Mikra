@@ -37,11 +37,14 @@ function AppLayout() {
 
   return (
     <SafeAreaProvider>
-      <GestureHandlerRootView style={{ flex: 1, backgroundColor: colors.background }}>
+      <GestureHandlerRootView 
+        style={{ flex: 1, backgroundColor: colors.background }}
+        className={`flex-1 ${theme === 'dark' ? 'dark' : ''}`}
+      >
         <StatusBar 
           backgroundColor={theme === 'dark' ? colors.card : 'transparent'}
           barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
-          translucent={true}
+          translucent={false}
         />
         <TouchableOpacity 
           onPress={toggleTheme}
