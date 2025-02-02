@@ -33,27 +33,29 @@ export default function CategoriesLayout() {
       {/* Category route */}
       <Stack.Screen 
         name="[category]/index"
-        options={{
+        options={({ route }) => ({
+          title: route.params.category, // Will show כתובים
           headerTitleAlign: 'center',
           animation: 'slide_from_right'
-        }}
+        })}
       />
 
       {/* Book route */}
       <Stack.Screen 
         name="[category]/[book]/index"
-        options={{
+        options={({ route }) => ({
+          title: route.params.book, // Will show the book name
           headerTitleAlign: 'center',
           animation: 'slide_from_right'
-        }}
+        })}
       />
-
 
       {/* New Episode route */}
       <Stack.Screen 
         name="[category]/[book]/[episode]/[id]"
-        options={{
-          headerShown: false,
+        options={({ route }) => ({
+          title: route.params.episode, // Will show the episode name
+          headerShown: false, // Changed from false to true
           headerTitleAlign: 'center',
           animation: 'slide_from_right',
           headerStyle: {
@@ -63,7 +65,7 @@ export default function CategoriesLayout() {
           headerTitleStyle: {
             color: colors.text
           }
-        }}
+        })}
       />
     </Stack>
   );
