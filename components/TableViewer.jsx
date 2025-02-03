@@ -3,9 +3,7 @@ import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
 const CellContent = ({ content, styles = {}, columnIndex, rowData, rowIndex }) => {
-    const { colors, theme } = useTheme();
-    
-    // Check if col2 is empty for this row
+    const { colors } = useTheme();
     const isCol2Empty = !rowData.row[1]?.cell?.trim();
     
     // Base classes for all cells
@@ -47,12 +45,16 @@ const CellContent = ({ content, styles = {}, columnIndex, rowData, rowIndex }) =
                 {parts.map((part, index) => {
                     if (part.match(/^\([^)]+\)$/)) {
                         return (
-                            <Text key={index} className="font-david">
+                            <Text 
+                                key={index} 
+                                className="font-david"
+                                style={{ color: colors.text }} // Add theme color
+                            >
                                 {part}
                             </Text>
                         );
                     }
-                    return <Text key={index}>{part}</Text>;
+                    return <Text key={index} style={{ color: colors.text }}>{part}</Text>;
                 })}
             </>
         );
@@ -96,43 +98,81 @@ const CellContent = ({ content, styles = {}, columnIndex, rowData, rowIndex }) =
     );
 };
 
-export const TableViewer = ({ data }) => {
-    const { colors, theme } = useTheme();
+// Add Table component
+const Table = ({ data }) => {
+    const { colors } = useTheme();
+    
+    if (!Array.isArray(data)) {
+        console.error('Table data is not an array:', data);
+        return null;
+    }
     
     return (
-        <ScrollView style={styles.container}>
-            {data.tables.map((table, tableIndex) => (
-                <View key={`table-${tableIndex}`} style={[styles.table, { backgroundColor: colors.card }]}>
-                    {table.map((rowData, rowIndex) => (
-                        <View key={`row-${rowIndex}`} style={[styles.row, { borderBottomColor: colors.border }]}>
-                            {rowData.row.map((cellData, cellIndex) => (
-                                <View 
-                                    key={`cell-${cellIndex}`} 
-                                    style={[
-                                        styles.cell,
-                                        cellIndex === 0 && styles.firstColumn,
-                                        cellIndex === 1 && styles.secondColumn,
-                                        cellIndex === 2 && styles.thirdColumn,
-                                        cellIndex === 3 && [
-                                            styles.fourthColumn,
-                                            { backgroundColor: theme === 'light' ? '#e5e5e5' : '#2d2d2d' }
-                                        ]
-                                    ]}
-                                >
-                                    <CellContent 
-                                        content={cellData.cell || ' '} 
-                                        styles={cellData.styles} 
-                                        columnIndex={cellIndex}
-                                        rowData={rowData}
-                                        rowIndex={rowIndex}
-                                    />
-                                </View>
-                            ))}
+        <View style={[styles.table, { borderColor: colors.border }]}>
+            {data.map((row, rowIndex) => (
+                <View 
+                    key={rowIndex} 
+                    style={[styles.row, { borderColor: colors.border }]}
+                >
+                    {row.row.map((cell, colIndex) => (
+                        <View 
+                            key={colIndex} 
+                            style={[
+                                styles.cell,
+                                colIndex === 0 && styles.firstColumn,
+                                colIndex === 1 && styles.secondColumn,
+                                colIndex === 2 && styles.thirdColumn,
+                                colIndex === 3 && styles.fourthColumn,
+                            ]}
+                        >
+                            <CellContent 
+                                content={cell.cell} 
+                                styles={cell.styles} 
+                                columnIndex={colIndex}
+                                rowData={row}
+                                rowIndex={rowIndex}
+                            />
                         </View>
                     ))}
                 </View>
             ))}
-        </ScrollView>
+        </View>
+    );
+};
+
+export const TableViewer = ({ data }) => {
+    const { colors } = useTheme(); // Add this line
+    
+    if (!data?.content) return null;
+
+    return (
+        <View>
+            {data.content.map((item, index) => {
+                if (item.type === 'table') {
+                    return <Table key={`table-${index}`} data={item.data} />;
+                } else if (item.type === 'text') {
+                    return (
+                        <Text
+                            key={`text-${index}`}
+                            className={`
+                                text-center mb-4
+                                ${item.style === 'h1' && 'text-3xl font-ezra'}
+                                ${item.style === 'h2' && 'text-3xl font-ezra'}
+                                ${item.style === 'h3' && 'text-3xl font-ezra'}
+                                ${item.style === 'p' && 'text-lg'}
+                            `}
+                            style={{ 
+                                color: colors.text,
+                                backgroundColor: colors.background 
+                            }}                        
+                        >
+                            {item.data.text}
+                        </Text>
+                    );
+                }
+                return null;
+            })}
+        </View>
     );
 };
 
