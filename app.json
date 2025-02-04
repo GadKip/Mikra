@@ -28,7 +28,24 @@
     },
     "web": {
       "favicon": "./assets/favicon.png",
-      "bundler": "metro"
+      "bundler": "metro",
+      "output": "static",
+      "build": {
+        "babel": {
+          "include": [
+            "@expo/vector-icons",
+            "nativewind"
+          ]
+        }
+      },
+      "fonts": {
+        "asset": [
+          "./assets/fonts/David.ttf",
+          "./assets/fonts/DavidBD.ttf",
+          "./assets/fonts/Ezra SIL SR.ttf",
+          "./assets/fonts/Guttman Keren.ttf"
+        ]
+      }
     },
     "newArchEnabled": true,
     "plugins": [
@@ -36,6 +53,14 @@
     ],
     "experiments": {
       "tsconfigPaths": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "98c020ac-7dbf-409d-9b00-72bfef5f5e8b"
+      }
     }
   }
 }

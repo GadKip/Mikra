@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, TouchableOpacity } from 'react-native';
+import { StatusBar, TouchableOpacity, View, Text, Platform } from 'react-native';
 import "../global.css";
 import { Slot } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -12,27 +12,41 @@ import { Ionicons } from '@expo/vector-icons';
 function AppLayout() {
   const { colors, theme, toggleTheme } = useTheme();
   const [error, setError] = useState(null);
-  const [fontsLoaded] = useFonts({
-    'Ezra SIL SR': require('../assets/fonts/Ezra SIL SR.ttf'),
-    'Guttman Keren': require('../assets/fonts/Guttman Keren.ttf'),
-    'David': require('../assets/fonts/David.ttf'),
-    'DavidBD': require('../assets/fonts/DavidBD.ttf'),
-  });
+  const [fontsLoaded] = useFonts(Platform.select({
+    web: {}, // Empty object for web - fonts will be loaded via app.json
+    default: { // Native platforms
+      'Ezra SIL SR': require('../assets/fonts/Ezra SIL SR.ttf'),
+      'Guttman Keren': require('../assets/fonts/Guttman Keren.ttf'),
+      'David': require('../assets/fonts/David.ttf'),
+      'DavidBD': require('../assets/fonts/DavidBD.ttf'),
+    }
+  }));
 
   useEffect(() => {
     async function prepare() {
       try {
         if (fontsLoaded) {
-          await SplashScreen.hideAsync();
+          if (Platform.OS !== 'web') {
+            await SplashScreen.hideAsync();
+          }
         }
       } catch (e) {
+        console.error('Error loading fonts:', e);
         setError(e);
       }
     }
     prepare();
   }, [fontsLoaded]);
 
-  if (!fontsLoaded) return null;
+  // Add loading state debug
+  if (!fontsLoaded && Platform.OS !== 'web') {
+    console.log('Fonts still loading...');
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
   if (error) throw error;
 
   return (

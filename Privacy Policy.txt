@@ -1,0 +1,54 @@
+Privacy Policy for Mikra Mevoar
+
+1. Introduction
+
+Welcome to Mikra Mevoar. We are committed to protecting your personal information and your right to privacy. If you have any questions or concerns about this privacy policy or our practices with regards to your personal information, please contact us at erastpe@gmail.com.
+
+2. Information We Collect
+
+We collect minimal personal information:
+
+- Theme Preferences: If you customize your app, we will save your theme preference on your device.
+- Usage Data: Basic information about how you use the app, such as the screens you visit and the content you view. This data is used to improve the app's design and functionality.
+
+3. How We Use Your Information
+
+We use the information collected via our app for the following purposes:
+
+- To provide and improve the app: We use usage data to understand how users interact with Mikra Mevoar, allowing us to improve its design and functionality.
+- To personalize your experience: We use theme preferences to customize the app to your liking.
+- For Analytics: We use anonymous usage data to understand app usage patterns.
+
+4. Sharing Your Information
+
+We do not share your personal information with third parties. We only use analytics data in an anonymous, aggregated form to improve our app.
+
+5. Security of Your Information
+
+We use industry-standard security measures to protect any information stored locally on your device. As the app primarily operates offline, most data remains on your device.
+
+6. Your Privacy Rights
+
+You have the right to:
+- Access your personal information
+- Request deletion of your data
+- Object to the processing of your information
+
+To exercise these rights, please contact us at erastpe@gmail.com.
+
+7. Updates to This Policy
+
+We may update this privacy policy from time to time. We will post any changes on this page and update the effective date at the top of the policy.
+
+8. Children's Privacy
+
+Mikra Mevoar is not directed to children under the age of 13. We do not knowingly collect personal information from children under 13.
+
+9. Contact Us
+
+If you have questions or comments about this policy, you may contact us at:
+
+erastpe@gmail.com
+
+Last updated: March 2024
+
