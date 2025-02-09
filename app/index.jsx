@@ -45,9 +45,12 @@ export default function SplashScreen() {
         מקרא מבואר
       </Text>
       <Text className="text-lg mb-2 text-center" style={{ color: colors.text }}>
-        המקרא לצד פירושו פשוט בשפה עכשווית
+        המקרא לצד פירושו בשפה עכשווית
       </Text>
-      <Text className="text-base text-center opacity-75" style={{ color: colors.text }}>
+      <Text className="text-base mb-2 text-center" style={{ color: colors.text }}>
+        מאת דוד כוכב
+      </Text>
+      <Text className="text-sm text-center opacity-75" style={{ color: colors.text }}>
         גרסה {version}
       </Text>
     </Animated.View>

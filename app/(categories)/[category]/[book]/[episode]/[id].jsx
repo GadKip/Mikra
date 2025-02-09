@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Loader from '../../../../../components/Loader';
 import { getDocumentContent } from '../../../../../lib/appwrite';
 import { useNavigation } from 'expo-router';
-import { TableViewer } from '../../../../../components/TableViewer';
+import { TableViewer } from '../../../../../components/JSONViewer';
 import { useTheme } from '../../../../../context/ThemeContext';
 
 export default function FileViewer() { 

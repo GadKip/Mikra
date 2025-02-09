@@ -2,7 +2,7 @@
 module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
-  darkMode: 'class', // Add this line
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -18,7 +18,10 @@ module.exports = {
         'guttman': ['"Guttman Keren"', 'sans-serif'],
         'david': ['David', 'sans-serif'],
         'davidbd': ['DavidBD', 'sans-serif'],
-      }
+      },
+      fontSize: {
+        '2xs': '0.625rem', // 10px
+      },
     },
   },
   plugins: [],

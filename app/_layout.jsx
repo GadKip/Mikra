@@ -40,7 +40,6 @@ function AppLayout() {
 
   // Add loading state debug
   if (!fontsLoaded && Platform.OS !== 'web') {
-    console.log('Fonts still loading...');
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <Text>Loading...</Text>
