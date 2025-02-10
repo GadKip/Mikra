@@ -4,7 +4,7 @@
     "scheme": "mikra",
     "slug": "mikra-app",
     "version": "1.0.1",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -17,7 +17,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.gadik.mikra"
+      "bundleIdentifier": "com.gadik.mikra",
+      "requireFullScreen": true
     },
     "android": {
       "adaptiveIcon": {
@@ -49,7 +50,11 @@
     },
     "newArchEnabled": true,
     "plugins": [
-      "expo-router"
+      "expo-router",
+      ["expo-screen-orientation",
+      {
+        "initialOrientation": "DEFAULT"
+      }]
     ],
     "experiments": {
       "tsconfigPaths": true

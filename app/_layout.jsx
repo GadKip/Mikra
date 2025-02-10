@@ -8,6 +8,7 @@ import { ThemeProvider, useTheme } from '../context/ThemeContext';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { Ionicons } from '@expo/vector-icons';
+import * as ScreenOrientation from 'expo-screen-orientation'; // Add this import
 
 function AppLayout() {
   const { colors, theme, toggleTheme } = useTheme();
@@ -37,6 +38,19 @@ function AppLayout() {
     }
     prepare();
   }, [fontsLoaded]);
+
+  useEffect(() => {
+    // Add this orientation setup
+    async function setupOrientation() {
+      try {
+        await ScreenOrientation.unlockAsync(); // Allow all orientations
+      } catch (error) {
+        console.error('Error setting up orientation:', error);
+      }
+    }
+
+    setupOrientation();
+  }, []);
 
   // Add loading state debug
   if (!fontsLoaded && Platform.OS !== 'web') {

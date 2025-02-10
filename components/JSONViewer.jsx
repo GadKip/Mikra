@@ -190,8 +190,19 @@ const TableHeader = ({ row }) => {
 };
 
 // Add Table component
-const Table = ({ data }) => {
+const Table = ({ data, isLandscape }) => {
     const { colors } = useTheme();
+    
+    // Add responsive styles based on orientation
+    const tableStyles = [
+        styles.table,
+        { 
+            borderColor: colors.border,
+            // Adjust max-width based on orientation
+            maxWidth: isLandscape ? '80%' : '100%',
+            alignSelf: 'center'
+        }
+    ];
     
     if (!Array.isArray(data)) {
         console.error('Table data is not an array:', data);
@@ -199,7 +210,7 @@ const Table = ({ data }) => {
     }
     
     return (
-        <View style={[styles.table, { borderColor: colors.border }]}>
+        <View style={tableStyles}>
             {data.map((row, rowIndex) => {
                 if (rowIndex === 0) {
                     return <TableHeader key={rowIndex} row={row.row} />;
@@ -237,7 +248,7 @@ const Table = ({ data }) => {
     );
 };
 
-export const TableViewer = ({ data }) => {
+export const TableViewer = ({ data, isLandscape }) => {
     const { colors } = useTheme();
     
     // Log initial data
@@ -250,7 +261,7 @@ export const TableViewer = ({ data }) => {
     if (!data?.content) return null;
 
     return (
-        <View>
+        <View style={{ flex: 1 }}>
             {data.content.map((item, index) => {
                 // Log each item being processed
                 console.log('Processing content item:', {
@@ -266,7 +277,11 @@ export const TableViewer = ({ data }) => {
                 });
 
                 if (item.type === 'table') {
-                    return <Table key={`table-${index}`} data={item.data} />;
+                    return <Table 
+                        key={`table-${index}`} 
+                        data={item.data}
+                        isLandscape={isLandscape} 
+                    />;
                 } else if (item.type === 'list') {
                     return (
                         <View key={`list-${index}`}>

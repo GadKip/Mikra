@@ -1,4 +1,4 @@
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, useWindowDimensions } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import Loader from '../../../../../components/Loader';
@@ -9,6 +9,7 @@ import { useTheme } from '../../../../../context/ThemeContext';
 
 export default function FileViewer() { 
   const { colors } = useTheme();
+  const { width, height } = useWindowDimensions();
   const { id } = useLocalSearchParams();
   const [metadata, setMetadata] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -46,10 +47,18 @@ export default function FileViewer() {
   return (
     <ScrollView 
       className="flex-1"
-      contentContainerStyle={{ direction: 'rtl' }}
+      contentContainerStyle={{ 
+        direction: 'rtl',
+        // Add padding that adjusts based on orientation
+        paddingHorizontal: width > height ? 40 : 10 
+      }}
     >
       <View className="flex-1">
-        <TableViewer data={tableData} />
+        <TableViewer 
+          data={tableData}
+          // Pass orientation info to TableViewer
+          isLandscape={width > height}
+        />
       </View>
     </ScrollView>
   );
