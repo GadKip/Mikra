@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Loader from '../../../../../components/Loader';
 import { getDocumentContent } from '../../../../../lib/appwrite';
 import { useNavigation } from 'expo-router';
-import { TableViewer } from '../../../../../components/JSONViewer';
+import { ContentViewer } from '../../../../../components/viewers/ContentViewer';
 import { useTheme } from '../../../../../context/ThemeContext';
 
 export default function FileViewer() { 
@@ -54,9 +54,9 @@ export default function FileViewer() {
       }}
     >
       <View className="flex-1">
-        <TableViewer 
+        <ContentViewer 
           data={tableData}
-          // Pass orientation info to TableViewer
+          // Pass orientation info to ContentViewer
           isLandscape={width > height}
         />
       </View>
