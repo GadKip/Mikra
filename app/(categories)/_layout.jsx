@@ -10,7 +10,6 @@ export default function CategoriesLayout() {
       backgroundColor: colors.card // Change from background to card
     },
     headerTitleStyle: {
-      fontWeight: 'bold',
       color: colors.text,
     },
     headerTintColor: colors.text,

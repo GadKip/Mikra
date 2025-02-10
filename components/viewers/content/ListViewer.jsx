@@ -13,13 +13,13 @@ export const ListItem = ({ data }) => {
     return (
         <View style={{ flexDirection: 'row', marginRight: indentation }}>
             <Text 
-                className="font-davidbd text-xl" 
+                className="font-ezra text-xl" 
                 style={{ color: colors.text }}
             >
                 {data.marker}
             </Text>
             <Text 
-                className="font-david text-xl flex-1" 
+                className="font-ezra text-xl flex-1" 
                 style={{ color: colors.text }}
             >
                 {data.text}

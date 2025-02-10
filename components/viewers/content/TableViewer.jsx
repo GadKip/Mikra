@@ -1,7 +1,6 @@
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import { useTheme } from '../../../context/ThemeContext';
 import { styles } from './styles/table.styles';
-import TableHeader from './cells/TableHeader'; // Update import
 import CellContent from './cells/CellContent';
 
 export const Table = ({ data, isLandscape }) => {
@@ -11,9 +10,7 @@ export const Table = ({ data, isLandscape }) => {
         styles.table,
         { 
             borderColor: colors.border,
-            maxWidth: isLandscape ? '80%' : '100%',
-            alignSelf: 'center'
-        }
+            }
     ];
     
     if (!Array.isArray(data)) {
@@ -26,14 +23,13 @@ export const Table = ({ data, isLandscape }) => {
     return (
         <View style={tableStyles}>
             {data.map((row, rowIndex) => {
-                if (rowIndex === 0) {
-                    return <TableHeader key={`header-${rowIndex}`} row={row.row} />;
-                }
-
                 return (
                     <View 
                         key={`row-${rowIndex}`} 
-                        style={[styles.row, { borderColor: colors.border }]}
+                        style={[
+                            styles.row, 
+                            { borderColor: colors.border },
+                        ]}
                     >
                         {row.row.map((cell, colIndex) => (
                             <View 

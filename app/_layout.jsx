@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, TouchableOpacity, View, Text, Platform } from 'react-native';
+import { StatusBar, TouchableOpacity, View, Text, Platform, I18nManager } from 'react-native';
 import "../global.css";
 import { Slot } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -75,8 +75,11 @@ function AppLayout() {
         />
         <TouchableOpacity 
           onPress={toggleTheme}
-          className="absolute top-12 right-4 z-50 p-2 rounded-full"
-          style={{ backgroundColor: colors.card }}
+          className="absolute top-12 z-50 p-2 rounded-full"
+          style={[
+            { backgroundColor: colors.card },
+            I18nManager.isRTL ? {marginStart: 4} : { marginRight: 4, right: 4 }
+          ]}
         >
           <Ionicons 
             name={theme === 'light' ? 'moon' : 'sunny'} 

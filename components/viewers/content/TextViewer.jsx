@@ -7,10 +7,10 @@ export const TextContent = ({ data }) => {
     return (
         <Text 
             className={`
-                font-davidbd text-center my-4
-                ${data.style === 'h1' && 'text-5xl'}
-                ${data.style === 'h2' && 'text-4xl'}
-                ${data.style === 'h3' && 'text-3xl'}
+                font-ezra text-center my-4
+                ${data.style === 'h1' && 'text-4xl'}
+                ${data.style === 'h2' && 'text-3xl'}
+                ${data.style === 'h3' && 'text-2xl'}
             `}
             style={{ color: colors.text }}
         >

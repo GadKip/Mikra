@@ -101,7 +101,7 @@ export default function EpisodeList() {
             style={{ backgroundColor: colors.card }}
           >
             <Text 
-              className="text-2xl font-bold text-center"
+              className="text-2xl text-center"
               style={{ color: colors.text }}
             >
               {episode.episode}

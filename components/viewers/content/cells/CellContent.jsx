@@ -1,8 +1,20 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { useTheme } from '../../../../context/ThemeContext';
 import { isHebrewChapter } from '../../../../utils/hebrewChapters';
 
-export default function CellContent({ content, styles = {}, columnIndex, rowData, rowIndex }) {
+const styles = StyleSheet.create({
+    col2Container: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'flex-end', // Align to the right
+        alignItems: 'flex-start',   // Align to the top
+    },
+    cellContainer: {
+        flex: 1,
+    }
+});
+
+export default function CellContent({ content, styles = {}, columnIndex, rowData, rowIndex, isHeader }) {
     const { colors } = useTheme();
     const isCol2Empty = !rowData.row[1]?.cell?.trim();
     
@@ -11,26 +23,25 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     const cellImage = typeof content === 'object' ? content.image : null;
 
     // Base classes for all cells
-    const baseClasses = "flex-1";
+    const baseClasses = "flex-1 ";
     
     // Dynamic classes based on column index
     const columnClasses = (() => {
         if (columnIndex === 0) {
-            return styles.bold
-                ?
-                // If bold, use David font and larger text size
-                "text-2xl font-davidbd"
-                // If not bold, use Ezra font and smaller text size
-                : "text-xs"
+            if (content?.cell?.trim() === '*') {
+                return "font-davidbd"
+            }
+            return styles.bold ? "text-2xl font-davidbd" : "text-xs flex-wrap"
         }
         if (columnIndex === 1) {
-            return rowIndex === 0 ? "text-3xl" : "text-xs"
-        }
-        if (columnIndex === 3) {
-            return "text-2xl"
+            return "text-xs"
         }
         if (columnIndex === 2 && rowIndex === 0) {
-            return "text-3xl"
+            return "text-4xl font-guttman"
+        }
+
+        if (columnIndex === 3) {
+            return styles.bold ? "text-3xl font-davidbd" : "text-xl"
         }
         return "text-xl"
     })();
@@ -98,38 +109,65 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         : "font-ezra";
 
     return (
-        <View>
+        <View style={styles.cellContainer}>
             {/* Render text content if exists */}
             {cellText && (
-                <Text 
-                    className={`
-                        ${baseClasses}
-                        ${columnClasses}
-                        ${styleClasses}
-                        ${fontClass}
-                    `}
-                    style={{ 
-                        color: colors.text,
-                        textAlign: 'justify',
-                        writingDirection: 'rtl',
-                        textAlignVertical: 'center',
-                        flexWrap: 'wrap',
-                        flexShrink: 1,
-                        textAlignLast: 'right',
-                        paddingTop: 4
-                    }}
-                    numberOfLines={0}
-                    adjustsFontSizeToFit
-                    minimumFontScale={0.5}
-                    allowFontScaling
-                >
-                    {columnIndex === 0 
-                        ? renderCol1Content(cellText)
-                        : columnIndex === 3 && !isCol2Empty 
-                            ? renderTextWithParentheses(cellText)
-                            : cellText
-                    }
-                </Text>
+                columnIndex === 1 ? (
+                    <View style={styles.col2Container}>
+                        <Text 
+                            className={`
+                                ${baseClasses}
+                                ${columnClasses}
+                                ${styleClasses}
+                                ${fontClass}
+                            `}
+                            style={{ 
+                                color: colors.text,
+                                writingDirection: 'rtl',
+                                flexWrap: 'wrap',
+                                flexShrink: 1,
+                                paddingTop: 4,
+                                alignSelf: 'flex-start', // Add this
+                            }}
+                            numberOfLines={0}
+                            adjustsFontSizeToFit
+                            minimumFontScale={0.5}
+                            allowFontScaling
+                        >
+                            {cellText}
+                        </Text>
+                    </View>
+                ) : (
+                    <Text 
+                        className={`
+                            ${baseClasses}
+                            ${columnClasses}
+                            ${styleClasses}
+                            ${fontClass}
+                        `}
+                        style={{ 
+                            color: colors.text,
+                            textAlign: 'justify',
+                            writingDirection: 'rtl',
+                            flexWrap: 'wrap',
+                            flexShrink: 1,
+                            textAlignLast: 'right',
+                            paddingTop: 4,
+                            alignSelf: 'flex-start', // Add this
+                        }}
+                        numberOfLines={0}
+                        adjustsFontSizeToFit
+                        minimumFontScale={0.5}
+                        allowFontScaling
+                    >
+                        {columnIndex === 0 
+                            ? renderCol1Content(cellText)
+                            : columnIndex === 3 && !isCol2Empty 
+                                ? renderTextWithParentheses(cellText)
+                                : cellText
+                        }
+                    </Text>
+                )
             )}
 
             {/* Render image if exists */}
