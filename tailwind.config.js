@@ -14,13 +14,10 @@ module.exports = {
         border: 'var(--border)',
       },
       fontFamily: {
-        'ezra': ['"Ezra SIL SR"', 'serif'],
-        'guttman': ['"Guttman Keren"', 'sans-serif'],
-        'david': ['David', 'sans-serif'],
-        'davidbd': ['DavidBD', 'sans-serif'],
-      },
-      fontSize: {
-        '2xs': '0.625rem', // 10px
+        'ezra': ['EzraSILSR'],
+        'guttman': ['GuttmanKeren'],
+        'david': ['David'],
+        'davidbd': ['DavidBD'],
       },
     },
   },

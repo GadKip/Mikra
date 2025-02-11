@@ -43,8 +43,8 @@
         "asset": [
           "./assets/fonts/David.ttf",
           "./assets/fonts/DavidBD.ttf",
-          "./assets/fonts/Ezra SIL SR.ttf",
-          "./assets/fonts/Guttman Keren.ttf"
+          "./assets/fonts/EzraSILSR.ttf",
+          "./assets/fonts/GuttmanKeren.ttf"
         ]
       }
     },

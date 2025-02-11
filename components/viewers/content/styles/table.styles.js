@@ -4,7 +4,9 @@ const baseStyles = {
     cellText: {
         textAlign: 'right',
         textAlignVertical: 'top',
-        flexWrap: 'wrap',},
+        flexWrap: 'wrap',
+        fontFamily: 'EzraSILSR'
+    },
 };
 
 export const styles = StyleSheet.create({

@@ -6,9 +6,9 @@ export const ListItem = ({ data }) => {
     const indentation = data.level * 20;
     
     // Only log in development
-    if (__DEV__) {
-        console.debug('ListItem:', { level: data.level, data: data }); // Added data log
-    }
+    //if (__DEV__) {
+    //    console.debug('ListItem:', { level: data.level, data: data });
+    //}
     
     return (
         <View style={{ flexDirection: 'row', marginRight: indentation }}>

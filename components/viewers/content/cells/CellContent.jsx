@@ -1,20 +1,12 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, Platform } from 'react-native';
 import { useTheme } from '../../../../context/ThemeContext';
 import { isHebrewChapter } from '../../../../utils/hebrewChapters';
 
-const styles = StyleSheet.create({
-    col2Container: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'flex-end', // Align to the right
-        alignItems: 'flex-start',   // Align to the top
-    },
-    cellContainer: {
-        flex: 1,
-    }
-});
+const guttmanFont = {
+    fontFamily: 'GuttmanKeren'
+};
 
-export default function CellContent({ content, styles = {}, columnIndex, rowData, rowIndex, isHeader }) {
+export default function CellContent({ content, styles = {}, columnIndex, rowData, rowIndex }) {
     const { colors } = useTheme();
     const isCol2Empty = !rowData.row[1]?.cell?.trim();
     
@@ -23,36 +15,38 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     const cellImage = typeof content === 'object' ? content.image : null;
 
     // Base classes for all cells
-    const baseClasses = "flex-1 ";
+    const baseClasses = "flex-1";
     
     // Dynamic classes based on column index
     const columnClasses = (() => {
         if (columnIndex === 0) {
             if (content?.cell?.trim() === '*') {
-                return "font-davidbd"
+                return "font-bold text-2xl"
             }
-            return styles.bold ? "text-2xl font-davidbd" : "text-xs flex-wrap"
+            return styles.bold ? "font-bold" : "text-xs"
         }
         if (columnIndex === 1) {
             return "text-xs"
         }
-        if (columnIndex === 2 && rowIndex === 0) {
-            return "text-4xl font-guttman"
+        if (columnIndex === 2) {
+            if (rowIndex === 0) {
+                return "text-4xl"
+            }
+            return "text-3xl"
         }
-
         if (columnIndex === 3) {
-            return styles.bold ? "text-3xl font-davidbd" : "text-xl"
+            return isCol2Empty ? "text-2xl" : "text-3xl"
         }
         return "text-xl"
     })();
 
     // Text style classes
     const styleClasses = [
-        styles.bold && "font-davidbd",
+        styles.bold && "font-bold",
         styles.italic && "italic",
         styles.underline && "underline",
-        styles.isHeading1 && "text-3xl font-davidbd",
-        styles.isHeading2 && "text-2xl font-davidbd",
+        styles.isHeading1 && "text-3xl",
+        styles.isHeading2 && "text-2xl",
     ].filter(Boolean).join(" ");
 
     const renderCol1Content = (text) => {
@@ -60,7 +54,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         if (isHebrewChapter(trimmedText) && trimmedText === text.trim()) {
             return (
                 <Text
-                    className = {styles.bold ? "text-2xl font-davidbd" : "text-2xl font-ezra"}
+                    className={`text-2xl font-ezra`}
                 >
                     {trimmedText}
                 </Text>
@@ -69,20 +63,18 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         
         return (
             <Text 
+                className="font-ezra text-xs"
                 style={{
-                    fontSize: 10,
                     flexWrap: 'wrap',
                     textAlign: 'right',
                     color: colors.text,
-                    fontFamily: 'Ezra SIL SR',
-                    wordBreak: 'normal' // Prevent word splitting
+                    wordBreak: 'normal'
                 }}
             >
                 {text}
             </Text>
         );
     };
-
     const renderTextWithParentheses = (text) => {
         const parts = text.split(/(\([^)]+\))/);
         return (
@@ -92,34 +84,59 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                         return (
                             <Text 
                                 key={index} 
-                                className="font-david text-text" // Add theme color
+                                className={`font-david ${columnClasses}`}
                             >
                                 {part}
                             </Text>
                         );
                     }
-                    return <Text key={index} className="text-text">{part}</Text>;
+                    return (
+                        <Text 
+                            key={index} 
+                            className={`${fontClass} ${columnClasses}`}
+                        >
+                            {part}
+                        </Text>
+                    );
                 })}
             </>
         );
     };
 
-    const fontClass = columnIndex === 3 
-        ? (isCol2Empty ? "font-davidbd text-3xl" : "font-guttman")
-        : "font-ezra";
+    const fontClass = (() => {
+        const selectedFont = (() => {
+            if (columnIndex === 2) {
+                return "font-guttman";
+            }
+            if (columnIndex === 3) {
+                return isCol2Empty ? "font-guttman" : "font-ezra";
+            }
+            return "font-ezra";
+        })();        
+        return selectedFont;
+    })();
+
+    // Add debug logs
+    console.log('CellContent debug:', {
+        columnIndex,
+        styles,
+        fontClass,
+        columnClasses,
+        styleClasses
+    });
 
     return (
         <View style={styles.cellContainer}>
             {/* Render text content if exists */}
             {cellText && (
                 columnIndex === 1 ? (
-                    <View style={styles.col2Container}>
+                    <View>
                         <Text 
                             className={`
+                                ${fontClass}
                                 ${baseClasses}
                                 ${columnClasses}
                                 ${styleClasses}
-                                ${fontClass}
                             `}
                             style={{ 
                                 color: colors.text,
@@ -127,7 +144,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                                 flexWrap: 'wrap',
                                 flexShrink: 1,
                                 paddingTop: 4,
-                                alignSelf: 'flex-start', // Add this
+                                alignSelf: 'flex-start',
                             }}
                             numberOfLines={0}
                             adjustsFontSizeToFit
@@ -137,36 +154,79 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                             {cellText}
                         </Text>
                     </View>
-                ) : (
-                    <Text 
+                ) : columnIndex === 2 ? (
+                    <Text
+                        key={`col2-${rowIndex}`}
                         className={`
                             ${baseClasses}
                             ${columnClasses}
                             ${styleClasses}
-                            ${fontClass}
-                        `}
-                        style={{ 
-                            color: colors.text,
-                            textAlign: 'justify',
-                            writingDirection: 'rtl',
-                            flexWrap: 'wrap',
-                            flexShrink: 1,
-                            textAlignLast: 'right',
-                            paddingTop: 4,
-                            alignSelf: 'flex-start', // Add this
+                        `.trim()}
+                        style={[
+                            {
+                                color: colors.text,
+                                textAlign: 'justify',
+                                writingDirection: 'rtl',
+                                flexWrap: 'wrap',
+                                flexShrink: 1,
+                                textAlignLast: 'right',
+                                paddingTop: 4,
+                                fontFamily: 'GuttmanKeren' // Apply the Guttman font directly
+                            }
+                        ]}
+                        onLayout={() => {
+                            console.log('Column 3 styles:', {
+                                columnIndex,
+                                platform: Platform.OS,
+                                fontClass,
+                                styles: styles.text || {},
+                                finalStyles: [
+                                    styles.text || {},
+                                    {
+                                        color: colors.text,
+                                        textAlign: 'justify',
+                                        writingDirection: 'rtl',
+                                        flexWrap: 'wrap',
+                                        flexShrink: 1,
+                                        textAlignLast: 'right',
+                                        paddingTop: 4,
+                                        fontFamily: 'GuttmanKeren' // Apply the Guttman font directly
+                                    }
+                                ]
+                            });
                         }}
-                        numberOfLines={0}
-                        adjustsFontSizeToFit
-                        minimumFontScale={0.5}
-                        allowFontScaling
                     >
-                        {columnIndex === 0 
-                            ? renderCol1Content(cellText)
-                            : columnIndex === 3 && !isCol2Empty 
-                                ? renderTextWithParentheses(cellText)
-                                : cellText
-                        }
+                        {cellText}
                     </Text>
+                )
+                : (
+                    columnIndex === 0 ? (
+                        renderCol1Content(cellText)
+                    ) : (
+                        columnIndex === 3 && !isCol2Empty ? (
+                            renderTextWithParentheses(cellText)
+                        ) : (
+                            <Text 
+                                className={`
+                                    ${fontClass}
+                                    ${baseClasses}
+                                    ${columnClasses}
+                                    ${styleClasses}
+                                `.trim()}
+                                style={{ 
+                                    color: colors.text,
+                                    textAlign: 'justify',
+                                    writingDirection: 'rtl',
+                                    flexWrap: 'wrap',
+                                    flexShrink: 1,
+                                    textAlignLast: 'right',
+                                    paddingTop: 4,
+                                }}
+                            >
+                                {cellText}
+                            </Text>
+                        )
+                    )
                 )
             )}
 

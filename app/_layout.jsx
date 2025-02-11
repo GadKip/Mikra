@@ -16,8 +16,8 @@ function AppLayout() {
   const [fontsLoaded] = useFonts(Platform.select({
     web: {}, // Empty object for web - fonts will be loaded via app.json
     default: { // Native platforms
-      'Ezra SIL SR': require('../assets/fonts/Ezra SIL SR.ttf'),
-      'Guttman Keren': require('../assets/fonts/Guttman Keren.ttf'),
+      'EzraSILSR': require('../assets/fonts/EzraSILSR.ttf'),
+      'GuttmanKeren': require('../assets/fonts/GuttmanKeren.ttf'),
       'David': require('../assets/fonts/David.ttf'),
       'DavidBD': require('../assets/fonts/DavidBD.ttf'),
     }
@@ -27,6 +27,7 @@ function AppLayout() {
     async function prepare() {
       try {
         if (fontsLoaded) {
+          console.log('Fonts loaded successfully');
           if (Platform.OS !== 'web') {
             await SplashScreen.hideAsync();
           }

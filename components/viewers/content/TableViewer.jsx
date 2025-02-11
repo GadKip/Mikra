@@ -3,6 +3,11 @@ import { useTheme } from '../../../context/ThemeContext';
 import { styles } from './styles/table.styles';
 import CellContent from './cells/CellContent';
 
+const guttmanFont = {
+    fontFamily: 'GuttmanKeren'
+};
+
+
 export const Table = ({ data, isLandscape }) => {
     const { colors } = useTheme();
     
@@ -44,7 +49,7 @@ export const Table = ({ data, isLandscape }) => {
                             >
                                 <CellContent 
                                     content={cell} 
-                                    styles={cell.styles} 
+                                    styles={cell.styles}
                                     columnIndex={colIndex}
                                     rowData={row}
                                     rowIndex={rowIndex}

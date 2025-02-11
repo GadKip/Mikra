@@ -2,12 +2,12 @@ import { View, Image } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 export const ImageContent = ({ data }) => {
-    if (!data.src) {
-        if (__DEV__) {
-            console.warn('Image missing source:', data);
-        }
-        return null;
-    }
+    //if (!data.src) {
+    //    if (__DEV__) {
+    //        console.warn('Image missing source:', data);
+    //    }
+    //    return null;
+    //}
 
     return (
         <View style={styles.imageContainer}>
