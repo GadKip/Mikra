@@ -19,7 +19,6 @@ export const styles = StyleSheet.create({
         minHeight: 40,
     },
     cell: {
-        justifyContent: 'flex-end',
         alignItems: 'stretch',
         textAlignVertical: 'top',
         padding: 8
