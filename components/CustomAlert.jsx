@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Modal, TouchableOpacity, StyleSheet } from 'react-native';
+import ThemedText from './ThemedText';
 
 const CustomAlert = ({ visible, title, message, onClose, onConfirm, confirmText = "Ok", cancelText = "Cancel", showCancel = false }) => {
   const [modalVisible, setModalVisible] = useState(visible);
@@ -31,15 +32,15 @@ const CustomAlert = ({ visible, title, message, onClose, onConfirm, confirmText 
     >
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <Text style={styles.modalTitle}>{title}</Text>
-          <Text style={styles.modalMessage}>{message}</Text>
+          <ThemedText style={styles.modalTitle}>{title}</ThemedText>
+          <ThemedText style={styles.modalMessage}>{message}</ThemedText>
           <View style={styles.buttonContainer}>
            {showCancel && (
             <TouchableOpacity style={[styles.button, styles.cancelButton]} onPress={handleClose}>
-            <Text style={styles.textStyle}>{cancelText}</Text>
+            <ThemedText style={styles.textStyle}>{cancelText}</ThemedText>
              </TouchableOpacity>)}
               <TouchableOpacity style={styles.button} onPress={handleConfirm}>
-              <Text style={styles.textStyle}>{confirmText}</Text>
+              <ThemedText style={styles.textStyle}>{confirmText}</ThemedText>
           </TouchableOpacity>
           </View>
         </View>

@@ -1,5 +1,6 @@
 import { View, Text } from 'react-native';
 import { useTheme } from '../../../context/ThemeContext';
+import ThemedText from '../../ThemedText';
 
 export const ListItem = ({ data }) => {
     const { colors } = useTheme();
@@ -12,18 +13,14 @@ export const ListItem = ({ data }) => {
     
     return (
         <View style={{ flexDirection: 'row', marginRight: indentation }}>
-            <Text 
-                className="font-ezra text-xl" 
-                style={{ color: colors.text }}
-            >
+            <ThemedText 
+                className="font-ezra text-xl">
                 {data.marker}
-            </Text>
-            <Text 
-                className="font-ezra text-xl flex-1" 
-                style={{ color: colors.text }}
-            >
+            </ThemedText>
+            <ThemedText 
+                className="font-ezra text-xl flex-1">
                 {data.text}
-            </Text>
+            </ThemedText>
         </View>
     );
 };

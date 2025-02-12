@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { listFiles } from '../../../lib/appwrite';
 import { client } from '../../../lib/appwrite';
 import Loader from '../../../components/Loader';
+import ThemedText from '../../../components/ThemedText';
 
 export default function BookList() {
   const { category } = useLocalSearchParams(); // Change from 'id' to 'category'
@@ -39,12 +40,9 @@ export default function BookList() {
           className="mb-6 rounded-lg p-6"
           style={{ backgroundColor: colors.card }}
         >
-          <Text 
-            className="text-2xl font-bold text-center"
-            style={{ color: colors.text }}
-          >
+          <ThemedText className="text-2xl font-bold text-center">
             {book}
-          </Text>
+          </ThemedText>
         </Pressable>
       ))}
     </ScrollView>

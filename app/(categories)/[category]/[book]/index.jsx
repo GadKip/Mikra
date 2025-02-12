@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { listFiles } from '../../../../lib/appwrite';
 import { client } from '../../../../lib/appwrite';
 import Loader from '../../../../components/Loader';
+import ThemedText from '../../../../components/ThemedText';
 
 export default function EpisodeList() {
   const { category, book } = useLocalSearchParams();
@@ -100,21 +101,15 @@ export default function EpisodeList() {
             className="mb-6 rounded-lg p-6"
             style={{ backgroundColor: colors.card }}
           >
-            <Text 
-              className="text-2xl text-center"
-              style={{ color: colors.text }}
-            >
+            <ThemedText className="text-2xl text-center">
               {episode.episode}
-            </Text>
+            </ThemedText>
           </Pressable>
         ))
       ) : (
-        <Text 
-          className="text-xl text-center mt-4"
-          style={{ color: colors.text }}
-        >
+        <ThemedText className="text-xl text-center mt-4">
           אין פרקים זמינים
-        </Text>
+        </ThemedText>
       )}
       {loading && offset > 0 && <Loader isLoading={true} />}
     </ScrollView>

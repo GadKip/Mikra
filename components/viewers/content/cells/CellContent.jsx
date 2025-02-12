@@ -1,6 +1,7 @@
 import { View, Text, Image, Platform } from 'react-native';
 import { useTheme } from '../../../../context/ThemeContext';
 import { isHebrewChapter } from '../../../../utils/hebrewChapters';
+import ThemedText from '../../../ThemedText';
 
 const guttmanFont = {
     fontFamily: 'GuttmanKeren'
@@ -53,26 +54,25 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         const trimmedText = text.trim();
         if (isHebrewChapter(trimmedText) && trimmedText === text.trim()) {
             return (
-                <Text
+                <ThemedText
                     className={`text-2xl font-ezra`}
                 >
                     {trimmedText}
-                </Text>
+                </ThemedText>
             );
         }
         
         return (
-            <Text 
+            <ThemedText 
                 className="font-ezra text-xs"
                 style={{
                     flexWrap: 'wrap',
                     textAlign: 'right',
-                    color: colors.text,
                     wordBreak: 'normal'
                 }}
             >
                 {text}
-            </Text>
+            </ThemedText>
         );
     };
     const renderTextWithParentheses = (text) => {
@@ -82,21 +82,21 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                 {parts.map((part, index) => {
                     if (part.match(/^\([^)]+\)$/)) {
                         return (
-                            <Text 
+                            <ThemedText 
                                 key={index} 
                                 className={`font-david ${columnClasses}`}
                             >
                                 {part}
-                            </Text>
+                            </ThemedText>
                         );
                     }
                     return (
-                        <Text 
+                        <ThemedText 
                             key={index} 
                             className={`${fontClass} ${columnClasses}`}
                         >
                             {part}
-                        </Text>
+                        </ThemedText>
                     );
                 })}
             </>
@@ -116,22 +116,13 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         return selectedFont;
     })();
 
-    // Add debug logs
-    console.log('CellContent debug:', {
-        columnIndex,
-        styles,
-        fontClass,
-        columnClasses,
-        styleClasses
-    });
-
     return (
         <View style={styles.cellContainer}>
             {/* Render text content if exists */}
             {cellText && (
                 columnIndex === 1 ? (
                     <View>
-                        <Text 
+                        <ThemedText 
                             className={`
                                 ${fontClass}
                                 ${baseClasses}
@@ -139,7 +130,6 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                                 ${styleClasses}
                             `}
                             style={{ 
-                                color: colors.text,
                                 writingDirection: 'rtl',
                                 flexWrap: 'wrap',
                                 flexShrink: 1,
@@ -152,10 +142,10 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                             allowFontScaling
                         >
                             {cellText}
-                        </Text>
+                        </ThemedText>
                     </View>
                 ) : columnIndex === 2 ? (
-                    <Text
+                    <ThemedText
                         key={`col2-${rowIndex}`}
                         className={`
                             ${baseClasses}
@@ -164,40 +154,18 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                         `.trim()}
                         style={[
                             {
-                                color: colors.text,
                                 textAlign: 'justify',
                                 writingDirection: 'rtl',
                                 flexWrap: 'wrap',
                                 flexShrink: 1,
                                 textAlignLast: 'right',
                                 paddingTop: 4,
-                                fontFamily: 'GuttmanKeren' // Apply the Guttman font directly
+                                fontFamily: 'GuttmanKeren'
                             }
                         ]}
-                        onLayout={() => {
-                            console.log('Column 3 styles:', {
-                                columnIndex,
-                                platform: Platform.OS,
-                                fontClass,
-                                styles: styles.text || {},
-                                finalStyles: [
-                                    styles.text || {},
-                                    {
-                                        color: colors.text,
-                                        textAlign: 'justify',
-                                        writingDirection: 'rtl',
-                                        flexWrap: 'wrap',
-                                        flexShrink: 1,
-                                        textAlignLast: 'right',
-                                        paddingTop: 4,
-                                        fontFamily: 'GuttmanKeren' // Apply the Guttman font directly
-                                    }
-                                ]
-                            });
-                        }}
                     >
                         {cellText}
-                    </Text>
+                    </ThemedText>
                 )
                 : (
                     columnIndex === 0 ? (
@@ -206,7 +174,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                         columnIndex === 3 && !isCol2Empty ? (
                             renderTextWithParentheses(cellText)
                         ) : (
-                            <Text 
+                            <ThemedText 
                                 className={`
                                     ${fontClass}
                                     ${baseClasses}
@@ -214,7 +182,6 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                                     ${styleClasses}
                                 `.trim()}
                                 style={{ 
-                                    color: colors.text,
                                     textAlign: 'justify',
                                     writingDirection: 'rtl',
                                     flexWrap: 'wrap',
@@ -224,7 +191,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                                 }}
                             >
                                 {cellText}
-                            </Text>
+                            </ThemedText>
                         )
                     )
                 )

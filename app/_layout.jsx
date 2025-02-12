@@ -9,6 +9,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { Ionicons } from '@expo/vector-icons';
 import * as ScreenOrientation from 'expo-screen-orientation'; // Add this import
+import ThemedText from '../components/ThemedText';
 
 function AppLayout() {
   const { colors, theme, toggleTheme } = useTheme();
@@ -57,7 +58,7 @@ function AppLayout() {
   if (!fontsLoaded && Platform.OS !== 'web') {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Loading...</Text>
+        <ThemedText>Loading...</ThemedText>
       </View>
     );
   }

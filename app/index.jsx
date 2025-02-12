@@ -3,6 +3,7 @@ import { Animated, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../context/ThemeContext';
 import Constants from 'expo-constants';
+import ThemedText from '../components/ThemedText';
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -41,18 +42,18 @@ export default function SplashScreen() {
         backgroundColor: colors.background
       }}
     >
-      <Text className="text-3xl mb-4 text-center" style={{ color: colors.text }}>
+      <ThemedText className="text-3xl mb-4 text-center">
         מקרא מבואר
-      </Text>
-      <Text className="text-lg mb-2 text-center" style={{ color: colors.text }}>
+      </ThemedText>
+      <ThemedText className="text-lg mb-2 text-center">
         המקרא לצד פירושו בשפה עכשווית
-      </Text>
-      <Text className="text-base mb-2 text-center" style={{ color: colors.text }}>
+      </ThemedText>
+      <ThemedText className="text-base mb-2 text-center" >
         מאת דוד כוכב
-      </Text>
-      <Text className="text-sm text-center opacity-75" style={{ color: colors.text }}>
+      </ThemedText>
+      <ThemedText className="text-sm text-center opacity-75">
         גרסה {version}
-      </Text>
+      </ThemedText>
     </Animated.View>
   );
 }

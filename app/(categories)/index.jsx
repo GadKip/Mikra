@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
+import ThemedText from '../../components/ThemedText';
 
 // Main categories view
 export default function CategoryList() {
@@ -17,12 +18,9 @@ export default function CategoryList() {
           className="mb-6 rounded-lg p-6"
           style={{ backgroundColor: colors.card }}
         >
-          <Text 
-            className="text-2xl font-bold text-center"
-            style={{ color: colors.text }}
-          >
+          <ThemedText className="text-2xl font-bold text-center">
             {category}
-          </Text>
+          </ThemedText>
         </Pressable>
       ))}
     </ScrollView>

@@ -1,5 +1,6 @@
 import { Text, TouchableOpacity } from 'react-native';
 import React from 'react';
+import ThemedText from './ThemedText';
 
 const CustomButton = ({title, handlePress, containerStyles, textStyles, isLoading}) => {
   return (
@@ -10,11 +11,11 @@ const CustomButton = ({title, handlePress, containerStyles, textStyles, isLoadin
       ${containerStyles} ${isLoading ? 'opacity-50' : ''}`}
       style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
     > 
-      <Text 
+      <ThemedText 
       className={`text-primary text-2xl ${textStyles}`}
       dir="rtl">
         {title}
-      </Text>
+      </ThemedText>
     </TouchableOpacity>
   )
 }
