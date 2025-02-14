@@ -15,11 +15,29 @@ export const ContentViewer = ({ data, isLandscape }) => {
     }
 
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ 
+            flex: 1,
+            width: '100%',
+            alignSelf: 'stretch'
+        }}>
             {data.content.map((item, index) => {
                 switch (item.type) {
                     case 'table':
-                        return <Table key={`table-${index}`} data={item.data} isLandscape={isLandscape} />;
+                        return (
+                            <View 
+                                key={`table-${index}`} 
+                                style={{ 
+                                    flex: 1,
+                                    width: '100%',
+                                    alignSelf: 'stretch'
+                                }}
+                            >
+                                <Table 
+                                    data={item.data} 
+                                    isLandscape={isLandscape} 
+                                />
+                            </View>
+                        );
                     case 'list':
                         return (
                             <View key={`list-${index}`}>

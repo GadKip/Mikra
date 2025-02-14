@@ -8,13 +8,11 @@ import { ContentViewer } from '../../../../../components/viewers/ContentViewer';
 import { useTheme } from '../../../../../context/ThemeContext';
 
 export default function FileViewer() { 
-  const { colors } = useTheme();
   const { width, height } = useWindowDimensions();
   const { id } = useLocalSearchParams();
   const [metadata, setMetadata] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tableData, setTableData] = useState(null);
-  const navigation = useNavigation();
 
   const fetchContent = async () => {
     setLoading(true);
@@ -47,13 +45,17 @@ export default function FileViewer() {
   return (
     <ScrollView 
       className="flex-1"
+      style={{ width: '100%' }}  // Add explicit width
       contentContainerStyle={{ 
         direction: 'rtl',
-        // Add padding that adjusts based on orientation
-        paddingHorizontal: width > height ? 40 : 10 
+        width: '100%'  // Add width here too
       }}
     >
-      <View className="flex-1">
+      <View style={{ 
+        flex: 1, 
+        width: '100%',
+        alignSelf: 'stretch' 
+      }}>
         <ContentViewer 
           data={tableData}
           // Pass orientation info to ContentViewer
