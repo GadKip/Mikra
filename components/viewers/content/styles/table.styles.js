@@ -27,13 +27,14 @@ export const styles = StyleSheet.create({
     },
 
     firstColumn: {
-        minWidth: '8%',
+        minWidth: 40, // Set absolute minimum width in pixels
         flex: 1,
+        flexShrink: 0, // Prevent shrinking smaller than minWidth
     },
     secondColumn: {
-        minWidth: '6%',
+        minWidth: 30, // Set absolute minimum width in pixels
         flex: 1,
-        flexWrap: 'wrap',
+        flexShrink: 0, // Prevent shrinking smaller than minWidth
     },
     thirdColumn: {
         flex: 4,

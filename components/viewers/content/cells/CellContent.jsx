@@ -21,10 +21,15 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     // Dynamic classes based on column index
     const columnClasses = (() => {
         if (columnIndex === 0) {
-            if (content?.cell?.trim() === '*') {
-                return "font-bold text-2xl"
+            // Check for chapter numbers first
+            if (isHebrewChapter(content?.cell?.trim())) {
+                return "text-2xl"; // Size for chapter numbers
             }
-            return styles.bold ? "font-bold" : "text-xs"
+            // Then check for asterisk
+            if (content?.cell?.trim() === '*') {
+                return "font-bold text-2xl";
+            }
+            return styles.bold ? "font-bold" : "text-xs";
         }
         if (columnIndex === 1) {
             return "text-xs"
@@ -56,6 +61,10 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
             return (
                 <ThemedText
                     className={`text-2xl font-ezra`}
+                    style={{
+                        flexWrap: 'nowrap',
+                        whiteSpace: 'nowrap'  // Prevents text wrapping
+                    }}
                 >
                     {trimmedText}
                 </ThemedText>
@@ -66,9 +75,9 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
             <ThemedText 
                 className="font-ezra text-xs"
                 style={{
-                    flexWrap: 'wrap',
-                    textAlign: 'right',
-                    wordBreak: 'normal'
+                    flexWrap: 'nowrap',
+                    whiteSpace: 'nowrap',  // Prevents text wrapping
+                    textAlign: 'right'
                 }}
             >
                 {text}
@@ -120,30 +129,24 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         <View style={styles.cellContainer}>
             {/* Render text content if exists */}
             {cellText && (
-                columnIndex === 1 ? (
-                    <View>
+                columnIndex <= 1 ? ( // For columns 0 and 1
+                    columnIndex === 0 && isHebrewChapter(cellText.trim()) ? (
+                        renderCol1Content(cellText)
+                    ) : (
                         <ThemedText 
-                            className={`
-                                ${fontClass}
-                                ${baseClasses}
-                                ${columnClasses}
-                                ${styleClasses}
-                            `}
+                            className={`${fontClass} ${columnClasses}`}
                             style={{ 
-                                writingDirection: 'rtl',
-                                flexWrap: 'wrap',
-                                flexShrink: 1,
-                                paddingTop: 4,
-                                alignSelf: 'flex-start',
+                                flexShrink: 0,
+                                flexGrow: 0,
+                                minWidth: 'fit-content', // Ensure content width
+                                width: 'auto',
+                                textAlign: 'right',
+                                flexBasis: 'auto' // Allow content to determine width
                             }}
-                            numberOfLines={0}
-                            adjustsFontSizeToFit
-                            minimumFontScale={0.5}
-                            allowFontScaling
                         >
                             {cellText}
                         </ThemedText>
-                    </View>
+                    )
                 ) : columnIndex === 2 ? (
                     <ThemedText
                         key={`col2-${rowIndex}`}
