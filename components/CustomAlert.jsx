@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
   textStyle: {
     color: '#fff',
     fontWeight: 'bold',
-      textAlign: 'center'
+      textAlign: 'justify'
   },
 });
 

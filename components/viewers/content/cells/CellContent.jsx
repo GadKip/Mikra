@@ -36,12 +36,12 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         }
         if (columnIndex === 2) {
             if (rowIndex === 0) {
-                return "text-4xl"
+                return "text-4xl leading-[1.5]"
             }
-            return "text-3xl"
+            return "text-2xl leading-[1.5] tracking-wide"
         }
         if (columnIndex === 3) {
-            return isCol2Empty ? "text-2xl" : "text-3xl"
+            return isCol2Empty ? "text-xl" : "text-2xl"
         }
         return "text-xl"
     })();
@@ -77,7 +77,6 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                 style={{
                     flexWrap: 'nowrap',
                     whiteSpace: 'nowrap',  // Prevents text wrapping
-                    textAlign: 'right'
                 }}
             >
                 {text}
@@ -87,13 +86,20 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     const renderTextWithParentheses = (text) => {
         const parts = text.split(/(\([^)]+\))/);
         return (
-            <>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                 {parts.map((part, index) => {
                     if (part.match(/^\([^)]+\)$/)) {
                         return (
                             <ThemedText 
                                 key={index} 
-                                className={`font-david ${columnClasses}`}
+                                className={`font-guttman ${
+                                    columnIndex === 3 ? columnClasses :
+                                    'text-xl'
+                                }`}
+                                style={{
+                                    textAlign: 'justify',
+                                    writingDirection: 'rtl',
+                                }}
                             >
                                 {part}
                             </ThemedText>
@@ -103,12 +109,20 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                         <ThemedText 
                             key={index} 
                             className={`${fontClass} ${columnClasses}`}
+                            style={{
+                                textAlign: 'justify',
+                                writingDirection: 'rtl',
+                                flexWrap: 'wrap',
+                                flexShrink: 1,
+                                textAlignLast: 'right',
+                                paddingTop: 4,
+                            }}
                         >
                             {part}
                         </ThemedText>
                     );
                 })}
-            </>
+            </View>
         );
     };
 
@@ -140,62 +154,38 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                                 flexGrow: 0,
                                 minWidth: 'fit-content', // Ensure content width
                                 width: 'auto',
-                                textAlign: 'right',
+                                textAlign: 'justify',
                                 flexBasis: 'auto' // Allow content to determine width
                             }}
                         >
                             {cellText}
                         </ThemedText>
                     )
-                ) : columnIndex === 2 ? (
-                    <ThemedText
-                        key={`col2-${rowIndex}`}
-                        className={`
-                            ${baseClasses}
-                            ${columnClasses}
-                            ${styleClasses}
-                        `.trim()}
-                        style={[
-                            {
+                ) : (
+                    columnIndex === 0 ? (
+                        renderCol1Content(cellText)
+                    ) : (
+                        <ThemedText 
+                            className={`
+                                ${fontClass}
+                                ${baseClasses}
+                                ${columnClasses}
+                                ${styleClasses}
+                            `.trim()}
+                            style={{ 
                                 textAlign: 'justify',
                                 writingDirection: 'rtl',
                                 flexWrap: 'wrap',
                                 flexShrink: 1,
                                 textAlignLast: 'right',
                                 paddingTop: 4,
-                                fontFamily: 'GuttmanKeren'
+                            }}
+                        >
+                            {cellText.includes('(') ? 
+                                renderTextWithParentheses(cellText) : 
+                                cellText
                             }
-                        ]}
-                    >
-                        {cellText}
-                    </ThemedText>
-                )
-                : (
-                    columnIndex === 0 ? (
-                        renderCol1Content(cellText)
-                    ) : (
-                        columnIndex === 3 && !isCol2Empty ? (
-                            renderTextWithParentheses(cellText)
-                        ) : (
-                            <ThemedText 
-                                className={`
-                                    ${fontClass}
-                                    ${baseClasses}
-                                    ${columnClasses}
-                                    ${styleClasses}
-                                `.trim()}
-                                style={{ 
-                                    textAlign: 'justify',
-                                    writingDirection: 'rtl',
-                                    flexWrap: 'wrap',
-                                    flexShrink: 1,
-                                    textAlignLast: 'right',
-                                    paddingTop: 4,
-                                }}
-                            >
-                                {cellText}
-                            </ThemedText>
-                        )
+                        </ThemedText>
                     )
                 )
             )}

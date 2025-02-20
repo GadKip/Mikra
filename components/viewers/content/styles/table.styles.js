@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native';
 
 const baseStyles = {
     cellText: {
-        textAlign: 'right',
+        textAlign: 'justify',
         textAlignVertical: 'top',
         flexWrap: 'wrap',
         fontFamily: 'EzraSILSR'
@@ -23,25 +23,28 @@ export const styles = StyleSheet.create({
     cell: {
         alignItems: 'stretch',
         textAlignVertical: 'top',
-        padding: 8
     },
 
     firstColumn: {
         minWidth: 40, // Set absolute minimum width in pixels
         flex: 1,
         flexShrink: 0, // Prevent shrinking smaller than minWidth
+        paddingRight: 2
     },
     secondColumn: {
         minWidth: 30, // Set absolute minimum width in pixels
         flex: 1,
         flexShrink: 0, // Prevent shrinking smaller than minWidth
+        paddingRight: 2
     },
     thirdColumn: {
         flex: 4,
         minWidth: '40%',
+        padding: 5
     },
     fourthColumn: {
         flex: 4,
         minWidth: '40%',
+        padding: 8
     }
 });

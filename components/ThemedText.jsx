@@ -9,7 +9,9 @@ const ThemedText = ({ style, ...props }) => {
     <Text // Corrected: Rendering the standard Text component
       {...props}
       style={[
-        { color: colors.text }, // Apply theme-aware text color
+        { color: colors.text,
+          textAlign: 'justify'
+         }, // Apply theme-aware text color
         style,                     // Allow overriding with specific styles
       ]}
     />
