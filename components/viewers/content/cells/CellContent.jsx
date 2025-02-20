@@ -86,7 +86,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     const renderTextWithParentheses = (text) => {
         const parts = text.split(/(\([^)]+\))/);
         return (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+            <>
                 {parts.map((part, index) => {
                     if (part.match(/^\([^)]+\)$/)) {
                         return (
@@ -94,12 +94,8 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                                 key={index} 
                                 className={`font-guttman ${
                                     columnIndex === 3 ? columnClasses :
-                                    'text-xl'
+                                    'text-xl' // Smaller text for parentheses in col 3
                                 }`}
-                                style={{
-                                    textAlign: 'justify',
-                                    writingDirection: 'rtl',
-                                }}
                             >
                                 {part}
                             </ThemedText>
@@ -109,20 +105,19 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                         <ThemedText 
                             key={index} 
                             className={`${fontClass} ${columnClasses}`}
-                            style={{
+                            style={columnIndex === 2 ? {
                                 textAlign: 'justify',
                                 writingDirection: 'rtl',
                                 flexWrap: 'wrap',
                                 flexShrink: 1,
-                                textAlignLast: 'right',
                                 paddingTop: 4,
-                            }}
+                            } : {}}
                         >
                             {part}
                         </ThemedText>
                     );
                 })}
-            </View>
+            </>
         );
     };
 
@@ -161,31 +156,52 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                             {cellText}
                         </ThemedText>
                     )
-                ) : (
+                ) : columnIndex === 2 ? (
+                    <ThemedText
+                        key={`col2-${rowIndex}`}
+                        className={`
+                            ${baseClasses}
+                            ${columnClasses}
+                            ${styleClasses}
+                        `.trim()}
+                        style={{ 
+                            textAlign: 'justify',
+                            writingDirection: 'rtl',
+                            flexWrap: 'wrap',
+                            flexShrink: 1,
+                            textAlignLast: 'right',
+                            paddingTop: 4,
+                        }}                
+                    >
+                        {renderTextWithParentheses(cellText)}
+                    </ThemedText>
+                )
+                : (
                     columnIndex === 0 ? (
                         renderCol1Content(cellText)
                     ) : (
-                        <ThemedText 
-                            className={`
-                                ${fontClass}
-                                ${baseClasses}
-                                ${columnClasses}
-                                ${styleClasses}
-                            `.trim()}
-                            style={{ 
-                                textAlign: 'justify',
-                                writingDirection: 'rtl',
-                                flexWrap: 'wrap',
-                                flexShrink: 1,
-                                textAlignLast: 'right',
-                                paddingTop: 4,
-                            }}
-                        >
-                            {cellText.includes('(') ? 
-                                renderTextWithParentheses(cellText) : 
-                                cellText
-                            }
-                        </ThemedText>
+                        columnIndex === 3 && !isCol2Empty ? (
+                            renderTextWithParentheses(cellText)
+                        ) : (
+                            <ThemedText 
+                                className={`
+                                    ${fontClass}
+                                    ${baseClasses}
+                                    ${columnClasses}
+                                    ${styleClasses}
+                                `.trim()}
+                                style={{ 
+                                    textAlign: 'justify',
+                                    writingDirection: 'rtl',
+                                    flexWrap: 'wrap',
+                                    flexShrink: 1,
+                                    textAlignLast: 'right',
+                                    paddingTop: 4,
+                                }}
+                            >
+                                {cellText}
+                            </ThemedText>
+                        )
                     )
                 )
             )}
