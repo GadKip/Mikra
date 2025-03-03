@@ -23,11 +23,25 @@ export default function CategoriesLayout() {
     <Stack screenOptions={{
       ...screenOptions,
       headerTitleAlign: 'center'}}>
+      <Stack.Screen 
+        name="about" 
+        options={{ 
+          title: "אודות",
+          headerTitleAlign: 'center'
+        }} 
+      />
+      <Stack.Screen 
+        name="settings" 
+        options={{ 
+          title: "הגדרות",
+          headerTitleAlign: 'center'
+        }} 
+      />
       {/* Main categories list */}
       <Stack.Screen 
         name="index" 
         options={{ 
-          title: 'תנ"ך',
+          title: 'ספרים',
           headerTitleAlign: 'center',
           headerShown: false
         }} 

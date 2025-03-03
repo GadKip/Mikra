@@ -1,9 +1,8 @@
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import { View, ScrollView, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
 import ThemedText from '../../components/ThemedText';
 
-// Main categories view
 export default function CategoryList() {
   const router = useRouter();
   const { colors } = useTheme();
@@ -11,6 +10,7 @@ export default function CategoryList() {
 
   return (
     <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
+      {/* Main categories */}
       {categories.map((category) => (
         <Pressable
           key={category}
@@ -19,15 +19,46 @@ export default function CategoryList() {
           style={{ backgroundColor: colors.card }}
         >
           <ThemedText 
-            className="text-2xl font-ezra text-center"  // Add font-ezra here
-            style={{
-              textAlign: 'center'
-            }}
+            className="text-2xl font-ezra text-center"
+            style={{ textAlign: 'center' }}
           >
             {category}
           </ThemedText>
         </Pressable>
       ))}
+
+      {/* Divider */}
+      <View 
+        className="my-4 h-[1px]" 
+        style={{ backgroundColor: colors.border }}
+      />
+
+      {/* About and Settings */}
+      <Pressable
+        onPress={() => router.push('/(categories)/about')}
+        className="mb-6 rounded-lg p-6"
+        style={{ backgroundColor: colors.card }}
+      >
+        <ThemedText 
+          className="text-2xl font-ezra text-center"
+          style={{ textAlign: 'center' }}
+        >
+          אודות
+        </ThemedText>
+      </Pressable>
+
+      <Pressable
+        onPress={() => router.push('/(categories)/settings')}
+        className="mb-6 rounded-lg p-6"
+        style={{ backgroundColor: colors.card }}
+      >
+        <ThemedText 
+          className="text-2xl font-ezra text-center"
+          style={{ textAlign: 'center' }}
+        >
+          הגדרות
+        </ThemedText>
+      </Pressable>
     </ScrollView>
   );
 }
