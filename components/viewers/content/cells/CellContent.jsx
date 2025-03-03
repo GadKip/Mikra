@@ -86,38 +86,35 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     const renderTextWithParentheses = (text) => {
         const parts = text.split(/(\([^)]+\))/);
         return (
-            <>
+            <ThemedText 
+                className={`${fontClass} ${columnClasses}`}
+                style={{ 
+                    textAlign: 'justify',
+                    writingDirection: 'rtl',
+                    flexWrap: 'wrap',
+                    flexShrink: 1,
+                    textAlignLast: 'right',
+                    paddingTop: 4,
+                }}
+            >
                 {parts.map((part, index) => {
                     if (part.match(/^\([^)]+\)$/)) {
                         return (
-                            <ThemedText 
+                            <Text 
                                 key={index} 
-                                className={`font-guttman ${
-                                    columnIndex === 3 ? columnClasses :
-                                    'text-xl' // Smaller text for parentheses in col 3
-                                }`}
+                                className="font-david text-xl"  // Changed from font-guttman and made smaller
+                                style={{ 
+                                    display: 'inline',  // Prevent line break
+                                    color: colors.text
+                                }}
                             >
                                 {part}
-                            </ThemedText>
+                            </Text>
                         );
                     }
-                    return (
-                        <ThemedText 
-                            key={index} 
-                            className={`${fontClass} ${columnClasses}`}
-                            style={columnIndex === 2 ? {
-                                textAlign: 'justify',
-                                writingDirection: 'rtl',
-                                flexWrap: 'wrap',
-                                flexShrink: 1,
-                                paddingTop: 4,
-                            } : {}}
-                        >
-                            {part}
-                        </ThemedText>
-                    );
+                    return part;  // Return plain text for non-parenthesized parts
                 })}
-            </>
+            </ThemedText>
         );
     };
 
@@ -171,9 +168,26 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                             flexShrink: 1,
                             textAlignLast: 'right',
                             paddingTop: 4,
+                            fontFamily: 'GuttmanKeren'
                         }}                
                     >
-                        {renderTextWithParentheses(cellText)}
+                        {cellText.split(/(\([^)]+\))/).map((part, index) => {
+                            if (part.match(/^\([^)]+\)$/)) {
+                                return (
+                                    <Text 
+                                        key={index}
+                                        style={{ 
+                                            fontSize: 16, // Smaller text for parentheses
+                                            fontFamily: 'GuttmanKeren',
+                                            color: colors.text
+                                        }}
+                                    >
+                                        {part}
+                                    </Text>
+                                );
+                            }
+                            return part;
+                        })}
                     </ThemedText>
                 )
                 : (
