@@ -7,6 +7,18 @@ const guttmanFont = {
     fontFamily: 'GuttmanKeren'
 };
 
+const processText = (text) => {
+    if (!text) return text;
+    // Match different types of Hebrew hyphens/dashes followed by spaces
+    // ־ (Hebrew hyphen/maqaf U+05BE)
+    // ‐ (Regular hyphen U+2010)
+    // - (Regular minus/hyphen U+002D)
+    // ― (Horizontal bar U+2015)
+    // – (En dash U+2013)
+    // — (Em dash U+2014)
+    return text.replace(/[־‐\-―–—]\s+/g, '־');
+};
+
 export default function CellContent({ content, styles = {}, columnIndex, rowData, rowIndex }) {
     const { colors } = useTheme();
     const isCol2Empty = !rowData.row[1]?.cell?.trim();
@@ -38,10 +50,10 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
             if (rowIndex === 0) {
                 return "text-4xl leading-[1.5]"
             }
-            return "text-2xl leading-[1.5] tracking-wide"
+            return "text-[1.4rem] leading-[1.5] tracking-wide"
         }
         if (columnIndex === 3) {
-            return isCol2Empty ? "text-xl" : "text-2xl"
+            return isCol2Empty ? "text-[1.25rem] align-middle" : "text-2xl"
         }
         return "text-xl"
     })();
@@ -124,7 +136,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                 return "font-guttman";
             }
             if (columnIndex === 3) {
-                return isCol2Empty ? "font-guttman" : "font-ezra";
+                return isCol2Empty ? "font-guttman " : "font-ezra";
             }
             return "font-ezra";
         })();        
@@ -171,7 +183,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                             fontFamily: 'GuttmanKeren'
                         }}                
                     >
-                        {cellText.split(/(\([^)]+\))/).map((part, index) => {
+                        {processText(cellText).split(/(\([^)]+\))/).map((part, index) => {
                             if (part.match(/^\([^)]+\)$/)) {
                                 return (
                                     <Text 
