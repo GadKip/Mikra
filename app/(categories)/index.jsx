@@ -18,7 +18,12 @@ export default function CategoryList() {
           className="mb-6 rounded-lg p-6"
           style={{ backgroundColor: colors.card }}
         >
-          <ThemedText className="text-2xl font-bold text-center">
+          <ThemedText 
+            className="text-2xl font-ezra text-center"  // Add font-ezra here
+            style={{
+              textAlign: 'center'
+            }}
+          >
             {category}
           </ThemedText>
         </Pressable>

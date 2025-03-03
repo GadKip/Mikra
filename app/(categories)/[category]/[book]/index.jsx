@@ -101,13 +101,18 @@ export default function EpisodeList() {
             className="mb-6 rounded-lg p-6"
             style={{ backgroundColor: colors.card }}
           >
-            <ThemedText className="text-2xl text-center">
+            <ThemedText 
+              className="text-2xl font-ezra text-center"
+              style={{
+                textAlign: 'center'
+              }}
+            >
               {episode.episode}
             </ThemedText>
           </Pressable>
         ))
       ) : (
-        <ThemedText className="text-xl text-center mt-4">
+        <ThemedText className="text-xl font-ezra text-center mt-4">
           אין פרקים זמינים
         </ThemedText>
       )}

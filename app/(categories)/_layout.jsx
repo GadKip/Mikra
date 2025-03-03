@@ -11,6 +11,7 @@ export default function CategoriesLayout() {
     },
     headerTitleStyle: {
       color: colors.text,
+      fontFamily: 'GuttmanKeren'  // Add this line
     },
     headerTintColor: colors.text,
     contentStyle: {
@@ -19,13 +20,16 @@ export default function CategoriesLayout() {
   };
 
   return (
-    <Stack screenOptions={screenOptions}>
+    <Stack screenOptions={{
+      ...screenOptions,
+      headerTitleAlign: 'center'}}>
       {/* Main categories list */}
       <Stack.Screen 
         name="index" 
         options={{ 
-          title: "ספרים",
+          title: 'תנ"ך',
           headerTitleAlign: 'center',
+          headerShown: false
         }} 
       />
 
