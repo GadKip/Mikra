@@ -11,13 +11,13 @@ export default function About() {
       style={{ backgroundColor: colors.background }}
     >
       <View className="rounded-lg p-6" style={{ backgroundColor: colors.card }}>
-        <ThemedText className="text-2xl font-ezra text-center mb-4">
+        <ThemedText style={{ fontSize: 24, textAlign: 'center', marginBottom: 16 }} className="font-ezra">
           אודות האפליקציה
         </ThemedText>
-        <ThemedText className="text-lg font-ezra text-right mb-2">
+        <ThemedText style={{ fontSize: 18, textAlign: 'right', marginBottom: 8 }} className="font-ezra">
           מקרא מבואר - המקרא לצד פירושו בשפה עכשווית
         </ThemedText>
-        <ThemedText className="text-lg font-ezra text-right">
+        <ThemedText style={{ fontSize: 18, textAlign: 'right' }} className="font-ezra">
           מאת דוד כוכב
         </ThemedText>
       </View>

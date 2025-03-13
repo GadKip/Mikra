@@ -9,18 +9,15 @@ const guttmanFont = {
 
 const processText = (text) => {
     if (!text) return text;
-    // Match different types of Hebrew hyphens/dashes followed by spaces
-    // ־ (Hebrew hyphen/maqaf U+05BE)
-    // ‐ (Regular hyphen U+2010)
-    // - (Regular minus/hyphen U+002D)
-    // ― (Horizontal bar U+2015)
-    // – (En dash U+2013)
-    // — (Em dash U+2014)
-    return text.replace(/[־‐\-―–—]\s+/g, '־');
+    // First replace space+hyphen
+    let processed = text.replace(/\s+[־‐\-―–—]/g, '־');
+    // Then replace hyphen+space
+    processed = processed.replace(/[־‐\-―–—]\s+/g, '־');
+    return processed;
 };
 
 export default function CellContent({ content, styles = {}, columnIndex, rowData, rowIndex }) {
-    const { colors } = useTheme();
+    const { colors, fontSize } = useTheme();
     const isCol2Empty = !rowData.row[1]?.cell?.trim();
     
     // If content is an object with both cell and image properties
@@ -30,52 +27,67 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     // Base classes for all cells
     const baseClasses = "flex-1";
     
-    // Dynamic classes based on column index
+    // Updated column classes with dynamic fontSize
     const columnClasses = (() => {
         if (columnIndex === 0) {
-            // Check for chapter numbers first
+            // Column 0 (first column) - fixed sizes with Ezra font
             if (isHebrewChapter(content?.cell?.trim())) {
-                return "text-2xl"; // Size for chapter numbers
+                return { 
+                    fontSize: 24, 
+                    fontWeight: 'bold',
+                    fontFamily: 'EzraSILSR'  // Add Ezra font
+                };
             }
-            // Then check for asterisk
             if (content?.cell?.trim() === '*') {
-                return "font-bold text-2xl";
+                return { fontSize: 24, fontWeight: 'bold' }; // Fixed size for asterisk
             }
-            return styles.bold ? "font-bold" : "text-xs";
+            return { fontSize: 12 }; // Fixed size for other content in column 0
         }
         if (columnIndex === 1) {
-            return "text-xs"
+            // Column 1 - fixed size
+            return { fontSize: 12 };
         }
         if (columnIndex === 2) {
+            // Column 2 - scalable sizes
             if (rowIndex === 0) {
-                return "text-4xl leading-[1.5]"
+                return { fontSize: 36 * fontSize, lineHeight: 36 * fontSize * 1.5 };
             }
-            return "text-[1.4rem] leading-[1.5] tracking-wide"
+            return { 
+                fontSize: 22.4 * fontSize, 
+                lineHeight: 22.4 * fontSize * 1.5, 
+                letterSpacing: 0.5 
+            };
         }
         if (columnIndex === 3) {
-            return isCol2Empty ? "text-[1.25rem] align-middle" : "text-2xl"
+            // Column 3 - scalable sizes
+            return isCol2Empty ? 
+                { fontSize: 20 * fontSize, lineHeight: 20 * fontSize * 1.5 } :
+                { fontSize: 24 * fontSize, lineHeight: 24 * fontSize * 1.5 };
         }
-        return "text-xl"
+        return { fontSize: 20 * fontSize, lineHeight: 20 * fontSize * 1.5 };
     })();
 
-    // Text style classes
-    const styleClasses = [
-        styles.bold && "font-bold",
-        styles.italic && "italic",
-        styles.underline && "underline",
-        styles.isHeading1 && "text-3xl",
-        styles.isHeading2 && "text-2xl",
-    ].filter(Boolean).join(" ");
+    // Updated style classes with dynamic fontSize
+    const styleClasses = {
+        fontSize: columnClasses.fontSize,
+        fontWeight: styles.bold ? 'bold' : 'normal',
+        fontStyle: styles.italic ? 'italic' : 'normal',
+        textDecorationLine: styles.underline ? 'underline' : 'none',
+        ...(styles.isHeading1 && { fontSize: 30 * fontSize }), // was text-3xl
+        ...(styles.isHeading2 && { fontSize: 24 * fontSize }), // was text-2xl
+        ...columnClasses
+    };
 
     const renderCol1Content = (text) => {
         const trimmedText = text.trim();
         if (isHebrewChapter(trimmedText) && trimmedText === text.trim()) {
             return (
                 <ThemedText
-                    className={`text-2xl font-ezra`}
+                    className="font-ezra"  // This adds the Ezra font
                     style={{
+                        fontSize: 24, // Fixed size for Hebrew chapters
                         flexWrap: 'nowrap',
-                        whiteSpace: 'nowrap'  // Prevents text wrapping
+                        whiteSpace: 'nowrap'
                     }}
                 >
                     {trimmedText}
@@ -85,22 +97,25 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         
         return (
             <ThemedText 
-                className="font-ezra text-xs"
+                className="font-ezra"
                 style={{
+                    fontSize: 12, // Fixed size for other content
                     flexWrap: 'nowrap',
-                    whiteSpace: 'nowrap',  // Prevents text wrapping
+                    whiteSpace: 'nowrap',
                 }}
             >
                 {text}
             </ThemedText>
         );
     };
+
     const renderTextWithParentheses = (text) => {
         const parts = text.split(/(\([^)]+\))/);
         return (
             <ThemedText 
-                className={`${fontClass} ${columnClasses}`}
+                className={fontClass}
                 style={{ 
+                    ...styleClasses,
                     textAlign: 'justify',
                     writingDirection: 'rtl',
                     flexWrap: 'wrap',
@@ -114,9 +129,10 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                         return (
                             <Text 
                                 key={index} 
-                                className="font-david text-xl"  // Changed from font-guttman and made smaller
+                                className="font-david"
                                 style={{ 
-                                    display: 'inline',  // Prevent line break
+                                    fontSize: 20 * fontSize, // was text-xl
+                                    display: 'inline',
                                     color: colors.text
                                 }}
                             >
@@ -124,7 +140,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                             </Text>
                         );
                     }
-                    return part;  // Return plain text for non-parenthesized parts
+                    return part;
                 })}
             </ThemedText>
         );
@@ -145,15 +161,16 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
 
     return (
         <View style={styles.cellContainer}>
-            {/* Render text content if exists */}
             {cellText && (
-                columnIndex <= 1 ? ( // For columns 0 and 1
+                columnIndex <= 1 ? (
+                    // Columns 0 and 1 - no processing needed
                     columnIndex === 0 && isHebrewChapter(cellText.trim()) ? (
                         renderCol1Content(cellText)
                     ) : (
                         <ThemedText 
-                            className={`${fontClass} ${columnClasses}`}
+                            className={`${fontClass}`}
                             style={{ 
+                                ...columnClasses,
                                 flexShrink: 0,
                                 flexGrow: 0,
                                 minWidth: 'fit-content', // Ensure content width
@@ -166,72 +183,49 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                         </ThemedText>
                     )
                 ) : columnIndex === 2 ? (
+                    // Column 2 - Guttman font
                     <ThemedText
-                        key={`col2-${rowIndex}`}
-                        className={`
-                            ${baseClasses}
-                            ${columnClasses}
-                            ${styleClasses}
-                        `.trim()}
+                        className="font-guttman"
                         style={{ 
+                            ...columnClasses,
                             textAlign: 'justify',
                             writingDirection: 'rtl',
                             flexWrap: 'wrap',
-                            flexShrink: 1,
-                            textAlignLast: 'right',
-                            paddingTop: 4,
-                            fontFamily: 'GuttmanKeren'
+                            paddingTop: 4
                         }}                
                     >
-                        {processText(cellText).split(/(\([^)]+\))/).map((part, index) => {
-                            if (part.match(/^\([^)]+\)$/)) {
-                                return (
-                                    <Text 
-                                        key={index}
-                                        style={{ 
-                                            fontSize: 16, // Smaller text for parentheses
-                                            fontFamily: 'GuttmanKeren',
-                                            color: colors.text
-                                        }}
-                                    >
-                                        {part}
-                                    </Text>
-                                );
-                            }
-                            return part;
-                        })}
+                        {processText(cellText)}
+                    </ThemedText>
+                ) : columnIndex === 3 ? (
+                    // Column 3 - Guttman or Ezra font based on isCol2Empty
+                    <ThemedText 
+                        className={isCol2Empty ? "font-guttman" : "font-ezra"}
+                        style={{ 
+                            ...columnClasses,
+                            textAlign: 'justify',
+                            writingDirection: 'rtl',
+                            flexWrap: 'wrap',
+                            paddingTop: 4
+                        }}
+                    >
+                        {processText(cellText)}
+                    </ThemedText>
+                ) : (
+                    // Column 4 and beyond - Ezra font
+                    <ThemedText 
+                        className="font-ezra"
+                        style={{ 
+                            ...columnClasses,
+                            textAlign: 'justify',
+                            writingDirection: 'rtl',
+                            flexWrap: 'wrap',
+                            paddingTop: 4
+                        }}
+                    >
+                        {processText(cellText)}
                     </ThemedText>
                 )
-                : (
-                    columnIndex === 0 ? (
-                        renderCol1Content(cellText)
-                    ) : (
-                        columnIndex === 3 && !isCol2Empty ? (
-                            renderTextWithParentheses(cellText)
-                        ) : (
-                            <ThemedText 
-                                className={`
-                                    ${fontClass}
-                                    ${baseClasses}
-                                    ${columnClasses}
-                                    ${styleClasses}
-                                `.trim()}
-                                style={{ 
-                                    textAlign: 'justify',
-                                    writingDirection: 'rtl',
-                                    flexWrap: 'wrap',
-                                    flexShrink: 1,
-                                    textAlignLast: 'right',
-                                    paddingTop: 4,
-                                }}
-                            >
-                                {cellText}
-                            </ThemedText>
-                        )
-                    )
-                )
             )}
-
             {/* Render image if exists */}
             {cellImage && (
                 <Image

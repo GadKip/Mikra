@@ -42,16 +42,16 @@ export default function SplashScreen() {
         backgroundColor: colors.background
       }}
     >
-      <ThemedText className="text-3xl mb-4 text-center">
+      <ThemedText style={{ fontSize: 30, marginBottom: 16, textAlign: 'center' }}>
         מקרא מבואר
       </ThemedText>
-      <ThemedText className="text-lg mb-2 text-center">
+      <ThemedText style={{ fontSize: 18, marginBottom: 8, textAlign: 'center' }}>
         המקרא לצד פירושו בשפה עכשווית
       </ThemedText>
-      <ThemedText className="text-base mb-2 text-center" >
+      <ThemedText style={{ fontSize: 16, marginBottom: 8, textAlign: 'center' }}>
         מאת דוד כוכב
       </ThemedText>
-      <ThemedText className="text-sm text-center opacity-75">
+      <ThemedText style={{ fontSize: 14, textAlign: 'center', opacity: 0.75 }}>
         גרסה {version}
       </ThemedText>
     </Animated.View>

@@ -12,7 +12,7 @@ export default function Loader({ isLoading }) {
   return (
     <View className="absolute inset-0 z-50 flex-1 items-center justify-center bg-black/50">
       <View className="rounded-lg p-4" style={{ backgroundColor: colors.card }}>
-        <ThemedText className="text-lg">
+        <ThemedText style={{ fontSize: 18 }}>
           טוען...
         </ThemedText>
       </View>

@@ -1,8 +1,7 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 
 const ThemeContext = createContext();
 
-// context/ThemeContext.js
 export const themes = {
   light: {
     text: '#000000',
@@ -26,16 +25,29 @@ export const themes = {
 
 export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState('light');
+  const [fontSize, setFontSize] = useState(1);
 
-  const toggleTheme = () => {
-    setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
-  };
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, colors: themes[theme] }}>
+    <ThemeContext.Provider value={{ 
+      theme, 
+      colors: themes[theme], 
+      toggleTheme, 
+      fontSize,
+      setFontSize
+    }}>
       {children}
     </ThemeContext.Provider>
   );
 }
 
-export const useTheme = () => useContext(ThemeContext);
+export function useTheme() {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error('useTheme must be used within a ThemeProvider');
+  }
+  return context;
+}

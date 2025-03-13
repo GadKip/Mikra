@@ -70,13 +70,13 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-    textAlign:'center'
+    textAlign: 'center'
   },
   modalMessage: {
-      fontSize: 16,
-      marginBottom: 20,
-      textAlign:'center'
-    },
+    fontSize: 16,
+    marginBottom: 20,
+    textAlign: 'center'
+  },
   buttonContainer: {
     flexDirection: 'row',
       justifyContent: 'space-around',

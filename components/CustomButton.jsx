@@ -12,8 +12,8 @@ const CustomButton = ({title, handlePress, containerStyles, textStyles, isLoadin
       style={{ pointerEvents: isLoading ? 'none' : 'auto' }}
     > 
       <ThemedText 
-      className={`text-primary text-2xl ${textStyles}`}
-      dir="rtl">
+        style={[{ fontSize: 24 }, textStyles]}
+        dir="rtl">
         {title}
       </ThemedText>
     </TouchableOpacity>
