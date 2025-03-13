@@ -40,7 +40,7 @@ export const Table = ({ data, isLandscape }) => {
                                     colIndex === 1 && styles.secondColumn,
                                     colIndex === 2 && styles.thirdColumn,
                                     colIndex === 3 && [styles.fourthColumn, {
-                                        backgroundColor: colors.card,
+                                        backgroundColor: colors.highlight,
                                     }],
                                 ]}
                             >

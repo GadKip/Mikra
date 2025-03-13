@@ -10,9 +10,9 @@ const guttmanFont = {
 const processText = (text) => {
     if (!text) return text;
     // First replace space+hyphen
-    let processed = text.replace(/\s+[־‐\-―–—]/g, '־');
+    let processed = text.replace(/\s+־/g, '־');
     // Then replace hyphen+space
-    processed = processed.replace(/[־‐\-―–—]\s+/g, '־');
+    processed = processed.replace(/־\s+/g, '־');
     return processed;
 };
 

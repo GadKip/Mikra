@@ -6,10 +6,13 @@ export default function Settings() {
   const { colors, fontSize, setFontSize } = useTheme();
   
   const fontSizes = [
+    { label: 'קטנטן', value: 0.4 },
+    { label: 'קטן מאוד', value: 0.6 },
     { label: 'קטן', value: 0.8 },
-    { label: 'רגיל', value: 1 },
+    { label: 'בינוני', value: 1 },
     { label: 'גדול', value: 1.2 },
-    { label: 'גדול מאוד', value: 1.4 }
+    { label: 'גדול מאוד', value: 1.4 },
+    { label: 'ענק', value: 1.6 }
   ];
 
   return (
@@ -26,20 +29,24 @@ export default function Settings() {
           <ThemedText style={{ fontSize: 20, marginBottom: 8, textAlign: 'right' }} className="font-ezra">
             גודל טקסט
           </ThemedText>
-          <View className="flex-row justify-end gap-4 mt-2">
+          <View className="flex-column items-center gap-4 mt-2">
             {fontSizes.map((size) => (
               <TouchableOpacity
                 key={size.value}
                 onPress={() => setFontSize(size.value)}
-                className={`px-4 py-2 rounded-lg ${
-                  fontSize === size.value ? 'bg-primary' : 'bg-secondary'
-                }`}
+                style={{ 
+                  padding: 8,
+                  borderRadius: 8,
+                  backgroundColor: fontSize === size.value ? colors.primary : colors.secondary,
+                  width: '80%',  // Add fixed width
+                }}
               >
                 <ThemedText 
                   className="font-ezra"
                   style={{ 
-                    color: fontSize === size.value ? '#fff' : colors.text,
-                    fontSize: 16 * size.value  // Scale the button text too
+                    color: fontSize === size.value ? colors.text : colors.text,
+                    fontSize: 20 * size.value,
+                    textAlign: 'center'  // Center the text
                   }}
                 >
                   {size.label}

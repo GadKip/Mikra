@@ -6,19 +6,21 @@ export const themes = {
   light: {
     text: '#000000',
     background: '#FFFFFF',
-    primary: '#2196F3',
-    secondary: '#646464',
+    primary: '#8cc0ff',
+    secondary: '#aba9a9',
     card: '#F5F5F5',
     border: '#E0E0E0',
+    highlight: '#e4edf7',
     statusBar: 'dark-content'
   },
   dark: {
     text: '#FFFFFF',
     background: '#121212',
-    primary: '#1976D2',
+    primary: '#8cc0ff',
     secondary: '#424242',
     card: '#1E1E1E',
     border: '#333333',
+    highlight: '#001024',
     statusBar: 'light-content'
   }
 };
