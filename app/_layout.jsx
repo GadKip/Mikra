@@ -12,7 +12,7 @@ import * as ScreenOrientation from 'expo-screen-orientation'; // Add this import
 import ThemedText from '../components/ThemedText';
 
 function AppLayout() {
-  const { colors, theme, toggleTheme } = useTheme();
+  const { colors, theme, toggleTheme, fontSize, setFontSize } = useTheme();
   const [error, setError] = useState(null);
   const [fontsLoaded] = useFonts(Platform.select({
     web: {}, // Empty object for web - fonts will be loaded via app.json
@@ -77,10 +77,18 @@ function AppLayout() {
         />
         <TouchableOpacity 
           onPress={toggleTheme}
-          className="absolute top-12 z-50 p-2 rounded-full"
+          accessibilityHint={`שינוי ערכת נושא ל${theme === 'light' ? 'כהה' : 'בהירה'}`}
+          accessibilityLabel={`שינוי ערכת נושא ל${theme === 'light' ? 'כהה' : 'בהירה'}`}
           style={[
-            { backgroundColor: colors.card },
-            I18nManager.isRTL ? {marginStart: 4} : { marginRight: 4, right: 4 }
+            { 
+              position: 'absolute',
+              top: 12,
+              right: 4,
+              zIndex: 50,
+              backgroundColor: `${colors.card}99`, // Added 99 for 60% opacity
+              padding: 8,
+              borderRadius: 20
+            }
           ]}
         >
           <Ionicons 
@@ -90,7 +98,6 @@ function AppLayout() {
           />
         </TouchableOpacity>
         <Slot />
-        
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
