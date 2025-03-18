@@ -21,12 +21,12 @@ export default function Settings() {
       style={{ backgroundColor: colors.background }}
     >
       <View className="rounded-lg p-6" style={{ backgroundColor: colors.card }}>
-        <ThemedText style={{ fontSize: 24, textAlign: 'center', marginBottom: 16 }} className="font-ezra">
+        <ThemedText style={{ fontSize: 24, textAlign: 'center', marginBottom: 16 }} className="font-guttman">
           הגדרות
         </ThemedText>
         
         <View className="mt-4">
-          <ThemedText style={{ fontSize: 20, marginBottom: 8, textAlign: 'right' }} className="font-ezra">
+          <ThemedText style={{ fontSize: 20, marginBottom: 8, textAlign: 'right' }} className="font-guttman">
             גודל טקסט
           </ThemedText>
           <View className="flex-column items-center gap-4 mt-2">
@@ -42,7 +42,7 @@ export default function Settings() {
                 }}
               >
                 <ThemedText 
-                  className="font-ezra"
+                  className="font-guttman"
                   style={{ 
                     color: fontSize === size.value ? colors.text : colors.text,
                     fontSize: 20 * size.value,

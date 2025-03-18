@@ -5,7 +5,7 @@ const baseStyles = {
         textAlign: 'justify',
         textAlignVertical: 'top',
         flexWrap: 'wrap',
-        fontFamily: 'EzraSILSR'
+        fontFamily: 'GuttmanKeren',
     },
 };
 

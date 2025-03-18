@@ -11,7 +11,7 @@ export default function CategoriesLayout() {
     },
     headerTitleStyle: {
       color: colors.text,
-      fontFamily: 'GuttmanKeren'  // Add this line
+      fontFamily: 'EzraSILSR'
     },
     headerTintColor: colors.text,
     contentStyle: {

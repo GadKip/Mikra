@@ -15,7 +15,7 @@ export const TextContent = ({ data }) => {
     
     return (
         <ThemedText 
-            className="font-ezra"
+            className="font-guttman"
             style={{
                 textAlign: 'center',
                 marginVertical: 16,

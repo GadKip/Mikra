@@ -3,8 +3,8 @@ import { useTheme } from '../../../../context/ThemeContext';
 import { isHebrewChapter } from '../../../../utils/hebrewChapters';
 import ThemedText from '../../../ThemedText';
 
-const guttmanFont = {
-    fontFamily: 'GuttmanKeren'
+const ezraFont = {
+    fontFamily: 'EzraSILSR'
 };
 
 const processText = (text) => {
@@ -30,12 +30,12 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     // Updated column classes with dynamic fontSize
     const columnClasses = (() => {
         if (columnIndex === 0) {
-            // Column 0 (first column) - fixed sizes with Ezra font
+            // Column 0 (first column) - fixed sizes with Guttman font
             if (isHebrewChapter(content?.cell?.trim())) {
                 return { 
                     fontSize: 24, 
                     fontWeight: 'bold',
-                    fontFamily: 'EzraSILSR'  // Add Ezra font
+                    fontFamily: 'GuttmanKeren'  // Add Guttman font
                 };
             }
             if (content?.cell?.trim() === '*') {
@@ -83,7 +83,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         if (isHebrewChapter(trimmedText) && trimmedText === text.trim()) {
             return (
                 <ThemedText
-                    className="font-ezra"  // This adds the Ezra font
+                    className="font-guttman"  // This adds the Guttman font
                     style={{
                         fontSize: 24, // Fixed size for Hebrew chapters
                         flexWrap: 'nowrap',
@@ -97,7 +97,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         
         return (
             <ThemedText 
-                className="font-ezra"
+                className="font-guttman"
                 style={{
                     fontSize: 12, // Fixed size for other content
                     flexWrap: 'nowrap',
@@ -111,16 +111,23 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
 
     const renderTextWithParentheses = (text) => {
         const parts = text.split(/(\([^)]+\))/);
+        const useGuttmanFont = columnIndex === 3 && !isCol2Empty;
+        const fontFamily = useGuttmanFont ? 'GuttmanKeren' : 'EzraSILSR';
+        const fontClass = useGuttmanFont ? 'font-guttman' : 'font-ezra';
+
+        // If it's column 3, explicitly set font size based on isCol2Empty
+        const baseFontSize = columnIndex === 3 
+            ? (isCol2Empty ? 20 * fontSize : 24 * fontSize)
+            : columnClasses.fontSize;
+
         return (
             <ThemedText 
                 className={fontClass}
                 style={{ 
-                    ...styleClasses,
+                    ...columnClasses,
                     textAlign: 'justify',
                     writingDirection: 'rtl',
                     flexWrap: 'wrap',
-                    flexShrink: 1,
-                    textAlignLast: 'right',
                     paddingTop: 4,
                 }}
             >
@@ -128,12 +135,11 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                     if (part.match(/^\([^)]+\)$/)) {
                         return (
                             <Text 
-                                key={index} 
-                                className="font-david"
+                                key={index}
                                 style={{ 
-                                    fontSize: 20 * fontSize, // was text-xl
-                                    display: 'inline',
-                                    color: colors.text
+                                    fontSize: Math.floor(baseFontSize * 0.8),
+                                    color: colors.text,
+                                    fontFamily,
                                 }}
                             >
                                 {part}
@@ -149,12 +155,12 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     const fontClass = (() => {
         const selectedFont = (() => {
             if (columnIndex === 2) {
-                return "font-guttman";
+                return "font-ezra";
             }
             if (columnIndex === 3) {
-                return isCol2Empty ? "font-guttman " : "font-ezra";
+                return isCol2Empty ? "font-ezra " : "font-guttman";
             }
-            return "font-ezra";
+            return "font-guttman";
         })();        
         return selectedFont;
     })();
@@ -183,9 +189,9 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                         </ThemedText>
                     )
                 ) : columnIndex === 2 ? (
-                    // Column 2 - Guttman font
+                    // Column 2 - EZRA font
                     <ThemedText
-                        className="font-guttman"
+                        className="font-ezra"
                         style={{ 
                             ...columnClasses,
                             textAlign: 'justify',
@@ -196,24 +202,13 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                     >
                         {processText(cellText)}
                     </ThemedText>
-                ) : columnIndex === 3 ? (
-                    // Column 3 - Guttman or Ezra font based on isCol2Empty
-                    <ThemedText 
-                        className={isCol2Empty ? "font-guttman" : "font-ezra"}
-                        style={{ 
-                            ...columnClasses,
-                            textAlign: 'justify',
-                            writingDirection: 'rtl',
-                            flexWrap: 'wrap',
-                            paddingTop: 4
-                        }}
-                    >
-                        {processText(cellText)}
-                    </ThemedText>
+                ) : columnIndex === 3 || columnIndex === 4 ? (
+                    // Columns 3 and 4 - Use renderTextWithParentheses with correct font
+                    renderTextWithParentheses(processText(cellText))
                 ) : (
-                    // Column 4 and beyond - Ezra font
+                    // Other columns - default rendering
                     <ThemedText 
-                        className="font-ezra"
+                        className="font-guttman"
                         style={{ 
                             ...columnClasses,
                             textAlign: 'justify',

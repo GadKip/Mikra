@@ -14,12 +14,12 @@ export const ListItem = ({ data }) => {
     return (
         <View style={{ flexDirection: 'row', marginRight: indentation }}>
             <ThemedText 
-                className="font-ezra"
+                className="font-guttman"
                 style={{ fontSize: 20 * fontSize }}>
                 {data.marker}
             </ThemedText>
             <ThemedText 
-                className="font-ezra"
+                className="font-guttman"
                 style={{ fontSize: 20 * fontSize, flex: 1 }}>
                 {data.text}
             </ThemedText>

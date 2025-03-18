@@ -19,7 +19,7 @@ export default function CategoryList() {
           style={{ backgroundColor: colors.card }}
         >
           <ThemedText 
-            className="text-2xl font-ezra text-center"
+            className="text-2xl font-guttman text-center"
             style={{ textAlign: 'center' }}
           >
             {category}
@@ -40,7 +40,7 @@ export default function CategoryList() {
         style={{ backgroundColor: colors.card }}
       >
         <ThemedText 
-          className="text-2xl font-ezra text-center"
+          className="text-2xl font-guttman text-center"
           style={{ textAlign: 'center' }}
         >
           אודות
@@ -53,7 +53,7 @@ export default function CategoryList() {
         style={{ backgroundColor: colors.card }}
       >
         <ThemedText 
-          className="text-2xl font-ezra text-center"
+          className="text-2xl font-guttman text-center"
           style={{ textAlign: 'center' }}
         >
           הגדרות

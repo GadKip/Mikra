@@ -41,7 +41,7 @@ export default function BookList() {
           style={{ backgroundColor: colors.card }}
         >
           <ThemedText 
-            className="text-2xl font-ezra text-center"  // Add font-ezra here
+            className="text-2xl font-guttman text-center"
             style={{
               textAlign: 'center'
             }}

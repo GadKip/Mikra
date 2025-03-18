@@ -102,7 +102,7 @@ export default function EpisodeList() {
             style={{ backgroundColor: colors.card }}
           >
             <ThemedText 
-              className="text-2xl font-ezra text-center"
+              className="text-2xl font-guttman text-center"
               style={{
                 textAlign: 'center'
               }}
@@ -112,7 +112,7 @@ export default function EpisodeList() {
           </Pressable>
         ))
       ) : (
-        <ThemedText className="text-xl font-ezra text-center mt-4">
+        <ThemedText className="text-xl font-guttman text-center mt-4">
           אין פרקים זמינים
         </ThemedText>
       )}
