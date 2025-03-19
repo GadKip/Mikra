@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StatusBar, TouchableOpacity, View, Text, Platform, I18nManager } from 'react-native';
 import "../global.css";
 import { Slot } from 'expo-router';
@@ -14,15 +14,22 @@ import ThemedText from '../components/ThemedText';
 function AppLayout() {
   const { colors, theme, toggleTheme, fontSize, setFontSize } = useTheme();
   const [error, setError] = useState(null);
-  const [fontsLoaded] = useFonts(Platform.select({
-    web: {}, // Empty object for web - fonts will be loaded via app.json
-    default: { // Native platforms
-      'EzraSILSR': require('../assets/fonts/EzraSILSR.ttf'),
-      'GuttmanKeren': require('../assets/fonts/GuttmanKeren.ttf'),
-      'David': require('../assets/fonts/David.ttf'),
-      'DavidBD': require('../assets/fonts/DavidBD.ttf'),
-    }
-  }));
+  const memoizedThemeStyles = useMemo(() => ({
+    flex: 1,
+    backgroundColor: colors.background
+  }), [colors.background]);
+
+  const [fontsLoaded] = useFonts(
+    Platform.select({
+      web: {}, 
+      default: useMemo(() => ({
+        'EzraSILSR': require('../assets/fonts/EzraSILSR.ttf'),
+        'GuttmanKeren': require('../assets/fonts/GuttmanKeren.ttf'),
+        'David': require('../assets/fonts/David.ttf'),
+        'DavidBD': require('../assets/fonts/DavidBD.ttf'),
+      }), [])
+    })
+  );
 
   useEffect(() => {
     async function prepare() {

@@ -13,21 +13,62 @@ export default function About() {
       style={{ backgroundColor: colors.background }}
     >
       {/* Main content card */}
-      <View className="rounded-lg p-6" style={{ backgroundColor: colors.card }}>
-        <ThemedText style={{ fontSize: 24, textAlign: 'center', marginBottom: 16 }} className="font-guttman">
+      <View className="rounded-lg p-6"
+      style={{
+        backgroundColor: colors.card,
+        alignItems: 'center',
+        direction: 'ltr',
+       }}>
+        <ThemedText 
+        style={{
+          fontSize: 24,
+          textAlign: 'center',
+          marginBottom: 16,
+          width: '100%'
+        }}
+          className="font-guttman"
+        >
           מקרא מבואר
         </ThemedText>
-        <ThemedText style={{ fontSize: 18, textAlign: 'right', marginBottom: 8 }} className="font-guttman">
-          המקרא לצד תרגומו לשפה עכשווית מאת דוד כוכב
+        <ThemedText
+        style={{
+          fontSize: 18,
+          textAlign: 'right',
+          marginBottom: 8
+        }}
+        className="font-guttman">
+          המקרא לצד תרגומו לשפה עכשווית
+        </ThemedText>
+        <ThemedText
+        style={{
+          fontSize: 20,
+          textAlign: 'right',
+          marginBottom: 8
+        }}
+        className="font-guttman">
+          מאת הרב דוד כוכב
         </ThemedText>
       </View>
 
       {/* Bottom info */}
       <View className="items-center pb-8">
-        <ThemedText style={{ fontSize: 14, marginBottom: 12, textAlign: 'center', opacity: 0.7 }}>
+        <ThemedText
+          style={{ 
+            fontSize: 14, 
+            marginBottom: 12, 
+            textAlign: 'center', 
+            opacity: 0.7 
+          }}
+        >
           Developed by Gadi K. ©
         </ThemedText>
-        <ThemedText style={{ fontSize: 14, textAlign: 'center', opacity: 0.6 }}>
+        <ThemedText 
+          style={{ 
+            fontSize: 14, 
+            textAlign: 'center', 
+            opacity: 0.6 
+            }}
+        >
           Version {version}
         </ThemedText>
       </View>

@@ -47,11 +47,11 @@ export default function SplashScreen() {
         <ThemedText style={{ fontSize: 30, marginBottom: 16, textAlign: 'center' }}>
           מקרא מבואר
         </ThemedText>
-        <ThemedText style={{ fontSize: 18, marginBottom: 8, textAlign: 'center' }}>
+        <ThemedText style={{ fontSize: 16, marginBottom: 8, textAlign: 'center' }}>
           המקרא לצד תרגומו לשפה עכשווית
         </ThemedText>
-        <ThemedText style={{ fontSize: 16, marginBottom: 8, textAlign: 'center' }}>
-          מאת דוד כוכב
+        <ThemedText style={{ fontSize: 18, marginBottom: 8, textAlign: 'center' }}>
+          מאת הרב דוד כוכב
         </ThemedText>
       </View>
 

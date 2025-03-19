@@ -21,9 +21,6 @@ export default function Settings() {
       style={{ backgroundColor: colors.background }}
     >
       <View className="rounded-lg p-6" style={{ backgroundColor: colors.card }}>
-        <ThemedText style={{ fontSize: 24, textAlign: 'center', marginBottom: 16 }} className="font-guttman">
-          הגדרות
-        </ThemedText>
         
         <View className="mt-4">
           <ThemedText style={{ fontSize: 20, marginBottom: 8, textAlign: 'right' }} className="font-guttman">
