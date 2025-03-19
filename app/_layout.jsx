@@ -87,7 +87,8 @@ function AppLayout() {
               zIndex: 50,
               backgroundColor: `${colors.card}99`, // Added 99 for 60% opacity
               padding: 8,
-              borderRadius: 20
+              borderRadius: 20,
+              transform: [{ scaleX: 1 }] // Fix for RTL
             }
           ]}
         >

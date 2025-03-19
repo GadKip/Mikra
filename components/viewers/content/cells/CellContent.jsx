@@ -64,7 +64,11 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                 { fontSize: 20 * fontSize, lineHeight: 20 * fontSize * 1.5 } :
                 { fontSize: 24 * fontSize, lineHeight: 24 * fontSize * 1.5 };
         }
-        return { fontSize: 20 * fontSize, lineHeight: 20 * fontSize * 1.5 };
+        return { 
+            fontSize: 20 * fontSize, 
+            lineHeight: 20 * fontSize * 1.5,
+            letterSpacing: 0.5
+        };
     })();
 
     // Updated style classes with dynamic fontSize

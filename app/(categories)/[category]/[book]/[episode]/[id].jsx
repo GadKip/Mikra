@@ -51,12 +51,13 @@ export default function FileViewer() {
         top: 60, // Changed from 12 to 60 to position under theme toggle
         right: 4, // Changed from left to right to align with theme toggle
         zIndex: 50,
-        flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
+        flexDirection: 'row',
         backgroundColor: `${colors.card}99`, // Added 99 for 60% opacity
         borderRadius: 20,
         padding: 4,
         gap: 8,
-        alignItems: 'center'
+        alignItems: 'center',
+        transform: [{ scaleX: 1 }] // Force LTR layout
       }}>
         <TouchableOpacity 
           onPress={() => setFontSize(prev => Math.max(0.4, prev - 0.2))}

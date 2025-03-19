@@ -10,7 +10,7 @@ export const themes = {
     secondary: '#aba9a9',
     card: '#F5F5F5',
     border: '#E0E0E0',
-    highlight: '#d9fcff',
+    highlight: '#e0ffff',
     statusBar: 'dark-content'
   },
   dark: {
