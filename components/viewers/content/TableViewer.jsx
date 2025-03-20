@@ -28,7 +28,10 @@ export const Table = ({ data, isLandscape }) => {
                         key={`row-${rowIndex}`} 
                         style={[
                             styles.row, 
-                            { borderColor: colors.border },
+                            { 
+                                borderColor: colors.border,
+                                overflow: 'visible'  // Add this
+                            },
                         ]}
                     >
                         {row.row.map((cell, colIndex) => (
@@ -36,6 +39,11 @@ export const Table = ({ data, isLandscape }) => {
                                 key={`cell-${rowIndex}-${colIndex}`} 
                                 style={[
                                     styles.cell,
+                                    {overflow: 'visible',
+                                        transform: [{ perspective: 1000 }], // Improve text rendering
+                                        backfaceVisibility: 'hidden', // Improve text rendering
+                            
+                                    },
                                     colIndex === 0 && styles.firstColumn,
                                     colIndex === 1 && styles.secondColumn,
                                     colIndex === 2 && styles.thirdColumn,

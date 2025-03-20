@@ -3,65 +3,82 @@ import { useTheme } from '../../../../context/ThemeContext';
 import { isHebrewChapter } from '../../../../utils/hebrewChapters';
 import ThemedText from '../../../ThemedText';
 
-const processText = (text) => {
-    if (!text) return text;
-    // First replace space+hyphen
-    let processed = text.replace(/\s+־/g, '־');
-    // Then replace hyphen+space
-    processed = processed.replace(/־\s+/g, '־');
-    return processed;
-};
-
 export default function CellContent({ content, styles = {}, columnIndex, rowData }) {
     const { colors, fontSize } = useTheme();
     const isCol2Empty = !rowData.row[1]?.cell?.trim();
-    
-    // If content is an object with both cell and image properties
     const cellText = typeof content === 'object' ? content.cell : content;
     const cellImage = typeof content === 'object' ? content.image : null;
     
-    // Updated column classes with dynamic fontSize
+    // Constants
+    const LINE_HEIGHT_MULTIPLIER = 1.5;
+
+    // Common styles
+    const COMMON_TEXT_STYLES = {
+        textAlign: 'justify',
+        writingDirection: 'rtl',
+        flexWrap: 'wrap'
+    };
+
+    // Process text helper function
+    const processText = (text) => {
+        if (!text) return text;
+        return text.replace(/\s+־/g, '־').replace(/־\s+/g, '־');
+    };
+
+    // Base text style generator
+    const getBaseTextStyles = (isParenthetical = false) => ({
+        ...columnClasses,
+        ...COMMON_TEXT_STYLES,
+        fontSize: isParenthetical ? Math.floor(columnClasses.fontSize * 0.8) : columnClasses.fontSize,
+        color: colors.text
+    });
+
+    // Process text once at the start
+    const processedText = (() => {
+        if (!cellText) return cellText;
+        return cellText.replace(/\s+־/g, '־').replace(/־\s+/g, '־');
+    })();
+
+    // Font class determination
+    const fontClass = (() => {
+        if (columnIndex === 2) return "font-ezra";
+        if (columnIndex === 3) return isCol2Empty ? "font-ezra" : "font-guttman";
+        return "font-guttman";
+    })();
+
+    // Column classes with consistent line height calculation
     const columnClasses = (() => {
+        const getLineHeight = (size) => size * fontSize * LINE_HEIGHT_MULTIPLIER;
+        
         if (columnIndex === 0) {
-            // Column 0 (first column) - fixed sizes with Guttman font
             if (isHebrewChapter(content?.cell?.trim())) {
-                return { 
-                    fontSize: 24, 
-                    fontWeight: 'bold',
-                    fontFamily: 'GuttmanKeren'  // Add Guttman font
-                };
+                return { fontSize: 24, fontWeight: 'bold', fontFamily: 'GuttmanKeren' };
             }
-            if (content?.cell?.trim() === '*') {
-                return { fontSize: 24, fontWeight: 'bold' }; // Fixed size for asterisk
-            }
-            return { fontSize: 12 }; // Fixed size for other content in column 0
+            return content?.cell?.trim() === '*' ? 
+                { fontSize: 24, fontWeight: 'bold' } : 
+                { fontSize: 12 };
         }
-        if (columnIndex === 1) {
-            // Column 1 - fixed size
-            return { fontSize: 12 };
-        }
+        if (columnIndex === 1) return { fontSize: 12 };
         if (columnIndex === 2) {
-            // Column 2 - scalable sizes
-            return isCol2Empty ? {
-                fontSize: 34 * fontSize, 
-                lineHeight: 34 * fontSize * 1.5, 
+            const baseSize = isCol2Empty ? 34 : 22.4;
+            return {
+                fontSize: baseSize * fontSize,
+                lineHeight: getLineHeight(baseSize),
                 letterSpacing: 0.5,
-                fontFamily: 'EzraSILSR'
-            } : { 
-                fontSize: 22.4 * fontSize, 
-                lineHeight: 22.4 * fontSize * 1.5, 
-                letterSpacing: 0.5 
+                ...(isCol2Empty && { fontFamily: 'EzraSILSR' })
             };
         }
         if (columnIndex === 3) {
-            // Column 3 - header style when col2 is empty
-            return isCol2Empty ? 
-                { fontSize: 24 * fontSize, lineHeight: 24 * fontSize * 1.5 } : // Header size
-                { fontSize: 24 * fontSize, lineHeight: 24 * fontSize * 1.5 };
+            const baseSize = 24;
+            return {
+                fontSize: baseSize * fontSize,
+                lineHeight: getLineHeight(baseSize),
+                letterSpacing: 0.5
+            };
         }
-        return { 
-            fontSize: 20 * fontSize, 
-            lineHeight: 20 * fontSize * 1.5,
+        return {
+            fontSize: 20 * fontSize,
+            lineHeight: getLineHeight(20),
             letterSpacing: 0.5
         };
     })();
@@ -116,9 +133,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                     className={fontClass}
                     style={{ 
                         ...columnClasses,
-                        textAlign: 'justify',
-                        writingDirection: 'rtl',
-                        flexWrap: 'wrap'
+                        ...COMMON_TEXT_STYLES
                     }}
                 >
                     {text}
@@ -131,22 +146,14 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         return (
             <ThemedText 
                 className={fontClass}
-                style={{ 
-                    ...columnClasses,
-                    textAlign: 'justify',
-                    writingDirection: 'rtl',
-                    flexWrap: 'wrap'
-                }}
+                style={getBaseTextStyles()}
             >
                 {parts.map((part, index) => {
                     if (part.match(/^\([^)]+\)$/)) {
                         return (
                             <Text 
                                 key={index}
-                                style={{ 
-                                    fontSize: Math.floor(columnClasses.fontSize * 0.8),
-                                    color: colors.text
-                                }}
+                                style={getBaseTextStyles(true)}
                             >
                                 {part}
                             </Text>
@@ -158,21 +165,8 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         );
     };
 
-    const fontClass = (() => {
-        const selectedFont = (() => {
-            if (columnIndex === 2) {
-                return "font-ezra";
-            }
-            if (columnIndex === 3) {
-                return isCol2Empty ? "font-ezra " : "font-guttman";
-            }
-            return "font-guttman";
-        })();        
-        return selectedFont;
-    })();
-
     return (
-        <View style={styles.cellContainer}>
+        <View style={[styles.cellContainer, {overflow: 'visible'}]}>
             {cellText && (
                 columnIndex <= 1 ? (
                     // Columns 0 and 1 - no processing needed
@@ -195,7 +189,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                         </ThemedText>
                     )
                 ) : (columnIndex === 2 || columnIndex === 3) ? (
-                    renderTextWithParentheses(processText(cellText))
+                    renderTextWithParentheses(processedText)
                 ) : (
                     // Other columns - default rendering
                     <ThemedText 
@@ -204,11 +198,10 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                             ...columnClasses,
                             textAlign: 'justify',
                             writingDirection: 'rtl',
-                            flexWrap: 'wrap',
-                            paddingTop: 4
+                            flexWrap: 'wrap'
                         }}
                     >
-                        {processText(cellText)}
+                        {processedText}
                     </ThemedText>
                 )
             )}

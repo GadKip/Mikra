@@ -26,13 +26,13 @@ export const styles = StyleSheet.create({
     },
 
     firstColumn: {
-        minWidth: 40, // Set absolute minimum width in pixels
+        minWidth: '13%', // Set absolute minimum width in pixels
         flex: 1,
         flexShrink: 0, // Prevent shrinking smaller than minWidth
         paddingRight: 2
     },
     secondColumn: {
-        minWidth: 30, // Set absolute minimum width in pixels
+        minWidth: '7%', // Set absolute minimum width in pixels
         flex: 1,
         flexShrink: 0, // Prevent shrinking smaller than minWidth
         paddingRight: 2
@@ -40,11 +40,13 @@ export const styles = StyleSheet.create({
     thirdColumn: {
         flex: 4,
         minWidth: '40%',
-        padding: 5
+        paddingHorizontal: 4,
+        paddingVertical: 6
     },
     fourthColumn: {
         flex: 4,
         minWidth: '40%',
-        padding: 8
+        paddingHorizontal: 4,
+        paddingVertical: 6
     }
 });
