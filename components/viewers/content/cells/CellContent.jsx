@@ -1,11 +1,7 @@
-import { View, Text, Image, Platform } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import { useTheme } from '../../../../context/ThemeContext';
 import { isHebrewChapter } from '../../../../utils/hebrewChapters';
 import ThemedText from '../../../ThemedText';
-
-const ezraFont = {
-    fontFamily: 'EzraSILSR'
-};
 
 const processText = (text) => {
     if (!text) return text;
@@ -16,16 +12,13 @@ const processText = (text) => {
     return processed;
 };
 
-export default function CellContent({ content, styles = {}, columnIndex, rowData, rowIndex }) {
+export default function CellContent({ content, styles = {}, columnIndex, rowData }) {
     const { colors, fontSize } = useTheme();
     const isCol2Empty = !rowData.row[1]?.cell?.trim();
     
     // If content is an object with both cell and image properties
     const cellText = typeof content === 'object' ? content.cell : content;
     const cellImage = typeof content === 'object' ? content.image : null;
-
-    // Base classes for all cells
-    const baseClasses = "flex-1";
     
     // Updated column classes with dynamic fontSize
     const columnClasses = (() => {
@@ -49,10 +42,12 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         }
         if (columnIndex === 2) {
             // Column 2 - scalable sizes
-            if (rowIndex === 0) {
-                return { fontSize: 36 * fontSize, lineHeight: 36 * fontSize * 1.5 };
-            }
-            return { 
+            return isCol2Empty ? {
+                fontSize: 34 * fontSize, 
+                lineHeight: 34 * fontSize * 1.5, 
+                letterSpacing: 0.5,
+                fontFamily: 'EzraSILSR'
+            } : { 
                 fontSize: 22.4 * fontSize, 
                 lineHeight: 22.4 * fontSize * 1.5, 
                 letterSpacing: 0.5 
@@ -61,16 +56,8 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         if (columnIndex === 3) {
             // Column 3 - header style when col2 is empty
             return isCol2Empty ? 
-                { fontSize: 36 * fontSize, lineHeight: 36 * fontSize * 1.5 } : // Header size
+                { fontSize: 24 * fontSize, lineHeight: 24 * fontSize * 1.5 } : // Header size
                 { fontSize: 24 * fontSize, lineHeight: 24 * fontSize * 1.5 };
-        }
-        if (columnIndex === 4) {
-            // Column 4 - consistent size regardless of col2
-            return { 
-                fontSize: 20 * fontSize, 
-                lineHeight: 20 * fontSize * 1.5,
-                letterSpacing: 0.5
-            };
         }
         return { 
             fontSize: 20 * fontSize, 
@@ -122,25 +109,33 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     };
 
     const renderTextWithParentheses = (text) => {
-        const parts = text.split(/(\([^)]+\))/);
-        // Always use Ezra font for columns 3 and 4 when col2 is empty
-        const fontFamily = isCol2Empty ? 'EzraSILSR' : (columnIndex === 3 ? 'GuttmanKeren' : 'EzraSILSR');
-        const fontClass = isCol2Empty ? 'font-ezra' : (columnIndex === 3 ? 'font-guttman' : 'font-ezra');
+        // Only process columns 3 & 4 (indexes 2 & 3)
+        if (columnIndex !== 2 && columnIndex !== 3) {
+            return (
+                <ThemedText 
+                    className={fontClass}
+                    style={{ 
+                        ...columnClasses,
+                        textAlign: 'justify',
+                        writingDirection: 'rtl',
+                        flexWrap: 'wrap'
+                    }}
+                >
+                    {text}
+                </ThemedText>
+            );
+        }
 
-        // Common styles for both parent and nested Text components
-        const commonStyles = {
-            textAlign: 'justify',
-            writingDirection: 'rtl',
-            flexWrap: 'wrap',
-            paddingTop: 4
-        };
+        const parts = text.split(/(\([^)]+\))/);
 
         return (
             <ThemedText 
                 className={fontClass}
                 style={{ 
                     ...columnClasses,
-                    ...commonStyles
+                    textAlign: 'justify',
+                    writingDirection: 'rtl',
+                    flexWrap: 'wrap'
                 }}
             >
                 {parts.map((part, index) => {
@@ -149,10 +144,8 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                             <Text 
                                 key={index}
                                 style={{ 
-                                    fontSize: Math.floor(columnClasses.fontSize * 0.8), // Fixed line
-                                    color: colors.text,
-                                    fontFamily,
-                                    ...commonStyles
+                                    fontSize: Math.floor(columnClasses.fontSize * 0.8),
+                                    color: colors.text
                                 }}
                             >
                                 {part}
@@ -201,22 +194,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                             {cellText}
                         </ThemedText>
                     )
-                ) : columnIndex === 2 ? (
-                    // Column 2 - Ezra font
-                    <ThemedText
-                        className="font-ezra"
-                        style={{ 
-                            ...columnClasses,
-                            textAlign: 'justify',
-                            writingDirection: 'rtl',
-                            flexWrap: 'wrap',
-                            paddingTop: 4
-                        }}                
-                    >
-                        {processText(cellText)}
-                    </ThemedText>
-                ) : columnIndex === 3 || columnIndex === 4 ? (
-                    // Columns 3 and 4 - Use renderTextWithParentheses with correct font
+                ) : (columnIndex === 2 || columnIndex === 3) ? (
                     renderTextWithParentheses(processText(cellText))
                 ) : (
                     // Other columns - default rendering
