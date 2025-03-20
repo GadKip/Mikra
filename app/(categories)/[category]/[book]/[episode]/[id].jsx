@@ -60,16 +60,24 @@ export default function FileViewer() {
         transform: [{ scaleX: 1 }] // Force LTR layout
       }}>
         <TouchableOpacity 
-          onPress={() => setFontSize(prev => Math.max(0.4, prev - 0.2))}
+          onPress={() => {
+            const newSize = Math.max(0.4, fontSize - 0.2);
+            console.log('Decreasing font size to:', newSize);
+            setFontSize(newSize);  // Pass the value directly, not a function
+          }}
           style={{ padding: 4 }}
         >
           <Ionicons name="remove" size={24} color={colors.text} />
         </TouchableOpacity>
         <TouchableOpacity 
-          onPress={() => setFontSize(prev => Math.min(1.6, prev + 0.2))}
+          onPress={() => {
+            const newSize = Math.min(1.6, fontSize + 0.2);
+            console.log('Increasing font size to:', newSize);
+            setFontSize(newSize);  // Pass the value directly, not a function
+          }}
           style={{ padding: 4 }}
-          accessibilityLabel="הקטן גודל טקסט"
-          accessibilityHint="הקטן גודל טקסט"
+          accessibilityLabel="הגדל גודל טקסט"
+          accessibilityHint="הגדל גודל טקסט"
         >
           <Ionicons name="add" size={24} color={colors.text} />
         </TouchableOpacity>

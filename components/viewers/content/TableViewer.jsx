@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View  } from 'react-native';
 import { useTheme } from '../../../context/ThemeContext';
 import { styles } from './styles/table.styles';
 import CellContent from './cells/CellContent';

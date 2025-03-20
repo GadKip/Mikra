@@ -59,10 +59,18 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
             };
         }
         if (columnIndex === 3) {
-            // Column 3 - scalable sizes
+            // Column 3 - header style when col2 is empty
             return isCol2Empty ? 
-                { fontSize: 20 * fontSize, lineHeight: 20 * fontSize * 1.5 } :
+                { fontSize: 36 * fontSize, lineHeight: 36 * fontSize * 1.5 } : // Header size
                 { fontSize: 24 * fontSize, lineHeight: 24 * fontSize * 1.5 };
+        }
+        if (columnIndex === 4) {
+            // Column 4 - consistent size regardless of col2
+            return { 
+                fontSize: 20 * fontSize, 
+                lineHeight: 20 * fontSize * 1.5,
+                letterSpacing: 0.5
+            };
         }
         return { 
             fontSize: 20 * fontSize, 
@@ -115,24 +123,24 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
 
     const renderTextWithParentheses = (text) => {
         const parts = text.split(/(\([^)]+\))/);
-        const useGuttmanFont = columnIndex === 3 && !isCol2Empty;
-        const fontFamily = useGuttmanFont ? 'GuttmanKeren' : 'EzraSILSR';
-        const fontClass = useGuttmanFont ? 'font-guttman' : 'font-ezra';
+        // Always use Ezra font for columns 3 and 4 when col2 is empty
+        const fontFamily = isCol2Empty ? 'EzraSILSR' : (columnIndex === 3 ? 'GuttmanKeren' : 'EzraSILSR');
+        const fontClass = isCol2Empty ? 'font-ezra' : (columnIndex === 3 ? 'font-guttman' : 'font-ezra');
 
-        // If it's column 3, explicitly set font size based on isCol2Empty
-        const baseFontSize = columnIndex === 3 
-            ? (isCol2Empty ? 20 * fontSize : 24 * fontSize)
-            : columnClasses.fontSize;
+        // Common styles for both parent and nested Text components
+        const commonStyles = {
+            textAlign: 'justify',
+            writingDirection: 'rtl',
+            flexWrap: 'wrap',
+            paddingTop: 4
+        };
 
         return (
             <ThemedText 
                 className={fontClass}
                 style={{ 
                     ...columnClasses,
-                    textAlign: 'justify',
-                    writingDirection: 'rtl',
-                    flexWrap: 'wrap',
-                    paddingTop: 4,
+                    ...commonStyles
                 }}
             >
                 {parts.map((part, index) => {
@@ -141,9 +149,10 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                             <Text 
                                 key={index}
                                 style={{ 
-                                    fontSize: Math.floor(baseFontSize * 0.8),
+                                    fontSize: Math.floor(columnClasses.fontSize * 0.8), // Fixed line
                                     color: colors.text,
                                     fontFamily,
+                                    ...commonStyles
                                 }}
                             >
                                 {part}
@@ -193,7 +202,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                         </ThemedText>
                     )
                 ) : columnIndex === 2 ? (
-                    // Column 2 - EZRA font
+                    // Column 2 - Ezra font
                     <ThemedText
                         className="font-ezra"
                         style={{ 
