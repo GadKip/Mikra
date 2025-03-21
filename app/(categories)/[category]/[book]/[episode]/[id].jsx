@@ -1,4 +1,4 @@
-import { View, ScrollView, useWindowDimensions, TouchableOpacity, I18nManager } from 'react-native';
+import { View, ScrollView, useWindowDimensions, TouchableOpacity, I18nManager, Platform } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import Loader from '../../../../../components/Loader';
@@ -57,7 +57,11 @@ export default function FileViewer() {
         padding: 4,
         gap: 8,
         alignItems: 'center',
-        transform: [{ scaleX: 1 }] // Force LTR layout
+        direction: 'ltr', // Force LTR
+        writingDirection: 'ltr', // Force LTR
+        ...(Platform.OS === 'android' && {
+          layoutDirection: 'ltr', // Force LTR on Android
+        })
       }}>
         <TouchableOpacity 
           onPress={() => {

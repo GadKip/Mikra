@@ -90,13 +90,21 @@ function AppLayout() {
             { 
               position: 'absolute',
               top: 12,
-              right: 4,
+              right: 4, // This will now be respected regardless of RTL
               zIndex: 50,
               backgroundColor: `${colors.card}99`, // Added 99 for 60% opacity
               padding: 8,
               borderRadius: 20,
-              transform: [{ scaleX: 1 }] // Fix for RTL
-            }
+              transform: [{ scaleX: 1 }], // Fix for RTL
+              direction: 'ltr', // Force LTR
+              writingDirection: 'ltr', // Force LTR
+            },
+            Platform.select({
+              android: {
+                // Force LTR layout on Android
+                layoutDirection: 'ltr',
+              }
+            })
           ]}
         >
           <Ionicons 
