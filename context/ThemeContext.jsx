@@ -38,32 +38,90 @@ export function ThemeProvider({ children }) {
   const [columnLoading, setColumnLoading] = useState(false); // Add loading state
 
   const toggleColumn = async (columnIndex) => {
-    setColumnLoading(true); // Set loading to true immediately
-
-    // Optimistic update
-    setVisibleColumns(prevVisibility => {
-        const newVisibility = {
-            ...prevVisibility,
-            [columnIndex]: !prevVisibility[columnIndex]
-        };
-        if (columnIndex >= 2 && !newVisibility[2] && !newVisibility[3]) {
-            return prevVisibility; // Revert if invalid
-        }
-        return newVisibility;
+    setColumnLoading(true);
+    console.log('=== Toggle Column Start ===');
+    console.log('Current state:', {
+        columnIndex,
+        visibleColumns,
+        wasClicked: columnIndex === 2 ? 'מקור' : 'תרגום'
     });
-
+    
     try {
-        // Persist to AsyncStorage
-        await AsyncStorage.setItem('columnVisibility', JSON.stringify({
-            ...visibleColumns, // Use the previous state for persistence
-            [columnIndex]: !visibleColumns[columnIndex]
-        }));
+        const newVisibility = await new Promise(resolve => {
+            setVisibleColumns(prevVisibility => {
+                console.log('Previous visibility:', prevVisibility);
+                
+                if (columnIndex === 2 || columnIndex === 3) {
+                    const otherColumn = columnIndex === 2 ? 3 : 2;
+                    console.log('Content column check:', {
+                        columnIsVisible: prevVisibility[columnIndex],
+                        otherIsVisible: prevVisibility[otherColumn],
+                        columnIndex,
+                        otherColumn
+                    });
+
+                    // Case 1: If this column is visible and other is hidden
+                    if (prevVisibility[columnIndex] && !prevVisibility[otherColumn]) {
+                        console.log('Case 1: Current visible, other hidden');
+                        const newState = {
+                            ...prevVisibility,
+                            [columnIndex]: false,
+                            [otherColumn]: true
+                        };
+                        console.log('New state (Case 1):', newState);
+                        resolve(newState);
+                        return newState;
+                    }
+
+                    // Case 2: If both are visible
+                    if (prevVisibility[columnIndex] && prevVisibility[otherColumn]) {
+                        console.log('Case 2: Both visible');
+                        const newState = {
+                            ...prevVisibility,
+                            [columnIndex]: false
+                        };
+                        console.log('New state (Case 2):', newState);
+                        resolve(newState);
+                        return newState;
+                    }
+
+                    // Case 3: If current is hidden
+                    if (!prevVisibility[columnIndex]) {
+                        console.log('Case 3: Current hidden');
+                        const newState = {
+                            ...prevVisibility,
+                            [columnIndex]: true
+                        };
+                        console.log('New state (Case 3):', newState);
+                        resolve(newState);
+                        return newState;
+                    }
+
+                    // Fallback case
+                    console.log('No condition met, returning previous state');
+                    resolve(prevVisibility);
+                    return prevVisibility;
+                }
+                
+                // Non-content columns
+                const newState = {
+                    ...prevVisibility,
+                    [columnIndex]: !prevVisibility[columnIndex]
+                };
+                console.log('Non-content column toggle:', newState);
+                resolve(newState);
+                return newState;
+            });
+        });
+
+        console.log('Saving to storage:', newVisibility);
+        await AsyncStorage.setItem('columnVisibility', JSON.stringify(newVisibility));
+        console.log('=== Toggle Column End ===');
+
     } catch (error) {
-        console.error('Error saving column visibility:', error);
-        // Revert on error
-        setVisibleColumns(prevVisibility => prevVisibility);
+        console.error('Error in toggleColumn:', error);
     } finally {
-        setColumnLoading(false); // Set loading to false after completion
+        setColumnLoading(false);
     }
   };
 

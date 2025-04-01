@@ -1,4 +1,4 @@
-import { View, ScrollView, useWindowDimensions, TouchableOpacity, I18nManager, Platform } from 'react-native';
+import { View, ScrollView, useWindowDimensions, TouchableOpacity, I18nManager, Platform, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import Loader from '../../../../../components/Loader';
@@ -15,7 +15,7 @@ export default function FileViewer() {
   const [metadata, setMetadata] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tableData, setTableData] = useState(null);
-  const { colors, fontSize, setFontSize, visibleColumns, toggleColumn } = useTheme();
+  const { colors, fontSize, setFontSize, visibleColumns, toggleColumn, columnLoading } = useTheme();
   const [showColumnMenu, setShowColumnMenu] = useState(false);
 
   const fetchContent = async () => {
@@ -83,13 +83,6 @@ export default function FileViewer() {
                     <TouchableOpacity
                         key={col.id}
                         onPress={() => {
-                            // Don't allow hiding both content columns
-                            if (col.id >= 2) {
-                                const otherContentCol = col.id === 2 ? 3 : 2;
-                                if (!visibleColumns[otherContentCol] && visibleColumns[col.id]) {
-                                    return;
-                                }
-                            }
                             toggleColumn(col.id);
                         }}
                         style={{
@@ -109,6 +102,9 @@ export default function FileViewer() {
                         </ThemedText>
                     </TouchableOpacity>
                 ))}
+                {columnLoading && (
+                    <ActivityIndicator size="small" color={colors.text} />
+                )}
             </View>
         )}
     </View>
