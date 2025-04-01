@@ -7,6 +7,7 @@ import { useNavigation } from 'expo-router';
 import { ContentViewer } from '../../../../../components/viewers/ContentViewer';
 import { useTheme } from '../../../../../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
+import ThemedText from '../../../../../components/ThemedText';
 
 export default function FileViewer() { 
   const { width, height } = useWindowDimensions();
@@ -14,7 +15,8 @@ export default function FileViewer() {
   const [metadata, setMetadata] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tableData, setTableData] = useState(null);
-  const { colors, fontSize, setFontSize } = useTheme();
+  const { colors, fontSize, setFontSize, visibleColumns, toggleColumn } = useTheme();
+  const [showColumnMenu, setShowColumnMenu] = useState(false);
 
   const fetchContent = async () => {
     setLoading(true);
@@ -38,9 +40,83 @@ export default function FileViewer() {
     }
   };
 
+  const renderColumnControls = () => (
+    <View style={{
+        position: 'absolute',
+        top: 120,
+        right: 4,
+        zIndex: 50,
+        direction: 'ltr',
+    }}>
+        <TouchableOpacity
+            onPress={() => setShowColumnMenu(!showColumnMenu)}
+            style={{
+                backgroundColor: `${colors.card}99`,
+                borderRadius: 20,
+                padding: 8,
+            }}
+        >
+            <Ionicons
+                name={showColumnMenu ? 'menu' : 'menu-outline'}
+                size={24}
+                color={colors.text}
+            />
+        </TouchableOpacity>
+
+        {showColumnMenu && (
+            <View style={{
+                marginTop: 8,
+                backgroundColor: `${colors.card}99`,
+                borderRadius: 12,
+                padding: 8,
+                gap: 8,
+            }}>
+                <ThemedText style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}>
+                    הצג עמודות
+                </ThemedText>
+                {[
+                    { id: 0, label: 'פרק' },
+                    { id: 1, label: 'פסוק' },
+                    { id: 2, label: 'מקור' },
+                    { id: 3, label: 'תרגום' }
+                ].map(col => (
+                    <TouchableOpacity
+                        key={col.id}
+                        onPress={() => {
+                            // Don't allow hiding both content columns
+                            if (col.id >= 2) {
+                                const otherContentCol = col.id === 2 ? 3 : 2;
+                                if (!visibleColumns[otherContentCol] && visibleColumns[col.id]) {
+                                    return;
+                                }
+                            }
+                            toggleColumn(col.id);
+                        }}
+                        style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            gap: 8,
+                            padding: 4
+                        }}
+                    >
+                        <Ionicons
+                            name={visibleColumns[col.id] ? 'eye' : 'eye-off'}
+                            size={20}
+                            color={colors.text}
+                        />
+                        <ThemedText style={{ fontSize: 16 }}>
+                            {col.label}
+                        </ThemedText>
+                    </TouchableOpacity>
+                ))}
+            </View>
+        )}
+    </View>
+  );
+
   useEffect(() => {
     fetchContent();
-  }, [id]);
+  }, [id, visibleColumns]);
 
   if (loading) return <Loader isLoading={loading} />;
 
@@ -48,26 +124,25 @@ export default function FileViewer() {
     <>
       <View style={{ 
         position: 'absolute',
-        top: 60, // Changed from 12 to 60 to position under theme toggle
-        right: 4, // Changed from left to right to align with theme toggle
+        top: 60,
+        right: 4,
         zIndex: 50,
         flexDirection: 'row',
-        backgroundColor: `${colors.card}99`, // Added 99 for 60% opacity
+        backgroundColor: `${colors.card}99`,
         borderRadius: 20,
         padding: 4,
         gap: 8,
         alignItems: 'center',
-        direction: 'ltr', // Force LTR
-        writingDirection: 'ltr', // Force LTR
+        direction: 'ltr',
+        writingDirection: 'ltr',
         ...(Platform.OS === 'android' && {
-          layoutDirection: 'ltr', // Force LTR on Android
+          layoutDirection: 'ltr',
         })
       }}>
         <TouchableOpacity 
           onPress={() => {
             const newSize = Math.max(0.4, fontSize - 0.2);
-            console.log('Decreasing font size to:', newSize);
-            setFontSize(newSize);  // Pass the value directly, not a function
+            setFontSize(newSize);
           }}
           style={{ padding: 4 }}
         >
@@ -76,8 +151,7 @@ export default function FileViewer() {
         <TouchableOpacity 
           onPress={() => {
             const newSize = Math.min(1.6, fontSize + 0.2);
-            console.log('Increasing font size to:', newSize);
-            setFontSize(newSize);  // Pass the value directly, not a function
+            setFontSize(newSize);
           }}
           style={{ padding: 4 }}
           accessibilityLabel="הגדל גודל טקסט"
@@ -87,12 +161,14 @@ export default function FileViewer() {
         </TouchableOpacity>
       </View>
 
+      {renderColumnControls()}
+
       <ScrollView 
         className="flex-1"
-        style={{ width: '100%' }}  // Add explicit width
+        style={{ width: '100%' }}
         contentContainerStyle={{ 
           direction: 'rtl',
-          width: '100%'  // Add width here too
+          width: '100%'
         }}
       >
         <View style={{ 
@@ -102,8 +178,8 @@ export default function FileViewer() {
         }}>
           <ContentViewer 
             data={tableData}
-            // Pass orientation info to ContentViewer
             isLandscape={width > height}
+            visibleColumns={visibleColumns}
           />
         </View>
       </ScrollView>

@@ -11,22 +11,23 @@ const CONTAINER_STYLES = {
     alignSelf: 'stretch'
 };
 
-export const ContentViewer = ({ data, isLandscape }) => {
-    if (!data?.content) return null;
+export const ContentViewer = ({ data, isLandscape, visibleColumns }) => {
 
-    // Single debug log for content structure
-    if (__DEV__) {
-        console.debug('ContentViewer rendering:', {
-            contentTypes: data.content.map(item => item.type)
-        });
-    }
+    if (!data?.content) return null;
 
     return (
         <View style={CONTAINER_STYLES}>
-            {data.content.map((item, index) => {
+            {data.content.map((item, index) => {                
                 switch (item.type) {
                     case 'table':
-                        return <Table key={`table-${index}`} data={item.data} isLandscape={isLandscape} />;
+                        return (
+                            <Table 
+                                key={`table-${index}`} 
+                                data={item.data} 
+                                isLandscape={isLandscape}
+                                visibleColumns={visibleColumns}
+                            />
+                        );
                     case 'list':
                         return <ListItems key={`list-${index}`} items={item.data} />;
                     case 'text':
