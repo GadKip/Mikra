@@ -6,7 +6,7 @@ import ThemedText from '../../components/ThemedText';
 export default function CategoryList() {
   const router = useRouter();
   const { colors } = useTheme();
-  const categories = ['תורה', 'נביאים', 'כתובים'];
+  const categories = ['הקדמה והסכמות','תורה', 'נביאים', 'כתובים'];
 
   return (
     <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>

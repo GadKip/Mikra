@@ -2,10 +2,11 @@ import { View, ScrollView, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTheme } from '../../context/ThemeContext';
 import ThemedText from '../../components/ThemedText';
+import { Ionicons } from '@expo/vector-icons';
 import { useEffect } from 'react';
 
 export default function Settings() {
-  const { colors, fontSize, setFontSize, theme, setTheme } = useTheme();
+  const { colors, fontSize, setFontSize, theme, setTheme, visibleColumns, toggleColumn } = useTheme();
   
   const fontSizes = [
     { label: 'קטנטן', value: 0.4 },
@@ -20,6 +21,13 @@ export default function Settings() {
   const themes = [
     { label: 'בהיר', value: 'light' },
     { label: 'כהה', value: 'dark' }
+  ];
+
+  const columnOptions = [
+    { id: 0, label: 'פרק' },
+    { id: 1, label: 'פסוק' },
+    { id: 2, label: 'מקור' },
+    { id: 3, label: 'תרגום' }
   ];
 
   return (
@@ -74,7 +82,7 @@ export default function Settings() {
                   padding: 8,
                   borderRadius: 8,
                   backgroundColor: fontSize === size.value ? colors.primary : colors.secondary,
-                  width: '80%',  // Add fixed width
+                  width: '80%',
                 }}
               >
                 <ThemedText 
@@ -82,11 +90,62 @@ export default function Settings() {
                   style={{ 
                     color: fontSize === size.value ? colors.text : colors.text,
                     fontSize: 20 * size.value,
-                    textAlign: 'center'  // Center the text
+                    textAlign: 'center'
                   }}
                 >
                   {size.label}
                 </ThemedText>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Column Visibility Section */}
+        <View className="mt-8">
+          <ThemedText 
+            style={{ fontSize: 20, marginBottom: 8, textAlign: 'right' }} 
+            className="font-guttman"
+          >
+            עמודות מוצגות
+          </ThemedText>
+          <View className="flex-column items-center gap-4 mt-2">
+            {columnOptions.map((col) => (
+              <TouchableOpacity
+                key={col.id}
+                onPress={() => {
+                  // Don't allow hiding both content columns
+                  if (col.id >= 2) {
+                    const otherContentCol = col.id === 2 ? 3 : 2;
+                    if (!visibleColumns[otherContentCol] && visibleColumns[col.id]) {
+                      return;
+                    }
+                  }
+                  toggleColumn(col.id);
+                }}
+                style={{ 
+                  padding: 12,
+                  borderRadius: 8,
+                  backgroundColor: visibleColumns[col.id] ? colors.primary : colors.secondary,
+                  width: '80%',
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <ThemedText 
+                  className="font-guttman"
+                  style={{ 
+                    color: colors.text,
+                    fontSize: 20 * fontSize,
+                  }}
+                >
+                  {col.label}
+                </ThemedText>
+                <Ionicons
+                  name={visibleColumns[col.id] ? 'eye' : 'eye-off'}
+                  size={24}
+                  color={colors.text}
+                />
               </TouchableOpacity>
             ))}
           </View>
