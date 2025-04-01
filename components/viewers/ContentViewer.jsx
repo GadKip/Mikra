@@ -12,12 +12,23 @@ const CONTAINER_STYLES = {
 };
 
 export const ContentViewer = ({ data, isLandscape, visibleColumns }) => {
+    console.log('Rendering content item:', {
+        hasData: !!data,
+        type: data?.content?.[0]?.type
+    });
 
     if (!data?.content) return null;
 
     return (
         <View style={CONTAINER_STYLES}>
-            {data.content.map((item, index) => {                
+            {data.content.map((item, index) => {
+                if (item.type === 'image') {
+                    console.log('Found image:', {
+                        src: item.data?.src?.substring(0, 50) + '...',
+                        alt: item.data?.alt
+                    });
+                }
+                
                 switch (item.type) {
                     case 'table':
                         return (

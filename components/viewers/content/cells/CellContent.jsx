@@ -2,6 +2,7 @@ import { View, Text, Image } from 'react-native';
 import { useTheme } from '../../../../context/ThemeContext';
 import { isHebrewChapter } from '../../../../utils/hebrewChapters';
 import ThemedText from '../../../ThemedText';
+import ZoomableImage from '../../../ZoomableImage';  // Add this import
 
 export default function CellContent({ content, styles = {}, columnIndex, rowData }) {
     const { colors, fontSize } = useTheme();
@@ -205,24 +206,18 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                     </ThemedText>
                 )
             )}
-            {/* Render image if exists */}
+            {/* Replace Image with ZoomableImage */}
             {cellImage && (
-                <Image
-                    source={{ uri: cellImage.src }}
-                    alt={cellImage.alt || 'Image'}
-                    style={[styles.image, {
-                        width: '100%',
-                        height: 200,
-                        resizeMode: 'contain',
-                        marginVertical: 5
-                    }]}
-                    onError={(e) => {
-                        console.error('Cell image load error:', {
-                            error: e.nativeEvent,
-                            src: cellImage.src?.substring(0, 50) + '...'
-                        });
-                    }}
-                />
+                <View style={{ width: '100%', height: 200 }}>
+                    <ZoomableImage
+                        source={{ uri: cellImage.src }}
+                        alt={cellImage.alt || 'Image'}
+                        style={{
+                            width: '100%',
+                            height: '100%'
+                        }}
+                    />
+                </View>
             )}
         </View>
     );
