@@ -16,7 +16,7 @@ export default function FileViewer() {
   const [loading, setLoading] = useState(true);
   const [tableData, setTableData] = useState(null);
   const { colors, fontSize, setFontSize, visibleColumns, toggleColumn, columnLoading } = useTheme();
-  const [showColumnMenu, setShowColumnMenu] = useState(false);
+  const [showControlsMenu, setShowControlsMenu] = useState(false);
 
   const fetchContent = async () => {
     setLoading(true);
@@ -40,16 +40,20 @@ export default function FileViewer() {
     }
   };
 
-  const renderColumnControls = () => (
+  const renderControls = () => (
     <View style={{
         position: 'absolute',
-        top: 120,
-        right: 4,
+        top: 60,
+        end: 4,
         zIndex: 50,
         direction: 'ltr',
+        writingDirection: 'ltr',
+        ...(Platform.OS === 'android' && {
+            layoutDirection: 'ltr',
+        })
     }}>
         <TouchableOpacity
-            onPress={() => setShowColumnMenu(!showColumnMenu)}
+            onPress={() => setShowControlsMenu(!showControlsMenu)}
             style={{
                 backgroundColor: `${colors.card}99`,
                 borderRadius: 20,
@@ -57,13 +61,13 @@ export default function FileViewer() {
             }}
         >
             <Ionicons
-                name={showColumnMenu ? 'menu' : 'menu-outline'}
+                name={showControlsMenu ? 'menu' : 'menu-outline'}
                 size={24}
                 color={colors.text}
             />
         </TouchableOpacity>
 
-        {showColumnMenu && (
+        {showControlsMenu && (
             <View style={{
                 marginTop: 8,
                 backgroundColor: `${colors.card}99`,
@@ -71,40 +75,73 @@ export default function FileViewer() {
                 padding: 8,
                 gap: 8,
             }}>
-                <ThemedText style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}>
-                    הצג עמודות
-                </ThemedText>
-                {[
-                    { id: 0, label: 'פרק' },
-                    { id: 1, label: 'פסוק' },
-                    { id: 2, label: 'מקור' },
-                    { id: 3, label: 'תרגום' }
-                ].map(col => (
-                    <TouchableOpacity
-                        key={col.id}
-                        onPress={() => {
-                            toggleColumn(col.id);
-                        }}
-                        style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            gap: 8,
-                            padding: 4
-                        }}
-                    >
-                        <Ionicons
-                            name={visibleColumns[col.id] ? 'eye' : 'eye-off'}
-                            size={20}
-                            color={colors.text}
-                        />
-                        <ThemedText style={{ fontSize: 16 }}>
-                            {col.label}
-                        </ThemedText>
-                    </TouchableOpacity>
-                ))}
-                {columnLoading && (
-                    <ActivityIndicator size="small" color={colors.text} />
-                )}
+                {/* Font Size Controls */}
+                <View>
+                    <ThemedText style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}>
+                        גודל טקסט
+                    </ThemedText>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        gap: 8,
+                        padding: 4
+                    }}>
+                        <TouchableOpacity 
+                            onPress={() => {
+                                const newSize = Math.max(0.4, fontSize - 0.2);
+                                setFontSize(newSize);
+                            }}
+                            style={{ padding: 4 }}
+                        >
+                            <Ionicons name="remove" size={24} color={colors.text} />
+                        </TouchableOpacity>
+                        <TouchableOpacity 
+                            onPress={() => {
+                                const newSize = Math.min(1.6, fontSize + 0.2);
+                                setFontSize(newSize);
+                            }}
+                            style={{ padding: 4 }}
+                        >
+                            <Ionicons name="add" size={24} color={colors.text} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
+                {/* Column Controls */}
+                <View>
+                    <ThemedText style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}>
+                        הצג עמודות
+                    </ThemedText>
+                    {[
+                        { id: 0, label: 'פרק' },
+                        { id: 1, label: 'פסוק' },
+                        { id: 2, label: 'מקור' },
+                        { id: 3, label: 'תרגום' }
+                    ].map(col => (
+                        <TouchableOpacity
+                            key={col.id}
+                            onPress={() => toggleColumn(col.id)}
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                gap: 8,
+                                padding: 4
+                            }}
+                        >
+                            <Ionicons
+                                name={visibleColumns[col.id] ? 'eye' : 'eye-off'}
+                                size={20}
+                                color={colors.text}
+                            />
+                            <ThemedText style={{ fontSize: 16 }}>
+                                {col.label}
+                            </ThemedText>
+                        </TouchableOpacity>
+                    ))}
+                    {columnLoading && (
+                        <ActivityIndicator size="small" color={colors.text} />
+                    )}
+                </View>
             </View>
         )}
     </View>
@@ -118,47 +155,7 @@ export default function FileViewer() {
 
   return (
     <>
-      <View style={{ 
-        position: 'absolute',
-        top: 60,
-        right: 4,
-        zIndex: 50,
-        flexDirection: 'row',
-        backgroundColor: `${colors.card}99`,
-        borderRadius: 20,
-        padding: 4,
-        gap: 8,
-        alignItems: 'center',
-        direction: 'ltr',
-        writingDirection: 'ltr',
-        ...(Platform.OS === 'android' && {
-          layoutDirection: 'ltr',
-        })
-      }}>
-        <TouchableOpacity 
-          onPress={() => {
-            const newSize = Math.max(0.4, fontSize - 0.2);
-            setFontSize(newSize);
-          }}
-          style={{ padding: 4 }}
-        >
-          <Ionicons name="remove" size={24} color={colors.text} />
-        </TouchableOpacity>
-        <TouchableOpacity 
-          onPress={() => {
-            const newSize = Math.min(1.6, fontSize + 0.2);
-            setFontSize(newSize);
-          }}
-          style={{ padding: 4 }}
-          accessibilityLabel="הגדל גודל טקסט"
-          accessibilityHint="הגדל גודל טקסט"
-        >
-          <Ionicons name="add" size={24} color={colors.text} />
-        </TouchableOpacity>
-      </View>
-
-      {renderColumnControls()}
-
+      {renderControls()}
       <ScrollView 
         className="flex-1"
         style={{ width: '100%' }}
