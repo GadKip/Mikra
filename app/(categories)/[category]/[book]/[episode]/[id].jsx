@@ -1,4 +1,4 @@
-import { View, ScrollView, useWindowDimensions, TouchableOpacity, I18nManager, Platform, ActivityIndicator } from 'react-native';
+import { View, ScrollView, useWindowDimensions, TouchableOpacity, Platform, ActivityIndicator } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import Loader from '../../../../../components/Loader';
@@ -15,7 +15,7 @@ export default function FileViewer() {
   const [metadata, setMetadata] = useState(null);
   const [loading, setLoading] = useState(true);
   const [tableData, setTableData] = useState(null);
-  const { colors, fontSize, setFontSize, visibleColumns, toggleColumn, columnLoading } = useTheme();
+  const { colors, fontSize, setFontSize, visibleColumns, toggleColumn, columnLoading, theme, toggleTheme } = useTheme();
   const [showControlsMenu, setShowControlsMenu] = useState(false);
 
   const fetchContent = async () => {
@@ -44,13 +44,9 @@ export default function FileViewer() {
     <View style={{
         position: 'absolute',
         top: 60,
-        end: 4,
+        right: 4,
         zIndex: 50,
-        direction: 'ltr',
-        writingDirection: 'ltr',
-        ...(Platform.OS === 'android' && {
-            layoutDirection: 'ltr',
-        })
+        backgroundColor: 'transparent',
     }}>
         <TouchableOpacity
             onPress={() => setShowControlsMenu(!showControlsMenu)}
@@ -58,6 +54,9 @@ export default function FileViewer() {
                 backgroundColor: `${colors.card}99`,
                 borderRadius: 20,
                 padding: 8,
+                alignItems: 'center',
+                justifyContent: 'center',
+                transform: [{ scaleX: 1 }],
             }}
         >
             <Ionicons
@@ -74,7 +73,32 @@ export default function FileViewer() {
                 borderRadius: 12,
                 padding: 8,
                 gap: 8,
+                transform: [{ scaleX: 1 }],
             }}>
+                {/* Theme Toggle */}
+                <View>
+                    <ThemedText style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}>
+                        ערכת נושא
+                    </ThemedText>
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        gap: 8,
+                        padding: 4
+                    }}>
+                        <TouchableOpacity 
+                            onPress={toggleTheme}
+                            style={{ padding: 4 }}
+                        >
+                            <Ionicons 
+                                name={theme === 'light' ? 'moon' : 'sunny'} 
+                                size={24} 
+                                color={colors.text}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+
                 {/* Font Size Controls */}
                 <View>
                     <ThemedText style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}>
@@ -124,6 +148,7 @@ export default function FileViewer() {
                             style={{
                                 flexDirection: 'row',
                                 alignItems: 'center',
+                                justifyContent: 'center',
                                 gap: 8,
                                 padding: 4
                             }}

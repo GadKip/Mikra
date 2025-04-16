@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { StatusBar, TouchableOpacity, View, Text, Platform, I18nManager } from 'react-native';
+import { StatusBar, View, Platform, I18nManager } from 'react-native';
 import "../global.css";
 import { Slot } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -7,12 +7,11 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ThemeProvider, useTheme } from '../context/ThemeContext';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { Ionicons } from '@expo/vector-icons';
-import * as ScreenOrientation from 'expo-screen-orientation'; // Add this import
+import * as ScreenOrientation from 'expo-screen-orientation';
 import ThemedText from '../components/ThemedText';
 
 function AppLayout() {
-  const { colors, theme, toggleTheme, fontSize, setFontSize } = useTheme();
+  const { colors, theme } = useTheme();
   const [error, setError] = useState(null);
   const memoizedThemeStyles = useMemo(() => ({
     flex: 1,
@@ -49,10 +48,9 @@ function AppLayout() {
   }, [fontsLoaded]);
 
   useEffect(() => {
-    // Add this orientation setup
     async function setupOrientation() {
       try {
-        await ScreenOrientation.unlockAsync(); // Allow all orientations
+        await ScreenOrientation.unlockAsync();
       } catch (error) {
         console.error('Error setting up orientation:', error);
       }
@@ -61,7 +59,6 @@ function AppLayout() {
     setupOrientation();
   }, []);
 
-  // Add loading state debug
   if (!fontsLoaded && Platform.OS !== 'web') {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -82,36 +79,6 @@ function AppLayout() {
           barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
           translucent={false}
         />
-        <TouchableOpacity 
-          onPress={toggleTheme}
-          accessibilityHint={`שינוי ערכת נושא ל${theme === 'light' ? 'כהה' : 'בהירה'}`}
-          accessibilityLabel={`שינוי ערכת נושא ל${theme === 'light' ? 'כהה' : 'בהירה'}`}
-          style={[
-            { 
-              position: 'absolute',
-              top: 12,
-              end: 4, // Use end instead of right
-              zIndex: 50,
-              backgroundColor: `${colors.card}99`, // Added 99 for 60% opacity
-              padding: 8,
-              borderRadius: 20,
-              direction: 'ltr', // Force LTR
-              writingDirection: 'ltr', // Force LTR
-            },
-            Platform.select({
-              android: {
-                // Force RTL-independent layout on Android
-                layoutDirection: 'ltr',
-              }
-            })
-          ]}
-        >
-          <Ionicons 
-            name={theme === 'light' ? 'moon' : 'sunny'} 
-            size={24} 
-            color={colors.text}
-          />
-        </TouchableOpacity>
         <Slot />
       </GestureHandlerRootView>
     </SafeAreaProvider>

@@ -51,6 +51,7 @@
     "newArchEnabled": true,
     "plugins": [
       "expo-router",
+      "expo-localization",
       ["expo-screen-orientation",
       {
         "initialOrientation": "DEFAULT"
@@ -60,6 +61,8 @@
       "tsconfigPaths": true
     },
     "extra": {
+      "supportsRTL": true,
+      "forcesRTL": true,
       "router": {
         "origin": false
       },

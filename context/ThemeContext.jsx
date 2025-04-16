@@ -21,7 +21,7 @@ export const themes = {
     secondary: '#424242',
     card: '#1E1E1E',
     border: '#333333',
-    highlight: '#001024',
+    highlight: '#011e42',
     statusBar: 'light-content'
   }
 };
