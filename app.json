@@ -51,7 +51,6 @@
     "newArchEnabled": true,
     "plugins": [
       "expo-router",
-      "expo-localization",
       ["expo-screen-orientation",
       {
         "initialOrientation": "DEFAULT"

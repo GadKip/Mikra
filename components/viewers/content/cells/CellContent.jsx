@@ -1,10 +1,10 @@
-import { View, Text, Image } from 'react-native';
+import { View, Text } from 'react-native';
 import { useTheme } from '../../../../context/ThemeContext';
 import { isHebrewChapter } from '../../../../utils/hebrewChapters';
 import ThemedText from '../../../ThemedText';
-import ZoomableImage from '../../../ZoomableImage';  // Add this import
+import ZoomableImage from '../../../ZoomableImage';
 
-export default function CellContent({ content, styles = {}, columnIndex, rowData }) {
+export default function CellContent({ content, styles = {}, columnIndex, rowData, hasChapter }) {
     const { colors, fontSize } = useTheme();
     const isCol2Empty = !rowData.row[1]?.cell?.trim();
     const cellText = typeof content === 'object' ? content.cell : content;
@@ -12,6 +12,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     
     // Constants
     const LINE_HEIGHT_MULTIPLIER = 1.5;
+    const CHAPTER_FONT_SIZE = 24;
 
     // Common styles
     const COMMON_TEXT_STYLES = {
@@ -26,20 +27,6 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         return text.replace(/\s+־/g, '־').replace(/־\s+/g, '־');
     };
 
-    // Base text style generator
-    const getBaseTextStyles = (isParenthetical = false) => ({
-        ...columnClasses,
-        ...COMMON_TEXT_STYLES,
-        fontSize: isParenthetical ? Math.floor(columnClasses.fontSize * 0.8) : columnClasses.fontSize,
-        color: colors.text
-    });
-
-    // Process text once at the start
-    const processedText = (() => {
-        if (!cellText) return cellText;
-        return cellText.replace(/\s+־/g, '־').replace(/־\s+/g, '־');
-    })();
-
     // Font class determination
     const fontClass = (() => {
         if (columnIndex === 2) return "font-ezra";
@@ -52,12 +39,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         const getLineHeight = (size) => size * fontSize * LINE_HEIGHT_MULTIPLIER;
         
         if (columnIndex === 0) {
-            if (isHebrewChapter(content?.cell?.trim())) {
-                return { fontSize: 24, fontWeight: 'bold', fontFamily: 'GuttmanKeren' };
-            }
-            return content?.cell?.trim() === '*' ? 
-                { fontSize: 24, fontWeight: 'bold' } : 
-                { fontSize: 12 };
+            return { fontSize: 12 };
         }
         if (columnIndex === 1) return { fontSize: 12 };
         if (columnIndex === 2) {
@@ -84,52 +66,36 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         };
     })();
 
-    // Updated style classes with dynamic fontSize
-    const styleClasses = {
-        fontSize: columnClasses.fontSize,
-        fontWeight: styles.bold ? 'bold' : 'normal',
-        fontStyle: styles.italic ? 'italic' : 'normal',
-        textDecorationLine: styles.underline ? 'underline' : 'none',
-        ...(styles.isHeading1 && { fontSize: 30 * fontSize }), // was text-3xl
-        ...(styles.isHeading2 && { fontSize: 24 * fontSize }), // was text-2xl
-        ...columnClasses
-    };
-
-    const renderCol1Content = (text) => {
-        const trimmedText = text.trim();
-        if (isHebrewChapter(trimmedText) && trimmedText === text.trim()) {
-            return (
-                <ThemedText
-                    className="font-guttman"  // This adds the Guttman font
-                    style={{
-                        fontSize: 24, // Fixed size for Hebrew chapters
-                        flexWrap: 'nowrap',
-                        whiteSpace: 'nowrap'
-                    }}
-                >
-                    {trimmedText}
-                </ThemedText>
-            );
-        }
+    if (hasChapter && columnIndex === 0) {
+        const words = String(cellText).split(/\s+/);
+        const chapterWord = words.find(word => isHebrewChapter(word));
+        const otherWords = words.filter(word => !isHebrewChapter(word));
         
         return (
-            <ThemedText 
-                className="font-guttman"
-                style={{
-                    fontSize: 12, // Fixed size for other content
-                    flexWrap: 'nowrap',
-                    whiteSpace: 'nowrap',
-                }}
-            >
-                {text}
-            </ThemedText>
+            <View style={[styles.cellContainer, {overflow: 'visible'}]}>
+                <View style={{ alignItems: 'flex-end' }}>
+                    <ThemedText 
+                        className={fontClass}
+                        style={{ fontSize: CHAPTER_FONT_SIZE }}
+                    >
+                        {chapterWord}
+                    </ThemedText>
+                    {otherWords.length > 0 && (
+                        <ThemedText 
+                            className={fontClass}
+                            style={{ fontSize: columnClasses.fontSize }}
+                        >
+                            {otherWords.join(' ')}
+                        </ThemedText>
+                    )}
+                </View>
+            </View>
         );
-    };
+    }
 
-    const renderTextWithParentheses = (text) => {
-        // Only process columns 3 & 4 (indexes 2 & 3)
-        if (columnIndex !== 2 && columnIndex !== 3) {
-            return (
+    return (
+        <View style={[styles.cellContainer, {overflow: 'visible'}]}>
+            {cellText && (
                 <ThemedText 
                     className={fontClass}
                     style={{ 
@@ -137,76 +103,9 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                         ...COMMON_TEXT_STYLES
                     }}
                 >
-                    {text}
+                    {processText(cellText)}
                 </ThemedText>
-            );
-        }
-
-        const parts = text.split(/(\([^)]+\))/);
-
-        return (
-            <ThemedText 
-                className={fontClass}
-                style={getBaseTextStyles()}
-            >
-                {parts.map((part, index) => {
-                    if (part.match(/^\([^)]+\)$/)) {
-                        return (
-                            <Text 
-                                key={index}
-                                style={getBaseTextStyles(true)}
-                            >
-                                {part}
-                            </Text>
-                        );
-                    }
-                    return part;
-                })}
-            </ThemedText>
-        );
-    };
-
-    return (
-        <View style={[styles.cellContainer, {overflow: 'visible'}]}>
-            {cellText && (
-                columnIndex <= 1 ? (
-                    // Columns 0 and 1 - no processing needed
-                    columnIndex === 0 && isHebrewChapter(cellText.trim()) ? (
-                        renderCol1Content(cellText)
-                    ) : (
-                        <ThemedText 
-                            className={`${fontClass}`}
-                            style={{ 
-                                ...columnClasses,
-                                flexShrink: 0,
-                                flexGrow: 0,
-                                minWidth: 'fit-content', // Ensure content width
-                                width: 'auto',
-                                textAlign: 'justify',
-                                flexBasis: 'auto' // Allow content to determine width
-                            }}
-                        >
-                            {cellText}
-                        </ThemedText>
-                    )
-                ) : (columnIndex === 2 || columnIndex === 3) ? (
-                    renderTextWithParentheses(processedText)
-                ) : (
-                    // Other columns - default rendering
-                    <ThemedText 
-                        className="font-guttman"
-                        style={{ 
-                            ...columnClasses,
-                            textAlign: 'justify',
-                            writingDirection: 'rtl',
-                            flexWrap: 'wrap'
-                        }}
-                    >
-                        {processedText}
-                    </ThemedText>
-                )
             )}
-            {/* Replace Image with ZoomableImage */}
             {cellImage && (
                 <View style={{ width: '100%', height: 200 }}>
                     <ZoomableImage
@@ -221,4 +120,4 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
             )}
         </View>
     );
-};
+}

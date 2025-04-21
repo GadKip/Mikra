@@ -18,20 +18,24 @@ export const Table = ({ data, isLandscape, visibleColumns }) => {
         return null;
     }
 
-    // Calculate total visible columns
-    const visibleColumnCount = Object.values(visibleColumns).filter(Boolean).length;
-    
+    const isTextIncludesChapter = (text) => {
+        const hebrewChapterRegex = /^[א-ת]{1,3}$/;
+        const words = String(text).split(/\s+/);
+        return words.some(word => hebrewChapterRegex.test(word.trim()));
+    };
+
+    // Base widths that will be adjusted based on orientation
+    const getBaseWidths = () => ({
+        0: visibleColumns[0] ? (isLandscape ? 0.065 : 0.12) : 0, // 13% in portrait, 6.5% in landscape
+        1: visibleColumns[1] ? (isLandscape ? 0.035 : 0.06) : 0, // 7% in portrait, 3.5% in landscape
+        2: visibleColumns[2] ? (isLandscape ? 0.45 : 0.41) : 0,  // 40% always
+        3: visibleColumns[3] ? (isLandscape ? 0.45 : 0.41) : 0   // 40% always
+    });
+
     return (
         <View style={tableStyles}>
             {data.map((row, rowIndex) => {
-                // Get base widths for visible columns
-                const baseWidths = {
-                    0: visibleColumns[0] ? 0.13 : 0, // 13%
-                    1: visibleColumns[1] ? 0.07 : 0, // 7%
-                    2: visibleColumns[2] ? 0.4 : 0,  // 40%
-                    3: visibleColumns[3] ? 0.4 : 0   // 40%
-                };
-
+                const baseWidths = getBaseWidths();
 
                 // Adjust widths based on visible columns
                 const totalWidth = Object.values(baseWidths).reduce((a, b) => a + b, 0);
@@ -46,16 +50,21 @@ export const Table = ({ data, isLandscape, visibleColumns }) => {
                         ]}
                     >
                         {row.row.map((cell, colIndex) => {
-                            
+                            const width = colIndex <= 1 ? 
+                                baseWidths[colIndex] * 100 : 
+                                baseWidths[colIndex] * 100 * multiplier;
+
                             return visibleColumns[colIndex] && (
                                 <View 
                                     key={`cell-${rowIndex}-${colIndex}`} 
                                     style={[
                                         styles.cell,
                                         {
-                                            flex: baseWidths[colIndex] * multiplier,
-                                            minWidth: `${baseWidths[colIndex] * 100 * multiplier}%`,
-                                            display: visibleColumns[colIndex] ? 'flex' : 'none'
+                                            flex: colIndex <= 1 ? 0 : baseWidths[colIndex] * multiplier,
+                                            width: `${width}%`,
+                                            minWidth: colIndex <= 1 ? `${width}%` : undefined,
+                                            display: visibleColumns[colIndex] ? 'flex' : 'none',
+                                            justifyContent: 'flex-start'
                                         },
                                         colIndex === 0 && styles.firstColumn,
                                         colIndex === 1 && styles.secondColumn,
@@ -70,6 +79,7 @@ export const Table = ({ data, isLandscape, visibleColumns }) => {
                                         styles={cell.styles}
                                         columnIndex={colIndex}
                                         rowData={row}
+                                        hasChapter={colIndex === 0 && typeof cell.cell === 'string' && isTextIncludesChapter(cell.cell)}
                                     />
                                 </View>
                             );

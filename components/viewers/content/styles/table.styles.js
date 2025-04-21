@@ -24,17 +24,14 @@ export const styles = StyleSheet.create({
         alignItems: 'stretch',
         textAlignVertical: 'top',
     },
-
     firstColumn: {
-        minWidth: '13%', // Set absolute minimum width in pixels
-        flex: 1,
-        flexShrink: 0, // Prevent shrinking smaller than minWidth
-        paddingRight: 2
+        paddingVertical: 6,
+        paddingRight: 2,
+        justifyContent: 'flex-start',
+        alignItems: 'flex-end',
+        flexDirection: 'row-reverse'
     },
     secondColumn: {
-        minWidth: '7%', // Set absolute minimum width in pixels
-        flex: 1,
-        flexShrink: 0, // Prevent shrinking smaller than minWidth
         paddingRight: 2
     },
     thirdColumn: {
