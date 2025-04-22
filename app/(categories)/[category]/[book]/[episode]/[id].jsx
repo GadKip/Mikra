@@ -44,10 +44,11 @@ export default function FileViewer() {
     <View style={{
         position: 'absolute',
         top: 10,
-        right: 4,
-        left: undefined,
+        start: undefined,
+        end: 4,
         zIndex: 50,
         backgroundColor: 'transparent',
+
     }}>
         <TouchableOpacity
             onPress={() => setShowControlsMenu(!showControlsMenu)}
