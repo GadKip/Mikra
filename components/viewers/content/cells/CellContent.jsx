@@ -72,23 +72,21 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         const otherWords = words.filter(word => !isHebrewChapter(word));
         
         return (
-            <View style={[styles.cellContainer, {overflow: 'visible'}]}>
-                <View style={{ alignItems: 'flex-end' }}>
+            <View>
+                <ThemedText 
+                    className={fontClass}
+                    style={{ fontSize: CHAPTER_FONT_SIZE }}
+                >
+                    {chapterWord}
+                </ThemedText>
+                {otherWords.length > 0 && (
                     <ThemedText 
                         className={fontClass}
-                        style={{ fontSize: CHAPTER_FONT_SIZE }}
+                        style={{ fontSize: columnClasses.fontSize }}
                     >
-                        {chapterWord}
+                        {otherWords.join(' ')}
                     </ThemedText>
-                    {otherWords.length > 0 && (
-                        <ThemedText 
-                            className={fontClass}
-                            style={{ fontSize: columnClasses.fontSize }}
-                        >
-                            {otherWords.join(' ')}
-                        </ThemedText>
-                    )}
-                </View>
+                )}
             </View>
         );
     }

@@ -25,11 +25,7 @@ export const styles = StyleSheet.create({
         textAlignVertical: 'top',
     },
     firstColumn: {
-        paddingVertical: 6,
-        paddingRight: 2,
-        justifyContent: 'flex-start',
-        alignItems: 'flex-end',
-        flexDirection: 'row-reverse'
+        paddingRight: 2
     },
     secondColumn: {
         paddingRight: 2
