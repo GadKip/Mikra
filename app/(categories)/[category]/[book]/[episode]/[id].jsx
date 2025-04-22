@@ -43,15 +43,16 @@ export default function FileViewer() {
   const renderControls = () => (
     <View style={{
         position: 'absolute',
-        top: 60,
+        top: 10,
         right: 4,
+        left: undefined,
         zIndex: 50,
         backgroundColor: 'transparent',
     }}>
         <TouchableOpacity
             onPress={() => setShowControlsMenu(!showControlsMenu)}
             style={{
-                backgroundColor: `${colors.card}99`,
+                backgroundColor: `${colors.highlight}99`,
                 borderRadius: 20,
                 padding: 8,
                 alignItems: 'center',
@@ -74,6 +75,8 @@ export default function FileViewer() {
                 padding: 8,
                 gap: 8,
                 transform: [{ scaleX: 1 }],
+                right: 0,
+                left: undefined
             }}>
                 {/* Theme Toggle */}
                 <View>

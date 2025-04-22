@@ -127,7 +127,7 @@ export default function Settings() {
                   borderRadius: 8,
                   backgroundColor: visibleColumns[col.id] ? colors.primary : colors.secondary,
                   width: '80%',
-                  flexDirection: 'row',
+                  flexDirection: 'row-reverse',
                   justifyContent: 'space-between',
                   alignItems: 'center'
                 }}
