@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/SchemaStore/schemastore/master/src/schemas/json/package.json",
   "name": "mikra-app",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "main": "expo-router/entry",
   "scripts": {
     "start": "npx expo start",
