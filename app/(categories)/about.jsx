@@ -18,8 +18,7 @@ export default function About() {
       <View className="rounded-lg p-6"
       style={{
         backgroundColor: colors.card,
-        alignItems: 'center',
-        direction: 'ltr',
+        alignItems: 'center'
        }}>
         <ThemedText 
         style={{

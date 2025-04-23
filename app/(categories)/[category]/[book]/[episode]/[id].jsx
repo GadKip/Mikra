@@ -3,7 +3,6 @@ import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import Loader from '../../../../../components/Loader';
 import { getDocumentContent } from '../../../../../lib/appwrite';
-import { useNavigation } from 'expo-router';
 import { ContentViewer } from '../../../../../components/viewers/ContentViewer';
 import { useTheme } from '../../../../../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
@@ -42,11 +41,11 @@ export default function FileViewer() {
 
   const renderControls = () => (
     <View style={{
+        direction: 'ltr',
+        start: undefined,
+        end: 10,
         position: 'absolute',
         top: 10,
-        start: undefined,
-        end: 4,
-        zIndex: 50,
         backgroundColor: 'transparent',
 
     }}>
@@ -185,7 +184,7 @@ export default function FileViewer() {
         className="flex-1"
         style={{ width: '100%' }}
         contentContainerStyle={{ 
-          direction: 'ltr',
+          direction: 'rtl',
           width: '100%'
         }}
       >

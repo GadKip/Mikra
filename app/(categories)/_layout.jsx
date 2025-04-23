@@ -5,10 +5,9 @@ import { useTheme } from '../../context/ThemeContext';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function CategoriesLayout() {
-  const { colors, theme, toggleTheme } = useTheme();
+  const { colors, theme } = useTheme();
 
   const [fontsLoaded] = useFonts({
     'EzraSILSR': require('../../assets/fonts/EzraSILSR.ttf'),
