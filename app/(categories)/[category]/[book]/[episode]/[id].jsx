@@ -57,8 +57,7 @@ export default function FileViewer() {
                 borderRadius: 20,
                 padding: 8,
                 alignItems: 'center',
-                justifyContent: 'center',
-                transform: [{ scaleX: 1 }],
+                justifyContent: 'center'
             }}
         >
             <Ionicons
@@ -75,9 +74,6 @@ export default function FileViewer() {
                 borderRadius: 12,
                 padding: 8,
                 gap: 8,
-                transform: [{ scaleX: 1 }],
-                right: 0,
-                left: undefined
             }}>
                 {/* Theme Toggle */}
                 <View>
@@ -189,7 +185,7 @@ export default function FileViewer() {
         className="flex-1"
         style={{ width: '100%' }}
         contentContainerStyle={{ 
-          direction: 'rtl',
+          direction: 'ltr',
           width: '100%'
         }}
       >

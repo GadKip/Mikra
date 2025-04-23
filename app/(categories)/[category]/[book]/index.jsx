@@ -6,6 +6,7 @@ import { listFiles } from '../../../../lib/appwrite';
 import { client } from '../../../../lib/appwrite';
 import Loader from '../../../../components/Loader';
 import ThemedText from '../../../../components/ThemedText';
+import ThemeToggle from '../../../../components/ThemeToggle';
 
 export default function EpisodeList() {
   const { category, book } = useLocalSearchParams();
@@ -16,9 +17,6 @@ export default function EpisodeList() {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(true);
   const LIMIT = 100;
-
-
-
   
   const fetchEpisodes = async (currentOffset = 0) => {
     try {
@@ -96,6 +94,7 @@ export default function EpisodeList() {
       }}
       scrollEventThrottle={400}
     >
+      <ThemeToggle />
       {episodes.length > 0 ? (
         episodes.map((episode) => (
           <Pressable

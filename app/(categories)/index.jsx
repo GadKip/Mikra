@@ -5,6 +5,7 @@ import ThemedText from '../../components/ThemedText';
 import { listFiles } from '../../lib/appwrite';
 import { client } from '../../lib/appwrite';
 import { useState, useEffect } from 'react';
+import ThemeToggle from '../../components/ThemeToggle';
 
 export default function CategoryList() {
   const router = useRouter();
@@ -42,12 +43,34 @@ export default function CategoryList() {
   };
 
   return (
-    <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
-      {/* Main categories */}
-      {categories.map((category) => (
+      <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
+        <ThemeToggle />
+        {/* Main categories */}
+        {categories.map((category) => (
+          <Pressable
+            key={category}
+            onPress={() => handleCategoryPress(category)}
+            className="mb-6 rounded-lg p-6"
+            style={{ backgroundColor: colors.card }}
+          >
+            <ThemedText 
+              className="text-2xl font-guttman text-center"
+              style={{ textAlign: 'center' }}
+            >
+              {category}
+            </ThemedText>
+          </Pressable>
+        ))}
+
+        {/* Divider */}
+        <View 
+          className="my-4 h-[1px]" 
+          style={{ backgroundColor: colors.border }}
+        />
+
+        {/* About and Settings */}
         <Pressable
-          key={category}
-          onPress={() => handleCategoryPress(category)}
+          onPress={() => router.push('/(categories)/about')}
           className="mb-6 rounded-lg p-6"
           style={{ backgroundColor: colors.card }}
         >
@@ -55,43 +78,22 @@ export default function CategoryList() {
             className="text-2xl font-guttman text-center"
             style={{ textAlign: 'center' }}
           >
-            {category}
+            אודות
           </ThemedText>
         </Pressable>
-      ))}
 
-      {/* Divider */}
-      <View 
-        className="my-4 h-[1px]" 
-        style={{ backgroundColor: colors.border }}
-      />
-
-      {/* About and Settings */}
-      <Pressable
-        onPress={() => router.push('/(categories)/about')}
-        className="mb-6 rounded-lg p-6"
-        style={{ backgroundColor: colors.card }}
-      >
-        <ThemedText 
-          className="text-2xl font-guttman text-center"
-          style={{ textAlign: 'center' }}
+        <Pressable
+          onPress={() => router.push('/(categories)/settings')}
+          className="mb-6 rounded-lg p-6"
+          style={{ backgroundColor: colors.card }}
         >
-          אודות
-        </ThemedText>
-      </Pressable>
-
-      <Pressable
-        onPress={() => router.push('/(categories)/settings')}
-        className="mb-6 rounded-lg p-6"
-        style={{ backgroundColor: colors.card }}
-      >
-        <ThemedText 
-          className="text-2xl font-guttman text-center"
-          style={{ textAlign: 'center' }}
-        >
-          הגדרות
-        </ThemedText>
-      </Pressable>
-    </ScrollView>
+          <ThemedText 
+            className="text-2xl font-guttman text-center"
+            style={{ textAlign: 'center' }}
+          >
+            הגדרות
+          </ThemedText>
+        </Pressable>
+      </ScrollView>
   );
 }

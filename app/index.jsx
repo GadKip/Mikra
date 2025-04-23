@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useTheme } from '../context/ThemeContext';
 import Constants from 'expo-constants';
 import ThemedText from '../components/ThemedText';
+import ThemeToggle from '../components/ThemeToggle';
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -42,6 +43,7 @@ export default function SplashScreen() {
         backgroundColor: colors.background
       }}
     >
+      <ThemeToggle />
       {/* Main content in center */}
       <View className="flex-1 items-center justify-center">
         <ThemedText style={{ fontSize: 30, marginBottom: 16, textAlign: 'center' }}>

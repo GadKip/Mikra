@@ -6,6 +6,7 @@ import { listFiles } from '../../../lib/appwrite';
 import { client } from '../../../lib/appwrite';
 import Loader from '../../../components/Loader';
 import ThemedText from '../../../components/ThemedText';
+import ThemeToggle from '../../../components/ThemeToggle';
 
 export default function BookList() {
   const { category } = useLocalSearchParams(); // Change from 'id' to 'category'
@@ -33,6 +34,7 @@ export default function BookList() {
 
   return (
     <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
+      <ThemeToggle />
       {Object.entries(books).map(([book, episodes]) => (
         <Pressable
           key={book}

@@ -62,7 +62,7 @@ function AppLayout() {
   if (!fontsLoaded && Platform.OS !== 'web') {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ThemedText>Loading...</ThemedText>
+        <ThemedText>טוען...</ThemedText>
       </View>
     );
   }

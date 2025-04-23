@@ -67,57 +67,21 @@ export default function CategoriesLayout() {
           name="about" 
           options={{ 
             title: "אודות",
-            headerTitleAlign: 'center',
-            headerRight: () => (
-              <TouchableOpacity 
-                onPress={toggleTheme}
-                style={{ marginRight: 15 }}
-              >
-                <Ionicons 
-                  name={theme === 'light' ? 'moon' : 'sunny'} 
-                  size={24} 
-                  color={colors.text}
-                />
-              </TouchableOpacity>
-            )
+            headerTitleAlign: 'center'
           }} 
         />
         <Stack.Screen 
           name="settings" 
           options={{ 
             title: "הגדרות",
-            headerTitleAlign: 'center',
-            headerRight: () => (
-              <TouchableOpacity 
-                onPress={toggleTheme}
-                style={{ marginRight: 15 }}
-              >
-                <Ionicons 
-                  name={theme === 'light' ? 'moon' : 'sunny'} 
-                  size={24} 
-                  color={colors.text}
-                />
-              </TouchableOpacity>
-            )
+            headerTitleAlign: 'center'
           }} 
         />
         <Stack.Screen 
           name="index" 
           options={{ 
-            title: 'ספרים',
-            headerTitleAlign: 'center',
-            headerRight: () => (
-              <TouchableOpacity 
-                onPress={toggleTheme}
-                style={{ marginRight: 15 }}
-              >
-                <Ionicons 
-                  name={theme === 'light' ? 'moon' : 'sunny'} 
-                  size={24} 
-                  color={colors.text}
-                />
-              </TouchableOpacity>
-            )
+            title: 'מקרא מבואר',
+            headerTitleAlign: 'center'
           }} 
         />
         <Stack.Screen 
@@ -125,19 +89,7 @@ export default function CategoriesLayout() {
           options={({ route }) => ({
             title: route.params.category,
             headerTitleAlign: 'center',
-            animation: 'slide_from_right',
-            headerRight: () => (
-              <TouchableOpacity 
-                onPress={toggleTheme}
-                style={{ marginRight: 15 }}
-              >
-                <Ionicons 
-                  name={theme === 'light' ? 'moon' : 'sunny'} 
-                  size={24} 
-                  color={colors.text}
-                />
-              </TouchableOpacity>
-            )
+            animation: 'slide_from_right'
           })}
         />
         <Stack.Screen 
@@ -145,19 +97,7 @@ export default function CategoriesLayout() {
           options={({ route }) => ({
             title: route.params.book,
             headerTitleAlign: 'center',
-            animation: 'slide_from_right',
-            headerRight: () => (
-              <TouchableOpacity 
-                onPress={toggleTheme}
-                style={{ marginRight: 15 }}
-              >
-                <Ionicons 
-                  name={theme === 'light' ? 'moon' : 'sunny'} 
-                  size={24} 
-                  color={colors.text}
-                />
-              </TouchableOpacity>
-            )
+            animation: 'slide_from_right'
           })}
         />
         <Stack.Screen 
