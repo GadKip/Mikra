@@ -33,25 +33,27 @@ export default function BookList() {
   if (loading) return <Loader isLoading={loading} />;
 
   return (
-    <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <ThemeToggle />
-      {Object.entries(books).map(([book, episodes]) => (
-        <Pressable
-          key={book}
-          onPress={() => router.push(`/(categories)/${category}/${book}`)}
-          className="mb-6 rounded-lg p-6"
-          style={{ backgroundColor: colors.card }}
-        >
-          <ThemedText 
-            className="text-2xl font-guttman text-center"
-            style={{
-              textAlign: 'center'
-            }}
+      <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
+        {Object.entries(books).map(([book, episodes]) => (
+          <Pressable
+            key={book}
+            onPress={() => router.push(`/(categories)/${category}/${book}`)}
+            className="mb-6 rounded-lg p-6"
+            style={{ backgroundColor: colors.card }}
           >
-            {book}
-          </ThemedText>
-        </Pressable>
-      ))}
-    </ScrollView>
+            <ThemedText 
+              className="text-2xl font-guttman text-center"
+              style={{
+                textAlign: 'center'
+              }}
+            >
+              {book}
+            </ThemedText>
+          </Pressable>
+        ))}
+      </ScrollView>
+    </View>
   );
 }

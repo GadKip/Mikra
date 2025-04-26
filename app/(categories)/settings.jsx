@@ -9,13 +9,13 @@ export default function Settings() {
   const { colors, fontSize, setFontSize, theme, setTheme, visibleColumns, toggleColumn } = useTheme();
   
   const fontSizes = [
-    { label: 'קטנטן', value: 0.4 },
-    { label: 'קטן מאוד', value: 0.6 },
-    { label: 'קטן', value: 0.8 },
-    { label: 'בינוני', value: 1 },
-    { label: 'גדול', value: 1.2 },
-    { label: 'גדול מאוד', value: 1.4 },
-    { label: 'ענק', value: 1.6 }
+    { label: 'קטנטן', value: 0.4, icon: 'text' },
+    { label: 'קטן מאוד', value: 0.6, icon: 'text' },
+    { label: 'קטן', value: 0.8, icon: 'text' },
+    { label: 'בינוני', value: 1, icon: 'text' },
+    { label: 'גדול', value: 1.2, icon: 'text' },
+    { label: 'גדול מאוד', value: 1.4, icon: 'text' },
+    { label: 'ענק', value: 1.6, icon: 'text' }
   ];
 
   const themes = [
@@ -51,6 +51,10 @@ export default function Settings() {
                   borderRadius: 8,
                   backgroundColor: theme === themeOption.value ? colors.primary : colors.secondary,
                   width: '40%',
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 8
                 }}
               >
                 <ThemedText 
@@ -63,6 +67,11 @@ export default function Settings() {
                 >
                   {themeOption.label}
                 </ThemedText>
+                <Ionicons
+                    name={themeOption.value === 'light' ? 'sunny' : 'moon'}
+                    size={24}
+                    color={colors.text}
+                />
               </TouchableOpacity>
             ))}
           </View>
@@ -82,7 +91,7 @@ export default function Settings() {
                   padding: 8,
                   borderRadius: 8,
                   backgroundColor: fontSize === size.value ? colors.primary : colors.secondary,
-                  width: '80%',
+                  width: '80%'
                 }}
               >
                 <ThemedText 

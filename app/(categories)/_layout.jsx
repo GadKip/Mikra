@@ -80,7 +80,8 @@ export default function CategoriesLayout() {
           name="index" 
           options={{ 
             title: 'מקרא מבואר',
-            headerTitleAlign: 'center'
+            headerTitleAlign: 'center',
+            headerShown: false
           }} 
         />
         <Stack.Screen 

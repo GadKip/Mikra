@@ -47,6 +47,7 @@ export default function FileViewer() {
         position: 'absolute',
         top: 10,
         backgroundColor: 'transparent',
+        zIndex: 50,
 
     }}>
         <TouchableOpacity

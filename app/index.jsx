@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Animated, Text, View } from 'react-native';
+import { Animated, Text, View, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../context/ThemeContext';
 import Constants from 'expo-constants';
@@ -36,36 +36,80 @@ export default function SplashScreen() {
   }, []);
 
   return (
-    <Animated.View 
-      className="flex-1"
-      style={{ 
-        opacity: fadeAnim,
-        backgroundColor: colors.background
-      }}
+    <ImageBackground
+      source={require('../assets/splash.png')}
+      style={{ flex: 1 }}
+      resizeMode="cover"
     >
-      <ThemeToggle />
-      {/* Main content in center */}
-      <View className="flex-1 items-center justify-center">
-        <ThemedText style={{ fontSize: 30, marginBottom: 16, textAlign: 'center' }}>
-          מקרא מבואר
-        </ThemedText>
-        <ThemedText style={{ fontSize: 16, marginBottom: 8, textAlign: 'center' }}>
-          המקרא לצד תרגומו לשפה עכשווית
-        </ThemedText>
-        <ThemedText style={{ fontSize: 18, marginBottom: 8, textAlign: 'center' }}>
-          מאת הרב דוד כוכב
-        </ThemedText>
-      </View>
+      <Animated.View 
+        className="flex-1"
+        style={{ 
+          opacity: fadeAnim,
+          backgroundColor: `${colors.background}CC` // Semi-transparent background
+        }}
+      >
+        <ThemeToggle />
+        {/* Main content - moved down using marginTop */}
+        <View className="flex-1 items-center justify-end" style={{ paddingBottom: 100 }}>
+          <ThemedText style={{ 
+            fontSize: 30, 
+            marginBottom: 16, 
+            textAlign: 'center',
+            textShadowColor: colors.card,
+            textShadowOffset: { width: 1, height: 1 },
+            textShadowRadius: 2
+          }}>
+            מקרא מבואר
+          </ThemedText>
+          <ThemedText style={{ 
+            fontSize: 18, 
+            marginBottom: 8, 
+            textAlign: 'center',
+            textShadowColor: colors.card,
+            textShadowOffset: { width: 1, height: 1 },
+            textShadowRadius: 2
+          }}>
+            מאת הרב דוד כוכב
+          </ThemedText>
+          <ThemedText style={{ 
+            fontSize: 16, 
+            marginBottom: 8, 
+            textAlign: 'center',
+            textShadowColor: colors.card,
+            textShadowOffset: { width: 1, height: 1 },
+            textShadowRadius: 2
+          }}>
+            המקרא לצד תרגומו לשפה עכשווית
+          </ThemedText>
+        </View>
 
-      {/* Bottom section */}
-      <View className="items-center pb-8">
-        <ThemedText style={{ fontSize: 14, marginBottom: 12, textAlign: 'center', opacity: 0.7 }}>
-          Developed by Gadi K. ©
-        </ThemedText>
-        <ThemedText style={{ fontSize: 14, textAlign: 'center', opacity: 0.6 }}>
-          Version {version}
-        </ThemedText>
-      </View>
-    </Animated.View>
+      </Animated.View>
+      
+        {/* Bottom section */}
+        <View className="items-center pb-8">
+          <ThemedText style={{ 
+            fontSize: 14, 
+            marginBottom: 12, 
+            textAlign: 'center', 
+            opacity: 0.7,
+            textShadowColor: colors.card,
+            textShadowOffset: { width: 1, height: 1 },
+            textShadowRadius: 2
+          }}>
+            Developed by Gadi K. ©
+          </ThemedText>
+          <ThemedText style={{ 
+            fontSize: 14, 
+            textAlign: 'center', 
+            opacity: 0.6,
+            textShadowColor: colors.card,
+            textShadowOffset: { width: 1, height: 1 },
+            textShadowRadius: 2
+          }}>
+            Version {version}
+          </ThemedText>
+        </View>
+
+    </ImageBackground>
   );
 }

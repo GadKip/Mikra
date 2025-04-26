@@ -1,4 +1,4 @@
-import { View, ScrollView, Pressable } from 'react-native';
+import { View, ScrollView, Pressable, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
 import ThemedText from '../../components/ThemedText';
@@ -43,8 +43,21 @@ export default function CategoryList() {
   };
 
   return (
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
+      <ThemeToggle />
       <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
-        <ThemeToggle />
+        {/* Logo */}
+        <View className="items-center mb-6">
+          <Image
+            source={require('../../assets/logo.png')}
+            style={{
+              width: 200,
+              height: 200,
+              resizeMode: 'contain'
+            }}
+          />
+        </View>
+
         {/* Main categories */}
         {categories.map((category) => (
           <Pressable
@@ -62,38 +75,38 @@ export default function CategoryList() {
           </Pressable>
         ))}
 
-        {/* Divider */}
-        <View 
-          className="my-4 h-[1px]" 
-          style={{ backgroundColor: colors.border }}
-        />
+        {/* Spacer */}
+        <View style={{ flex: 1, minHeight: 40 }} />
 
-        {/* About and Settings */}
-        <Pressable
-          onPress={() => router.push('/(categories)/about')}
-          className="mb-6 rounded-lg p-6"
-          style={{ backgroundColor: colors.card }}
-        >
-          <ThemedText 
-            className="text-2xl font-guttman text-center"
-            style={{ textAlign: 'center' }}
+        {/* Bottom Navigation */}
+        <View className="flex-row justify-between gap-4">
+          <Pressable
+            onPress={() => router.push('/(categories)/about')}
+            className="flex-1 rounded-lg p-4"
+            style={{ backgroundColor: `${colors.card}99` }}
           >
-            אודות
-          </ThemedText>
-        </Pressable>
+            <ThemedText 
+              className="text-lg font-guttman text-center"
+              style={{ textAlign: 'center' }}
+            >
+              אודות
+            </ThemedText>
+          </Pressable>
 
-        <Pressable
-          onPress={() => router.push('/(categories)/settings')}
-          className="mb-6 rounded-lg p-6"
-          style={{ backgroundColor: colors.card }}
-        >
-          <ThemedText 
-            className="text-2xl font-guttman text-center"
-            style={{ textAlign: 'center' }}
+          <Pressable
+            onPress={() => router.push('/(categories)/settings')}
+            className="flex-1 rounded-lg p-4"
+            style={{ backgroundColor: `${colors.card}99` }}
           >
-            הגדרות
-          </ThemedText>
-        </Pressable>
+            <ThemedText 
+              className="text-lg font-guttman text-center"
+              style={{ textAlign: 'center' }}
+            >
+              הגדרות
+            </ThemedText>
+          </Pressable>
+        </View>
       </ScrollView>
+    </View>
   );
 }

@@ -82,43 +82,45 @@ export default function EpisodeList() {
   if (loading && offset === 0) return <Loader isLoading={loading} />;
 
   return (
-    <ScrollView 
-      className="flex-1 p-4" 
-      style={{ backgroundColor: colors.background }}
-      onScroll={({ nativeEvent }) => {
-        const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
-        const isEndReached = layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
-        if (isEndReached && hasMore && !loading) {
-          loadMore();
-        }
-      }}
-      scrollEventThrottle={400}
-    >
+    <View className="flex-1" style={{ backgroundColor: colors.background }}>
       <ThemeToggle />
-      {episodes.length > 0 ? (
-        episodes.map((episode) => (
-          <Pressable
-            key={episode.$id}
-            onPress={() => router.push(`/(categories)/${category}/${book}/${episode.episode}/${episode.$id}`)}
-            className="mb-6 rounded-lg p-6"
-            style={{ backgroundColor: colors.card }}
-          >
-            <ThemedText 
-              className="text-2xl font-guttman text-center"
-              style={{
-                textAlign: 'center'
-              }}
+      <ScrollView 
+        className="flex-1 p-4" 
+        style={{ backgroundColor: colors.background }}
+        onScroll={({ nativeEvent }) => {
+          const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
+          const isEndReached = layoutMeasurement.height + contentOffset.y >= contentSize.height - 20;
+          if (isEndReached && hasMore && !loading) {
+            loadMore();
+          }
+        }}
+        scrollEventThrottle={400}
+      >
+        {episodes.length > 0 ? (
+          episodes.map((episode) => (
+            <Pressable
+              key={episode.$id}
+              onPress={() => router.push(`/(categories)/${category}/${book}/${episode.episode}/${episode.$id}`)}
+              className="mb-6 rounded-lg p-6"
+              style={{ backgroundColor: colors.card }}
             >
-              {episode.episode}
-            </ThemedText>
-          </Pressable>
-        ))
-      ) : (
-        <ThemedText className="text-xl font-guttman text-center mt-4">
-          אין פרקים זמינים
-        </ThemedText>
-      )}
-      {loading && offset > 0 && <Loader isLoading={true} />}
-    </ScrollView>
+              <ThemedText 
+                className="text-2xl font-guttman text-center"
+                style={{
+                  textAlign: 'center'
+                }}
+              >
+                {episode.episode}
+              </ThemedText>
+            </Pressable>
+          ))
+        ) : (
+          <ThemedText className="text-xl font-guttman text-center mt-4">
+            אין פרקים זמינים
+          </ThemedText>
+        )}
+        {loading && offset > 0 && <Loader isLoading={true} />}
+      </ScrollView>
+    </View>
   );
 }

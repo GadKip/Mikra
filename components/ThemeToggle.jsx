@@ -12,7 +12,7 @@ export default function ThemeToggle({ style }) {
       style={[{
         position: 'absolute',
         top: 10,
-        start: 10,
+        end: 10,
         padding: 8,
         borderRadius: 20,
         backgroundColor: `${colors.highlight}99`,
