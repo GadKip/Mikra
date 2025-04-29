@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Animated, Text, View, ImageBackground } from 'react-native';
+import { Animated, Text, View, ImageBackground, useWindowDimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../context/ThemeContext';
 import Constants from 'expo-constants';
@@ -11,6 +11,8 @@ export default function SplashScreen() {
   const { colors } = useTheme();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const version = Constants.expoConfig?.version ?? '1.0.0';
+  const { width, height } = useWindowDimensions();
+  const isLandscape = width > height;
 
   useEffect(() => {
     // Start fade in animation immediately
@@ -37,7 +39,10 @@ export default function SplashScreen() {
 
   return (
     <ImageBackground
-      source={require('../assets/splash.png')}
+      source={isLandscape ? 
+        require('../assets/splash-landscape.png') : 
+        require('../assets/splash.png')
+      }
       style={{ flex: 1 }}
       resizeMode="cover"
     >
@@ -45,12 +50,20 @@ export default function SplashScreen() {
         className="flex-1"
         style={{ 
           opacity: fadeAnim,
-          backgroundColor: `${colors.background}CC` // Semi-transparent background
+          backgroundColor: `${colors.background}CC`
         }}
       >
         <ThemeToggle />
-        {/* Main content - moved down using marginTop */}
-        <View className="flex-1 items-center justify-end" style={{ paddingBottom: 100 }}>
+        {/* Main content - conditionally positioned */}
+        <View
+          style={{
+            flex: 1,
+            justifyContent: isLandscape ? 'center' : 'flex-start',
+            alignItems: 'center',
+            paddingHorizontal: 20,
+            marginTop: isLandscape ? 0 : 100 // Add top margin only in portrait mode
+          }}
+        >
           <ThemedText style={{ 
             fontSize: 30, 
             marginBottom: 16, 
@@ -82,9 +95,7 @@ export default function SplashScreen() {
             המקרא לצד תרגומו לשפה עכשווית
           </ThemedText>
         </View>
-
-      </Animated.View>
-      
+        
         {/* Bottom section */}
         <View className="items-center pb-8">
           <ThemedText style={{ 
@@ -109,7 +120,7 @@ export default function SplashScreen() {
             Version {version}
           </ThemedText>
         </View>
-
+      </Animated.View>
     </ImageBackground>
   );
 }
