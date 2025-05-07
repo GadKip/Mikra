@@ -3,7 +3,7 @@
     "name": "מקרא מבואר",
     "scheme": "mikra",
     "slug": "mikra-app",
-    "version": "1.0.12",
+    "version": "1.0.13",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
