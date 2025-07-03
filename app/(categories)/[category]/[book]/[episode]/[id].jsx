@@ -1,4 +1,5 @@
-import { View, ScrollView, useWindowDimensions, TouchableOpacity, Platform, ActivityIndicator } from 'react-native';
+import { View, ScrollView, useWindowDimensions, TouchableOpacity, Platform, ActivityIndicator, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import Loader from '../../../../../components/Loader';
@@ -45,7 +46,7 @@ export default function FileViewer() {
         start: undefined,
         end: 10,
         position: 'absolute',
-        top: 10,
+        top: 10, // Adjust top position to account for header
         backgroundColor: 'transparent',
         zIndex: 50,
 
@@ -179,7 +180,9 @@ export default function FileViewer() {
   if (loading) return <Loader isLoading={loading} />;
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <StatusBar
+      />
       {renderControls()}
       <ScrollView 
         className="flex-1"
@@ -192,7 +195,7 @@ export default function FileViewer() {
         <View style={{ 
           flex: 1, 
           width: '100%',
-          alignSelf: 'stretch' 
+          alignSelf: 'stretch'
         }}>
           <ContentViewer 
             data={tableData}
@@ -201,6 +204,6 @@ export default function FileViewer() {
           />
         </View>
       </ScrollView>
-    </>
+    </SafeAreaView>
   );
 }

@@ -1,4 +1,5 @@
-import { View, ScrollView, Pressable, Image } from 'react-native';
+import { View, ScrollView, Pressable, Image, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
 import ThemedText from '../../components/ThemedText';
@@ -9,7 +10,7 @@ import ThemeToggle from '../../components/ThemeToggle';
 
 export default function CategoryList() {
   const router = useRouter();
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const categories = ['הקדמה והסכמות','תורה', 'נביאים', 'כתובים'];
   const [introductionId, setIntroductionId] = useState(null);
 
@@ -43,9 +44,23 @@ export default function CategoryList() {
   };
 
   return (
-    <View className="flex-1" style={{ backgroundColor: colors.background }}>
+    <SafeAreaView 
+      style={{ 
+        flex: 1,
+        backgroundColor: colors.background 
+      }}
+      edges={['top']}
+    >
+      <StatusBar
+        backgroundColor="transparent"
+        translucent={true}
+        barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+      />
       <ThemeToggle />
-      <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
+      <ScrollView 
+        className="flex-1 p-4" 
+        style={{ backgroundColor: colors.background }}
+      >
         {/* Logo */}
         <View className="items-center mb-6">
           <Image
@@ -107,6 +122,6 @@ export default function CategoryList() {
           </Pressable>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
