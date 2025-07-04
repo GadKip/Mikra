@@ -7,6 +7,7 @@ import { client } from '../../../lib/appwrite';
 import Loader from '../../../components/Loader';
 import ThemedText from '../../../components/ThemedText';
 import ThemeToggle from '../../../components/ThemeToggle';
+import { SafeAreaView } from 'node_modules/react-native-safe-area-context/lib/typescript/src';
 
 export default function BookList() {
   const { category } = useLocalSearchParams(); // Change from 'id' to 'category'
@@ -33,27 +34,29 @@ export default function BookList() {
   if (loading) return <Loader isLoading={loading} />;
 
   return (
-    <View className="flex-1" style={{ backgroundColor: colors.background }}>
-      <ThemeToggle />
-      <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
-        {Object.entries(books).map(([book, episodes]) => (
-          <Pressable
-            key={book}
-            onPress={() => router.push(`/(categories)/${category}/${book}`)}
-            className="mb-6 rounded-lg p-6"
-            style={{ backgroundColor: colors.card }}
-          >
-            <ThemedText 
-              className="text-2xl font-guttman text-center"
-              style={{
-                textAlign: 'center'
-              }}
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <View className="flex-1" style={{ backgroundColor: colors.background }}>
+        <ThemeToggle />
+        <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
+          {Object.entries(books).map(([book, episodes]) => (
+            <Pressable
+              key={book}
+              onPress={() => router.push(`/(categories)/${category}/${book}`)}
+              className="mb-6 rounded-lg p-6"
+              style={{ backgroundColor: colors.card }}
             >
-              {book}
-            </ThemedText>
-          </Pressable>
-        ))}
-      </ScrollView>
-    </View>
+              <ThemedText 
+                className="text-2xl font-guttman text-center"
+                style={{
+                  textAlign: 'center'
+                }}
+              >
+                {book}
+              </ThemedText>
+            </Pressable>
+          ))}
+        </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 }

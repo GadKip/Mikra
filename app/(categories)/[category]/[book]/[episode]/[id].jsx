@@ -181,8 +181,7 @@ export default function FileViewer() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <StatusBar
-      />
+      <StatusBar/>
       {renderControls()}
       <ScrollView 
         className="flex-1"
