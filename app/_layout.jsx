@@ -3,7 +3,7 @@ import { StatusBar, View, Platform, I18nManager } from 'react-native';
 import "../global.css";
 import { Slot } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeProvider, useTheme } from '../context/ThemeContext';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -70,17 +70,19 @@ function AppLayout() {
 
   return (
     <SafeAreaProvider>
-      <GestureHandlerRootView 
-        style={{ flex: 1, backgroundColor: colors.background }}
-        className={`flex-1 ${theme === 'dark' ? 'dark' : ''}`}
-      >
-        <StatusBar 
-          backgroundColor={theme === 'dark' ? colors.card : 'transparent'}
-          barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
-          translucent={false}
-        />
-        <Slot />
-      </GestureHandlerRootView>
+      <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+        <GestureHandlerRootView 
+          style={{ flex: 1, backgroundColor: colors.background }}
+          className={`flex-1 ${theme === 'dark' ? 'dark' : ''}`}
+        >
+          <StatusBar 
+            backgroundColor={theme === 'dark' ? colors.card : 'transparent'}
+            barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+            translucent={false}
+          />
+          <Slot />
+        </GestureHandlerRootView>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }
