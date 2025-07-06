@@ -15,17 +15,15 @@
     "@react-native-async-storage/async-storage": "2.1.2",
     "@types/jest": "^30.0.0",
     "appwrite": "^13.0.1",
-    "expo": "^53.0.16",
-    "expo-constants": "~17.1.6",
-    "expo-linking": "~7.1.6",
-    "expo-router": "~5.1.2",
+    "expo": "53.0.17",
+    "expo-constants": "~17.1.7",
+    "expo-linking": "~7.1.7",
+    "expo-router": "~5.1.3",
     "expo-screen-orientation": "~8.1.7",
-    "expo-splash-screen": "~0.30.9",
+    "expo-splash-screen": "~0.30.10",
     "expo-status-bar": "~2.2.3",
     "expo-updates": "~0.28.16",
-    "fs": "^0.0.1-security",
     "nativewind": "^4.1.23",
-    "path": "^0.12.7",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.5",
@@ -44,10 +42,16 @@
     "@react-native-community/cli": "latest",
     "@tsconfig/react-native": "^3.0.5",
     "@types/react": "~19.0.10",
-    "@types/react-native": "^0.73.0",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.35",
     "typescript": "^5.8.3"
   },
-  "private": true
+  "private": true,
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "listUnknownPackages": false
+      }
+    }
+  }
 }

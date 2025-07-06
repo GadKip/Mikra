@@ -1,32 +1,12 @@
 {
   "expo": {
     "name": "מקרא מבואר",
-    "scheme": "mikra",
     "slug": "mikra-app",
     "version": "1.0.13",
-    "orientation": "default",
-    "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "assetBundlePatterns": [
       "**/*"
     ],
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.gadik.mikra",
-      "requireFullScreen": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.gadik.mikra"
-    },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro",
