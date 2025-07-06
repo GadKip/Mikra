@@ -7,7 +7,7 @@ import { client } from '../../../lib/appwrite';
 import Loader from '../../../components/Loader';
 import ThemedText from '../../../components/ThemedText';
 import ThemeToggle from '../../../components/ThemeToggle';
-import { SafeAreaView } from 'node_modules/react-native-safe-area-context/lib/typescript/src';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function BookList() {
   const { category } = useLocalSearchParams(); // Change from 'id' to 'category'

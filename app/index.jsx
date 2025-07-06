@@ -39,9 +39,8 @@ export default function SplashScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar
-        backgroundColor={theme === 'dark' ? colors.card : 'transparent'}
         barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
       />
       <ImageBackground
