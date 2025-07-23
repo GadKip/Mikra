@@ -33,3 +33,8 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# Ignore generated native directories
+android/
+ios/
+

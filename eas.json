@@ -4,15 +4,26 @@
     "appVersionSource": "remote"
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal"
-    },
-    "production": {
-      "autoIncrement": true
+      "development": {
+        "environment": "development"
+      },
+      "preview": {
+        "environment": "preview"
+      },
+      "production": {
+        "android": {
+          "autoIncrement": true
+        },
+        "ios": {
+          "autoIncrement": true
+        },
+        "web": {
+          "autoIncrement": true
+        },
+        "environment": "production"
+      },
+      "my-profile": {
+        "environment": "production"
     }
   },
   "submit": {

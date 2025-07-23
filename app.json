@@ -2,11 +2,18 @@
   "expo": {
     "name": "מקרא מבואר",
     "slug": "mikra-app",
-    "version": "1.0.13",
+    "version": "1.0.14",
+    "orientation": "default",
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": [
       "**/*"
     ],
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro",
@@ -31,10 +38,12 @@
     "newArchEnabled": true,
     "plugins": [
       "expo-router",
-      ["expo-screen-orientation",
-      {
-        "initialOrientation": "DEFAULT"
-      }]
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
+        }
+      ]
     ],
     "experiments": {
       "tsconfigPaths": true
@@ -48,6 +57,13 @@
       "eas": {
         "projectId": "98c020ac-7dbf-409d-9b00-72bfef5f5e8b"
       }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.gadik.mikra"
     }
   }
 }
