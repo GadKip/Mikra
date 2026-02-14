@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { StatusBar, View, TouchableOpacity } from 'react-native';
+import { StatusBar, View, TouchableOpacity, Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
 import { useFonts } from 'expo-font';
@@ -39,15 +39,24 @@ export default function CategoriesLayout() {
   const screenOptions = {
     headerShown: true,
     headerStyle: {
-      backgroundColor: colors.card
+      backgroundColor: colors.card,
+      height: Platform.OS === 'ios' ? 44 : 56,
+      elevation: 0, // Remove Android shadow
+      shadowOpacity: 0, // Remove iOS shadow
+      borderBottomWidth: 0, // Remove bottom border
     },
     headerTitleStyle: {
       color: colors.text,
-      fontFamily: 'EzraSILSR'
+      fontFamily: 'EzraSILSR',
+      fontSize: 18, // Adjust font size
     },
     headerTintColor: colors.text,
     contentStyle: {
-      backgroundColor: colors.background
+      backgroundColor: colors.background,
+      paddingTop: 0, // Remove extra padding
+    },
+    headerTitleContainerStyle: {
+      marginVertical: 0, // Remove vertical margins
     }
   };
 

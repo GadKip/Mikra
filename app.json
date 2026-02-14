@@ -2,6 +2,7 @@
   "expo": {
     "name": "מקרא מבואר",
     "slug": "mikra-app",
+    "scheme": "mikra",
     "version": "1.0.14",
     "orientation": "default",
     "userInterfaceStyle": "automatic",

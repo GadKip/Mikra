@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, View, Image, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { GestureHandlerRootView, PinchGestureHandler } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, { 
-    useAnimatedGestureHandler,
     useAnimatedStyle,
     useSharedValue,
     withSpring
@@ -41,17 +40,21 @@ const ZoomableImage = ({ source, style, alt, debug = false }) => {
         }
     }, [source?.uri]);
 
-    const pinchHandler = useAnimatedGestureHandler({
-        onStart: (_, ctx) => {
-            ctx.startScale = scale.value;
-        },
-        onActive: (event, ctx) => {
-            scale.value = Math.max(0.5, Math.min(8, ctx.startScale * event.scale));
-        },
-        onEnd: () => {
+    const pinchGesture = Gesture.Pinch()
+        .onUpdate((event) => {
+            // The new logic uses the saved scale from the previous gesture's end
+            // and multiplies it by the current gesture's scale factor.
+            scale.value = Math.max(0.5, Math.min(8, savedScale.value * event.scale));
+        })
+        .onEnd(() => {
+            // Save the final scale for the next gesture
             savedScale.value = scale.value;
-        },
-    });
+            // The logic from the old onEnded prop is now here
+            if (scale.value < 1) {
+                scale.value = withSpring(1);
+                savedScale.value = 1;
+            }
+        });
 
     const imageStyle = useAnimatedStyle(() => ({
         transform: [{ scale: scale.value }],
@@ -99,42 +102,17 @@ const ZoomableImage = ({ source, style, alt, debug = false }) => {
                 onPress={() => setIsModalVisible(true)}
                 onLayout={handleLayout}
             >
-                <View style={[
-                    styles.imageWrapper,
-                    style,
-                    { 
-                        backgroundColor: isLoading ? colors.card : 'rgba(255,0,0,0.1)', // Red tint to visualize
-                    }
-                ]}>
+                {/* Unchanged thumbnail view */}
+                <View style={[styles.imageWrapper, style]}>
                     <Image 
                         source={source} 
-                        style={[
-                            styles.thumbnailImage,
-                            { opacity: isLoading ? 0 : 1 }
-                        ]}
-                        onLoad={(event) => {
-                            handleImageLoad();
-                            console.log('Image loaded with dimensions:', {
-                                width: event.nativeEvent?.source?.width,
-                                height: event.nativeEvent?.source?.height,
-                                style
-                            });
-                        }}
+                        style={[styles.thumbnailImage, { opacity: isLoading ? 0 : 1 }]}
+                        onLoad={handleImageLoad}
                         onError={handleImageError}
                         resizeMode="contain"
                     />
-                    {isLoading && (
-                        <ActivityIndicator 
-                            size="large" 
-                            color={colors.text}
-                            style={StyleSheet.absoluteFill}
-                        />
-                    )}
-                    {hasError && (
-                        <View style={[styles.errorContainer]}>
-                            <ThemedText>Failed to load image</ThemedText>
-                        </View>
-                    )}
+                    {isLoading && <ActivityIndicator size="large" color={colors.text} style={StyleSheet.absoluteFill} />}
+                    {hasError && <View style={styles.errorContainer}><ThemedText>Failed to load image</ThemedText></View>}
                 </View>
             </TouchableOpacity>
 
@@ -146,7 +124,7 @@ const ZoomableImage = ({ source, style, alt, debug = false }) => {
                     setIsModalVisible(false);
                 }}
             >
-                <View style={styles.modalContainer}>
+                <GestureHandlerRootView style={styles.modalContainer}>
                     <TouchableOpacity
                         style={styles.closeButton}
                         onPress={() => {
@@ -160,39 +138,30 @@ const ZoomableImage = ({ source, style, alt, debug = false }) => {
                         </View>
                     </TouchableOpacity>
 
-                    <GestureHandlerRootView style={styles.gestureContainer}>
-                        <PinchGestureHandler
-                            onGestureEvent={pinchHandler}
-                            onEnded={() => {
-                                if (scale.value < 1) {
-                                    scale.value = withSpring(1);
-                                    savedScale.value = 1;
-                                }
-                            }}
-                        >
-                            <Animated.View style={styles.gestureContainer}>
-                                <Animated.Image
-                                    source={source}
-                                    style={[styles.modalImage, imageStyle]}
-                                    resizeMode="contain"
-                                    onLoad={handleImageLoad}
-                                    onError={handleImageError}
+                    <GestureDetector gesture={pinchGesture}>
+                        <Animated.View style={styles.gestureContainer}>
+                            <Animated.Image
+                                source={source}
+                                style={[styles.modalImage, imageStyle]}
+                                resizeMode="contain"
+                                onLoad={handleImageLoad}
+                                onError={handleImageError}
+                            />
+                            {isLoading && (
+                                <ActivityIndicator 
+                                    size="large" 
+                                    color="white"
+                                    style={StyleSheet.absoluteFill}
                                 />
-                                {isLoading && (
-                                    <ActivityIndicator 
-                                        size="large" 
-                                        color="white"
-                                        style={StyleSheet.absoluteFill}
-                                    />
-                                )}
-                            </Animated.View>
-                        </PinchGestureHandler>
-                    </GestureHandlerRootView>
-                </View>
+                            )}
+                        </Animated.View>
+                    </GestureDetector>
+                </GestureHandlerRootView>
             </Modal>
         </>
     );
 };
+
 
 const styles = StyleSheet.create({
     modalContainer: {
