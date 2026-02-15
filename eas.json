@@ -17,9 +17,6 @@
         "ios": {
           "autoIncrement": true
         },
-        "web": {
-          "autoIncrement": true
-        },
         "environment": "production"
       },
       "my-profile": {
