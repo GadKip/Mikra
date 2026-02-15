@@ -3,7 +3,7 @@ import { useTheme } from '../../../context/ThemeContext';
 import { styles } from './styles/table.styles';
 import CellContent from './cells/CellContent';
 
-export const Table = ({ data, isLandscape, visibleColumns }) => {
+export const Table = ({ data, isLandscape, visibleColumns, onItemLayout, scrollViewRef, tableIndex }) => {
     const { colors } = useTheme();
         
     const tableStyles = [
@@ -80,6 +80,9 @@ export const Table = ({ data, isLandscape, visibleColumns }) => {
                                         columnIndex={colIndex}
                                         rowData={row}
                                         hasChapter={colIndex === 0 && typeof cell.cell === 'string' && isTextIncludesChapter(cell.cell)}
+                                        onItemLayout={onItemLayout}
+                                        scrollViewRef={scrollViewRef}
+                                        cellId={`heading-table-${tableIndex}-${rowIndex}`}
                                     />
                                 </View>
                             );

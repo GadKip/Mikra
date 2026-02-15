@@ -1,13 +1,14 @@
 import { View, ScrollView, useWindowDimensions, TouchableOpacity, Platform, ActivityIndicator, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Loader from '../../../../../components/Loader';
 import { getDocumentContent } from '../../../../../lib/appwrite';
 import { ContentViewer } from '../../../../../components/viewers/ContentViewer';
 import { useTheme } from '../../../../../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import ThemedText from '../../../../../components/ThemedText';
+import { IndexSidebar } from '../../../../../components/IndexSidebar';
 
 export default function FileViewer() { 
   const { width, height } = useWindowDimensions();
@@ -17,6 +18,10 @@ export default function FileViewer() {
   const [tableData, setTableData] = useState(null);
   const { colors, fontSize, setFontSize, visibleColumns, toggleColumn, columnLoading, theme, toggleTheme } = useTheme();
   const [showControlsMenu, setShowControlsMenu] = useState(false);
+  const [headings, setHeadings] = useState([]);
+  const [showIndex, setShowIndex] = useState(false);
+  const [layoutMap, setLayoutMap] = useState({});
+  const scrollViewRef = useRef(null);
 
   const fetchContent = async () => {
     setLoading(true);
@@ -24,7 +29,45 @@ export default function FileViewer() {
       const response = await getDocumentContent(id);
       if (response && response.content) {
         const jsonContent = JSON.parse(response.content);
+
         setTableData(jsonContent);
+        setLayoutMap({}); // Reset layout map on new content
+        
+        const extractedHeadings = [];
+
+        // 1. Add "Top of Page" as the very first item
+        extractedHeadings.push({
+        id: 'top',
+        text: 'תחילת הדף', // Hebrew for "Top of Page"
+        });
+
+        jsonContent.content.forEach((item, index) => {
+        // 2. Capture headings outside the table
+        if (item.type === 'text' && item.data?.style === 'h2') {
+            extractedHeadings.push({ 
+            id: `heading-${index}`, 
+            text: item.data.text 
+            });
+        }
+
+        // 3. Capture headings inside the table
+        if (item.type === 'table' && Array.isArray(item.data)) {
+            item.data.forEach((rowData, rowIndex) => {
+            const col2Text = rowData.row?.[1]?.cell?.trim();
+            const col4Text = rowData.row?.[3]?.cell?.trim();
+
+            // Your "Fingerprint" logic
+            if (col4Text && !col2Text) {
+                extractedHeadings.push({
+                id: `heading-table-${index}-${rowIndex}`,
+                text: col4Text,
+                });
+            }
+            });
+        }
+        });
+
+        setHeadings(extractedHeadings);
         setMetadata({
           book: response.book,
           episode: response.episode,
@@ -39,6 +82,30 @@ export default function FileViewer() {
       setLoading(false);
     }
   };
+
+  const handleItemLayout = ({ id, index, y }) => {
+    setLayoutMap((prev) => ({
+      ...prev,
+      [id]: y,
+    }));
+  };
+
+    const handleJump = (headingId) => {
+    // Handle the top anchor manually
+    if (headingId === 'top') {
+        scrollViewRef.current?.scrollTo({ y: 0, animated: true });
+        return;
+    }
+
+    // Handle all other tracked headings
+    const position = layoutMap[headingId];
+    if (position !== undefined && scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({
+        y: Math.max(0, position - 60),
+        animated: true,
+        });
+    }
+    };
 
   const renderControls = () => (
     <View style={{
@@ -76,6 +143,29 @@ export default function FileViewer() {
                 padding: 8,
                 gap: 8,
             }}>
+                {/* Index Toggle */}
+                {headings.length > 0 && (
+                    <View>
+                        <TouchableOpacity
+                            onPress={() => setShowIndex(!showIndex)}
+                            style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: 8,
+                                padding: 8,
+                                backgroundColor: showIndex ? colors.highlight : 'transparent',
+                                borderRadius: 8,
+                            }}
+                        >
+                            <Ionicons name="list" size={20} color={colors.text} />
+                            <ThemedText style={{ fontSize: 16 }}>
+                                תוכן עניינים
+                            </ThemedText>
+                        </TouchableOpacity>
+                    </View>
+                )}
+
                 {/* Theme Toggle */}
                 <View>
                     <ThemedText style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}>
@@ -183,26 +273,37 @@ export default function FileViewer() {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar/>
       {renderControls()}
-      <ScrollView 
-        className="flex-1"
-        style={{ width: '100%' }}
-        contentContainerStyle={{ 
-          direction: 'rtl',
-          width: '100%'
-        }}
-      >
-        <View style={{ 
-          flex: 1, 
-          width: '100%',
-          alignSelf: 'stretch'
-        }}>
-          <ContentViewer 
-            data={tableData}
-            isLandscape={width > height}
-            visibleColumns={visibleColumns}
-          />
-        </View>
-      </ScrollView>
+      <View style={{ flex: 1, position: 'relative' }}>
+        <ScrollView 
+          ref={scrollViewRef}
+          className="flex-1"
+          style={{ width: '100%' }}
+          contentContainerStyle={{ 
+            direction: 'rtl',
+            width: '100%'
+          }}
+        >
+          <View style={{ 
+            flex: 1, 
+            width: '100%',
+            alignSelf: 'stretch'
+          }}>
+            <ContentViewer 
+              data={tableData}
+              isLandscape={width > height}
+              visibleColumns={visibleColumns}
+              onItemLayout={handleItemLayout}
+              scrollViewRef={scrollViewRef}
+            />
+          </View>
+        </ScrollView>
+        <IndexSidebar
+          headings={headings}
+          onJump={handleJump}
+          onClose={() => setShowIndex(false)}
+          isOpen={showIndex}
+        />
+      </View>
     </SafeAreaView>
   );
 }

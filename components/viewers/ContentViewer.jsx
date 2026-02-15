@@ -11,7 +11,7 @@ const CONTAINER_STYLES = {
     alignSelf: 'stretch'
 };
 
-export const ContentViewer = ({ data, isLandscape, visibleColumns }) => {
+export const ContentViewer = ({ data, isLandscape, visibleColumns, onItemLayout, scrollViewRef }) => {
     console.log('Rendering content item:', {
         hasData: !!data,
         type: data?.content?.[0]?.type
@@ -28,26 +28,52 @@ export const ContentViewer = ({ data, isLandscape, visibleColumns }) => {
                         alt: item.data?.alt
                     });
                 }
+
+                // Generate anchor ID for h2 text items
+                const isHeading = item.type === 'text' && item.data?.style === 'h2';
+                const headingId = isHeading ? `heading-${index}` : null;
                 
-                switch (item.type) {
-                    case 'table':
-                        return (
-                            <Table 
-                                key={`table-${index}`} 
-                                data={item.data} 
-                                isLandscape={isLandscape}
-                                visibleColumns={visibleColumns}
-                            />
-                        );
-                    case 'list':
-                        return <ListItems key={`list-${index}`} items={item.data} />;
-                    case 'text':
-                        return <TextContent key={`text-${index}`} data={item.data} />;
-                    case 'image':
-                        return <ImageContent key={`image-${index}`} data={item.data} />;
-                    default:
-                        return null;
+                const itemElement = (() => {
+                    switch (item.type) {
+                        case 'table':
+                            return (
+                                <Table 
+                                    key={`table-${index}`} 
+                                    data={item.data} 
+                                    isLandscape={isLandscape}
+                                    visibleColumns={visibleColumns}
+                                    onItemLayout={onItemLayout}
+                                    scrollViewRef={scrollViewRef}
+                                    tableIndex={index}
+                                />
+                            );
+                        case 'list':
+                            return <ListItems key={`list-${index}`} items={item.data} />;
+                        case 'text':
+                            return <TextContent key={`text-${index}`} data={item.data} />;
+                        case 'image':
+                            return <ImageContent key={`image-${index}`} data={item.data} />;
+                        default:
+                            return null;
+                    }
+                })();
+
+                // Wrap h2 text items with layout tracking
+                if (isHeading && onItemLayout) {
+                    return (
+                        <View
+                            key={headingId}
+                            onLayout={(event) => {
+                                const { y } = event.nativeEvent.layout;
+                                onItemLayout({ id: headingId, index, y });
+                            }}
+                        >
+                            {itemElement}
+                        </View>
+                    );
                 }
+
+                return itemElement;
             })}
         </View>
     );

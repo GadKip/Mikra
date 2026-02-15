@@ -3,45 +3,70 @@ import { useTheme } from '../../../../context/ThemeContext';
 import { isHebrewChapter } from '../../../../utils/hebrewChapters';
 import ThemedText from '../../../ThemedText';
 import ZoomableImage from '../../../ZoomableImage';
+import { useRef } from 'react';
 
-export default function CellContent({ content, styles = {}, columnIndex, rowData, hasChapter }) {
+export default function CellContent({ 
+    content, 
+    styles = {}, 
+    columnIndex, 
+    rowData, 
+    hasChapter,
+    onItemLayout,
+    cellId,
+    scrollViewRef 
+}) {
+    const cellRef = useRef(null);
     const { colors, fontSize } = useTheme();
+    
     const isCol2Empty = !rowData.row[1]?.cell?.trim();
     const cellText = typeof content === 'object' ? content.cell : content;
     const cellImage = typeof content === 'object' ? content.image : null;
     
-    // Constants
+    // Identifier for tracking
+    const col2Text = rowData.row?.[1]?.cell?.trim();
+    const isTrackedHeading = columnIndex === 3 && cellText && !col2Text;
+
+    // --- Measurement Logic ---
+    const handleLayout = () => {
+        if (isTrackedHeading && onItemLayout && cellRef.current && scrollViewRef?.current) {
+            // We wait a tiny bit for the table to finish stretching
+            setTimeout(() => {
+                cellRef.current?.measureLayout(
+                    scrollViewRef.current,
+                    (x, y) => {
+                        onItemLayout({ id: cellId, y: y });
+                    },
+                    (error) => console.log('Measurement error', error)
+                );
+            }, 100);
+        }
+    };
+
     const LINE_HEIGHT_MULTIPLIER = 1.5;
     const CHAPTER_FONT_SIZE = 24;
 
-    // Common styles
     const COMMON_TEXT_STYLES = {
         textAlign: 'justify',
         writingDirection: 'rtl',
         flexWrap: 'wrap'
     };
 
-    // Process text helper function
     const processText = (text) => {
         if (!text) return text;
         return text.replace(/\s+־/g, '־').replace(/־\s+/g, '־');
     };
 
-    // Font class determination
     const fontClass = (() => {
         if (columnIndex === 2) return "font-ezra";
         if (columnIndex === 3) return isCol2Empty ? "font-ezra" : "font-guttman";
         return "font-guttman";
     })();
 
-    // Column classes with consistent line height calculation
     const columnClasses = (() => {
         const getLineHeight = (size) => size * fontSize * LINE_HEIGHT_MULTIPLIER;
         
-        if (columnIndex === 0) {
-            return { fontSize: 12 };
-        }
-        if (columnIndex === 1) return { fontSize: 12 };
+        if (columnIndex === 0 || columnIndex === 1) return { fontSize: 12 };
+        
         if (columnIndex === 2) {
             const baseSize = isCol2Empty ? 34 : 22.4;
             return {
@@ -72,18 +97,12 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
         const otherWords = words.filter(word => !isHebrewChapter(word));
         
         return (
-            <View>
-                <ThemedText 
-                    className={fontClass}
-                    style={{ fontSize: CHAPTER_FONT_SIZE }}
-                >
+            <View ref={cellRef} onLayout={handleLayout}>
+                <ThemedText className={fontClass} style={{ fontSize: CHAPTER_FONT_SIZE }}>
                     {chapterWord}
                 </ThemedText>
                 {otherWords.length > 0 && (
-                    <ThemedText 
-                        className={fontClass}
-                        style={{ fontSize: columnClasses.fontSize }}
-                    >
+                    <ThemedText className={fontClass} style={{ fontSize: columnClasses.fontSize }}>
                         {otherWords.join(' ')}
                     </ThemedText>
                 )}
@@ -92,7 +111,11 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
     }
 
     return (
-        <View style={[styles.cellContainer, {overflow: 'visible'}]}>
+        <View 
+            ref={cellRef} 
+            onLayout={handleLayout}
+            style={[styles.cellContainer, {overflow: 'visible'}]}
+        >
             {cellText && (
                 <ThemedText 
                     className={fontClass}
@@ -109,10 +132,7 @@ export default function CellContent({ content, styles = {}, columnIndex, rowData
                     <ZoomableImage
                         source={{ uri: cellImage.src }}
                         alt={cellImage.alt || 'Image'}
-                        style={{
-                            width: '100%',
-                            height: '100%'
-                        }}
+                        style={{ width: '100%', height: '100%' }}
                     />
                 </View>
             )}
