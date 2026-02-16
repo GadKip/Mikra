@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Pressable } from 'react-native';
+import { View, Text, ScrollView, Pressable, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '../../../context/ThemeContext';
 import { useEffect, useState } from 'react';
@@ -7,12 +7,11 @@ import { client } from '../../../lib/appwrite';
 import Loader from '../../../components/Loader';
 import ThemedText from '../../../components/ThemedText';
 import ThemeToggle from '../../../components/ThemeToggle';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function BookList() {
-  const { category } = useLocalSearchParams(); // Change from 'id' to 'category'
+  const { category } = useLocalSearchParams();
   const router = useRouter();
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const [books, setBooks] = useState({});
   const [loading, setLoading] = useState(true);
 
@@ -34,8 +33,19 @@ export default function BookList() {
   if (loading) return <Loader isLoading={loading} />;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <View className="flex-1" style={{ backgroundColor: colors.background }}>
+    <View 
+      style={{
+        flex: 1, 
+        backgroundColor: colors.background
+      }}
+      edges={['top']}
+    >
+      <StatusBar
+        backgroundColor="transparent"
+        translucent={true}
+        barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+      />
+      
         <ThemeToggle />
         <ScrollView className="flex-1 p-4" style={{ backgroundColor: colors.background }}>
           {Object.entries(books).map(([book, episodes]) => (
@@ -56,7 +66,6 @@ export default function BookList() {
             </Pressable>
           ))}
         </ScrollView>
-      </View>
-    </SafeAreaView>
+    </View>
   );
 }

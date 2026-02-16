@@ -70,7 +70,7 @@ function AppLayout() {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
         <GestureHandlerRootView 
           style={{ flex: 1, backgroundColor: colors.background }}
           className={`flex-1 ${theme === 'dark' ? 'dark' : ''}`}
@@ -78,11 +78,11 @@ function AppLayout() {
           <StatusBar 
             backgroundColor={theme === 'dark' ? colors.card : 'transparent'}
             barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
-            translucent={false}
+            translucent={true}
           />
           <Slot />
         </GestureHandlerRootView>
-      </SafeAreaView>
+      </View>
     </SafeAreaProvider>
   );
 }

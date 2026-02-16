@@ -1,5 +1,4 @@
 import { View, ScrollView, useWindowDimensions, TouchableOpacity, Platform, ActivityIndicator, StatusBar } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams } from 'expo-router';
 import { useEffect, useState, useRef } from 'react';
 import Loader from '../../../../../components/Loader';
@@ -9,25 +8,28 @@ import { useTheme } from '../../../../../context/ThemeContext';
 import { Ionicons } from '@expo/vector-icons';
 import ThemedText from '../../../../../components/ThemedText';
 import { IndexSidebar } from '../../../../../components/IndexSidebar';
+import { SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function FileViewer() { 
-  const { width, height } = useWindowDimensions();
-  const { id } = useLocalSearchParams();
-  const [metadata, setMetadata] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [tableData, setTableData] = useState(null);
-  const { colors, fontSize, setFontSize, visibleColumns, toggleColumn, columnLoading, theme, toggleTheme } = useTheme();
-  const [showControlsMenu, setShowControlsMenu] = useState(false);
-  const [headings, setHeadings] = useState([]);
-  const [showIndex, setShowIndex] = useState(false);
-  const [layoutMap, setLayoutMap] = useState({});
-  const scrollViewRef = useRef(null);
+    const { width, height } = useWindowDimensions();
+    const { id } = useLocalSearchParams();
+    const [metadata, setMetadata] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [tableData, setTableData] = useState(null);
+    const { colors, fontSize, setFontSize, visibleColumns, toggleColumn, columnLoading, theme, toggleTheme } = useTheme();
+    const [showControlsMenu, setShowControlsMenu] = useState(false);
+    const [headings, setHeadings] = useState([]);
+    const [showIndex, setShowIndex] = useState(false);
+    const [layoutMap, setLayoutMap] = useState({});
+    const scrollViewRef = useRef(null);
+    const [showScrollButton, setShowScrollButton] = useState(false);
+    const insets = useSafeAreaInsets();
 
-  const fetchContent = async () => {
+    const fetchContent = async () => {
     setLoading(true);
     try {
-      const response = await getDocumentContent(id);
-      if (response && response.content) {
+        const response = await getDocumentContent(id);
+        if (response && response.content) {
         const jsonContent = JSON.parse(response.content);
 
         setTableData(jsonContent);
@@ -56,7 +58,6 @@ export default function FileViewer() {
             const col2Text = rowData.row?.[1]?.cell?.trim();
             const col4Text = rowData.row?.[3]?.cell?.trim();
 
-            // Your "Fingerprint" logic
             if (col4Text && !col2Text) {
                 extractedHeadings.push({
                 id: `heading-table-${index}-${rowIndex}`,
@@ -69,26 +70,26 @@ export default function FileViewer() {
 
         setHeadings(extractedHeadings);
         setMetadata({
-          book: response.book,
-          episode: response.episode,
-          category: response.category
+            book: response.book,
+            episode: response.episode,
+            category: response.category
         });
-      } else {
+        } else {
         console.error('No content available');
-      }
+        }
     } catch (error) {
-      console.error('Error:', error);
+        console.error('Error:', error);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+    };
 
-  const handleItemLayout = ({ id, index, y }) => {
-    setLayoutMap((prev) => ({
-      ...prev,
-      [id]: y,
-    }));
-  };
+    const handleItemLayout = ({ id, index, y }) => {
+        setLayoutMap((prev) => ({
+            ...prev,
+            [id]: y,
+        }));
+    };
 
     const handleJump = (headingId) => {
     // Handle the top anchor manually
@@ -107,7 +108,7 @@ export default function FileViewer() {
     }
     };
 
-  const renderControls = () => (
+    const renderControls = () => (
     <View style={{
         direction: 'ltr',
         start: undefined,
@@ -121,15 +122,14 @@ export default function FileViewer() {
         <TouchableOpacity
             onPress={() => setShowControlsMenu(!showControlsMenu)}
             style={{
-                backgroundColor: `${colors.highlight}99`,
+                backgroundColor: `${colors.highlight}E6`,
                 borderRadius: 20,
                 padding: 8,
-                alignItems: 'center',
                 justifyContent: 'center'
             }}
         >
             <Ionicons
-                name={showControlsMenu ? 'menu' : 'menu-outline'}
+                name={showControlsMenu ? 'close' : 'menu'}
                 size={24}
                 color={colors.text}
             />
@@ -138,7 +138,7 @@ export default function FileViewer() {
         {showControlsMenu && (
             <View style={{
                 marginTop: 8,
-                backgroundColor: `${colors.card}99`,
+                backgroundColor: `${colors.card}F2`,
                 borderRadius: 12,
                 padding: 8,
                 gap: 8,
@@ -261,49 +261,94 @@ export default function FileViewer() {
             </View>
         )}
     </View>
-  );
+    );
 
-  useEffect(() => {
+    useEffect(() => {
     fetchContent();
-  }, [id, visibleColumns]);
+    }, [id, visibleColumns]);
 
-  if (loading) return <Loader isLoading={loading} />;
+    if (loading) return <Loader isLoading={loading} />;
 
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-      <StatusBar/>
-      {renderControls()}
-      <View style={{ flex: 1, position: 'relative' }}>
+    return (
+    <View 
+        style={{ 
+            flex: 1, 
+            backgroundColor: colors.background,
+            paddingTop: insets.top
+        }}
+    >
+        <StatusBar
+            barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
+            backgroundColor={theme === 'dark' ? colors.card : 'transparent'}
+            translucent={true}
+        />
+        <View style={{ flex: 1, position: 'relative' }}>
+            {renderControls()}
         <ScrollView 
-          ref={scrollViewRef}
-          className="flex-1"
-          style={{ width: '100%' }}
-          contentContainerStyle={{ 
+            ref={scrollViewRef}
+            onScroll={(event) => {
+            const verticalOffset = event.nativeEvent.contentOffset.y;
+            if (verticalOffset > 300) { // If scrolled down more than 300 pixels
+            setShowScrollButton(true);
+            } else {
+            setShowScrollButton(false);
+            }
+        }}
+            scrollEventThrottle={16}
+            className="flex-1"
+            style={{ width: '100%' }}
+            contentContainerStyle={{ 
             direction: 'rtl',
             width: '100%'
-          }}
+            }}
         >
-          <View style={{ 
+            
+            <View style={{ 
             flex: 1, 
             width: '100%',
             alignSelf: 'stretch'
-          }}>
+            }}>
             <ContentViewer 
-              data={tableData}
-              isLandscape={width > height}
-              visibleColumns={visibleColumns}
-              onItemLayout={handleItemLayout}
-              scrollViewRef={scrollViewRef}
+                data={tableData}
+                isLandscape={width > height}
+                visibleColumns={visibleColumns}
+                onItemLayout={handleItemLayout}
+                scrollViewRef={scrollViewRef}
             />
-          </View>
+            </View>
         </ScrollView>
         <IndexSidebar
-          headings={headings}
-          onJump={handleJump}
-          onClose={() => setShowIndex(false)}
-          isOpen={showIndex}
+            headings={headings}
+            onJump={handleJump}
+            onClose={() => setShowIndex(false)}
+            isOpen={showIndex}
         />
-      </View>
-    </SafeAreaView>
-  );
+        {showScrollButton && (
+            <TouchableOpacity
+                style={{
+                    position: 'absolute',
+                    bottom: 30,
+                    left: 20,
+                    width: 50,
+                    height: 50,
+                    borderRadius: 25,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // Shadow for iOS
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 2 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 3,
+                    // Shadow for Android
+                    elevation: 5,
+                    zIndex: 999, // Ensure it sits on top of the table
+                }}
+                onPress={() => handleJump('top')}
+            >
+                <Ionicons name="arrow-up" size={30} color="#fff" />
+            </TouchableOpacity>
+        )}
+        </View>
+    </View>
+    );
 }

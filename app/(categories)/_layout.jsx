@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { StatusBar, View, TouchableOpacity, Platform } from 'react-native';
+import { StatusBar, Platform } from 'react-native';
 import { Stack } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import ThemeToggle from 'components/ThemeToggle';
 
 export default function CategoriesLayout() {
   const { colors, theme } = useTheme();
@@ -40,7 +41,6 @@ export default function CategoriesLayout() {
     headerShown: true,
     headerStyle: {
       backgroundColor: colors.card,
-      height: Platform.OS === 'ios' ? 44 : 56,
       elevation: 0, // Remove Android shadow
       shadowOpacity: 0, // Remove iOS shadow
       borderBottomWidth: 0, // Remove bottom border
@@ -69,7 +69,9 @@ export default function CategoriesLayout() {
       />
       <Stack screenOptions={{
         ...screenOptions,
-        headerTitleAlign: 'center'
+        headerTitleAlign: 'center',
+        headerRight: () => <ThemeToggle />,
+
       }}>
         <Stack.Screen 
           name="about" 

@@ -5,7 +5,6 @@ import { useTheme } from '../context/ThemeContext';
 import Constants from 'expo-constants';
 import ThemedText from '../components/ThemedText';
 import ThemeToggle from '../components/ThemeToggle';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -39,7 +38,7 @@ export default function SplashScreen() {
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar
         barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
       />
@@ -127,6 +126,6 @@ export default function SplashScreen() {
           </View>
         </Animated.View>
       </ImageBackground>
-    </SafeAreaView>
+    </View>
   );
 }

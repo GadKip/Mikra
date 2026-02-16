@@ -1,5 +1,4 @@
 import { View, ScrollView, Pressable, Image, StatusBar } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
 import ThemedText from '../../components/ThemedText';
@@ -7,6 +6,7 @@ import { listFiles } from '../../lib/appwrite';
 import { client } from '../../lib/appwrite';
 import { useState, useEffect } from 'react';
 import ThemeToggle from '../../components/ThemeToggle';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function CategoryList() {
   const router = useRouter();
@@ -47,6 +47,7 @@ export default function CategoryList() {
     <SafeAreaView 
       style={{ 
         flex: 1,
+        paddingTop: StatusBar.currentHeight || 0,
         backgroundColor: colors.background 
       }}
       edges={['top']}
@@ -56,11 +57,12 @@ export default function CategoryList() {
         translucent={true}
         barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
       />
-      <ThemeToggle />
       <ScrollView 
         className="flex-1 p-4" 
         style={{ backgroundColor: colors.background }}
       >
+        <ThemeToggle />
+
         {/* Logo */}
         <View className="items-center mb-6">
           <Image

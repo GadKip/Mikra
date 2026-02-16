@@ -7,7 +7,6 @@ import { client } from '../../../../lib/appwrite';
 import Loader from '../../../../components/Loader';
 import ThemedText from '../../../../components/ThemedText';
 import ThemeToggle from '../../../../components/ThemeToggle';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EpisodeList() {
   const { category, book } = useLocalSearchParams();
@@ -83,7 +82,13 @@ export default function EpisodeList() {
   if (loading && offset === 0) return <Loader isLoading={loading} />;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+    <View 
+      style={{
+        flex: 1, 
+        backgroundColor: colors.background 
+      }}
+      edges={['top']}
+    >
       <View className="flex-1" style={{ backgroundColor: colors.background }}>
         <ThemeToggle />
         <ScrollView 
@@ -124,7 +129,7 @@ export default function EpisodeList() {
           {loading && offset > 0 && <Loader isLoading={true} />}
         </ScrollView>
       </View>
-    </SafeAreaView>
+    </View>
 
   );
 }
