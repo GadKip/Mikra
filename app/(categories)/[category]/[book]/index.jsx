@@ -1,9 +1,9 @@
-import { View, Text, ScrollView, Pressable } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
+import { Pressable, ScrollView, View } from 'react-native';
 import { useTheme } from '../../../../context/ThemeContext';
-import { useEffect, useState } from 'react';
-import { listFiles } from '../../../../lib/appwrite';
-import { client } from '../../../../lib/appwrite';
+import { client, listFiles } from '../../../../lib/appwrite';
+
 import Loader from '../../../../components/Loader';
 import ThemedText from '../../../../components/ThemedText';
 import ThemeToggle from '../../../../components/ThemeToggle';
@@ -18,7 +18,7 @@ export default function EpisodeList() {
   const [loading, setLoading] = useState(true);
   const LIMIT = 100;
   
-  const fetchEpisodes = async (currentOffset = 0) => {
+  const fetchEpisodes = useCallback(async (currentOffset = 0) => {
     try {
       const response = await listFiles(client);
       // First check if the category and book exist in the response
@@ -63,7 +63,7 @@ export default function EpisodeList() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [category, book, router]);
 
   const loadMore = () => {
     if (hasMore && !loading) {
@@ -77,7 +77,7 @@ export default function EpisodeList() {
     setLoading(true);
     setOffset(0); // Reset offset when category or book changes
     fetchEpisodes(0);
-  }, [category, book]);
+  }, [category, book, fetchEpisodes]);
 
   if (loading && offset === 0) return <Loader isLoading={loading} />;
 

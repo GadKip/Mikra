@@ -1,22 +1,18 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { StatusBar, View, Platform, I18nManager } from 'react-native';
-import "../global.css";
-import { Slot } from 'expo-router';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { ThemeProvider, useTheme } from '../context/ThemeContext';
 import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
+import { Slot } from 'expo-router';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import * as SplashScreen from 'expo-splash-screen';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Platform, StatusBar, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import ThemedText from '../components/ThemedText';
+import { ThemeProvider, useTheme } from '../context/ThemeContext';
+import "../global.css";
 
 function AppLayout() {
   const { colors, theme } = useTheme();
   const [error, setError] = useState(null);
-  const memoizedThemeStyles = useMemo(() => ({
-    flex: 1,
-    backgroundColor: colors.background
-  }), [colors.background]);
 
   const [fontsLoaded] = useFonts(
     Platform.select({

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { View } from 'react-native';
 import { Table } from './content/TableViewer';
 import { ListItem } from './content/ListViewer';
@@ -11,7 +12,7 @@ const CONTAINER_STYLES = {
     alignSelf: 'stretch'
 };
 
-export const ContentViewer = ({ data, isLandscape, visibleColumns, onItemLayout, scrollViewRef }) => {
+export const ContentViewer = memo(({ data, isLandscape, visibleColumns, onItemLayout, scrollViewRef }) => {
     console.log('Rendering content item:', {
         hasData: !!data,
         type: data?.content?.[0]?.type
@@ -48,7 +49,7 @@ export const ContentViewer = ({ data, isLandscape, visibleColumns, onItemLayout,
                                 />
                             );
                         case 'list':
-                            return <ListItems key={`list-${index}`} items={item.data} />;
+                            return <ListItem key={`list-${index}`} items={item.data} />;
                         case 'text':
                             return <TextContent key={`text-${index}`} data={item.data} />;
                         case 'image':
@@ -77,4 +78,5 @@ export const ContentViewer = ({ data, isLandscape, visibleColumns, onItemLayout,
             })}
         </View>
     );
-};
+});
+ContentViewer.displayName = 'ContentViewer';

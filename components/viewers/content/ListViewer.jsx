@@ -1,9 +1,10 @@
-import { View, Text } from 'react-native';
+import { memo } from 'react';
+import { View } from 'react-native';
 import { useTheme } from '../../../context/ThemeContext';
 import ThemedText from '../../ThemedText';
 
-export const ListItem = ({ data }) => {
-    const { colors } = useTheme();
+export const ListItem = memo(({ data }) => {
+    const { fontSize } = useTheme();
     const indentation = data.level * 20;
     
     // Only log in development
@@ -25,4 +26,5 @@ export const ListItem = ({ data }) => {
             </ThemedText>
         </View>
     );
-};
+});
+ListItem.displayName = 'ListItem';

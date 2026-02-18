@@ -1,15 +1,16 @@
-import React, { useEffect } from 'react';
-import { StatusBar, Platform } from 'react-native';
-import { Stack } from 'expo-router';
-import { useTheme } from '../../context/ThemeContext';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
-import * as ScreenOrientation from 'expo-screen-orientation';
 import ThemeToggle from 'components/ThemeToggle';
+import { useFonts } from 'expo-font';
+import { Stack } from 'expo-router';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import * as SplashScreen from 'expo-splash-screen';
+import React, { useEffect } from 'react';
+import { StatusBar } from 'react-native';
+import { useTheme } from '../../context/ThemeContext';
+import { I18nManager } from 'react-native';
 
 export default function CategoriesLayout() {
   const { colors, theme } = useTheme();
-
+  const isRTL = I18nManager.isRTL;
   const [fontsLoaded] = useFonts({
     'EzraSILSR': require('../../assets/fonts/EzraSILSR.ttf'),
     'GuttmanKeren': require('../../assets/fonts/GuttmanKeren.ttf'),
@@ -57,7 +58,8 @@ export default function CategoriesLayout() {
     },
     headerTitleContainerStyle: {
       marginVertical: 0, // Remove vertical margins
-    }
+    },
+    animation: isRTL ? 'slide_from_right' : 'slide_from_left',
   };
 
   return (
@@ -70,8 +72,6 @@ export default function CategoriesLayout() {
       <Stack screenOptions={{
         ...screenOptions,
         headerTitleAlign: 'center',
-        headerRight: () => <ThemeToggle />,
-
       }}>
         <Stack.Screen 
           name="about" 
@@ -100,7 +100,6 @@ export default function CategoriesLayout() {
           options={({ route }) => ({
             title: route.params.category,
             headerTitleAlign: 'center',
-            animation: 'slide_from_right'
           })}
         />
         <Stack.Screen 
@@ -108,7 +107,6 @@ export default function CategoriesLayout() {
           options={({ route }) => ({
             title: route.params.book,
             headerTitleAlign: 'center',
-            animation: 'slide_from_right'
           })}
         />
         <Stack.Screen 
@@ -117,7 +115,6 @@ export default function CategoriesLayout() {
             title: route.params.episode,
             headerShown: false,
             headerTitleAlign: 'center',
-            animation: 'slide_from_right',
             headerStyle: {
               backgroundColor: colors.card
             },

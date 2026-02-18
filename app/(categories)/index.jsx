@@ -2,8 +2,8 @@ import { View, ScrollView, Pressable, Image, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
 import ThemedText from '../../components/ThemedText';
-import { listFiles } from '../../lib/appwrite';
-import { client } from '../../lib/appwrite';
+import { listFiles , client } from '../../lib/appwrite';
+
 import { useState, useEffect } from 'react';
 import ThemeToggle from '../../components/ThemeToggle';
 import { SafeAreaView } from 'react-native-safe-area-context';

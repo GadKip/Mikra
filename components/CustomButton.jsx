@@ -1,5 +1,5 @@
-import { Text, TouchableOpacity } from 'react-native';
 import React from 'react';
+import { TouchableOpacity } from 'react-native';
 import ThemedText from './ThemedText';
 
 const CustomButton = ({title, handlePress, containerStyles, textStyles, isLoading}) => {

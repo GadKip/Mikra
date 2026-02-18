@@ -1,11 +1,25 @@
-import { View, Text } from 'react-native';
+import React, { memo, useMemo, useRef } from 'react'; // Added memo, useMemo
+import { View } from 'react-native';
 import { useTheme } from '../../../../context/ThemeContext';
 import { isHebrewChapter } from '../../../../utils/hebrewChapters';
 import ThemedText from '../../../ThemedText';
 import ZoomableImage from '../../../ZoomableImage';
-import { useRef } from 'react';
 
-export default function CellContent({ 
+const LINE_HEIGHT_MULTIPLIER = 1.5;
+const CHAPTER_FONT_SIZE = 24;
+
+const COMMON_TEXT_STYLES = {
+    textAlign: 'justify',
+    writingDirection: 'rtl',
+    flexWrap: 'wrap'
+};
+
+const processText = (text) => {
+    if (!text) return text;
+    return text.replace(/\s+־/g, '־').replace(/־\s+/g, '־');
+};
+
+const CellContent = memo(({ 
     content, 
     styles = {}, 
     columnIndex, 
@@ -14,82 +28,66 @@ export default function CellContent({
     onItemLayout,
     cellId,
     scrollViewRef 
-}) {
+}) => {
     const cellRef = useRef(null);
-    const { colors, fontSize } = useTheme();
+    const { fontSize } = useTheme();
     
     const isCol2Empty = !rowData.row[1]?.cell?.trim();
     const cellText = typeof content === 'object' ? content.cell : content;
     const cellImage = typeof content === 'object' ? content.image : null;
-    
-    // Identifier for tracking
     const col2Text = rowData.row?.[1]?.cell?.trim();
     const isTrackedHeading = columnIndex === 3 && cellText && !col2Text;
 
-    // --- Measurement Logic ---
     const handleLayout = () => {
         if (isTrackedHeading && onItemLayout && cellRef.current && scrollViewRef?.current) {
-            // We wait a tiny bit for the table to finish stretching
+            // Check if measurement is actually needed to avoid spamming the bridge
             setTimeout(() => {
                 cellRef.current?.measureLayout(
                     scrollViewRef.current,
-                    (x, y) => {
-                        onItemLayout({ id: cellId, y: y });
-                    },
+                    (x, y) => { onItemLayout({ id: cellId, y: y }); },
                     (error) => console.log('Measurement error', error)
                 );
             }, 100);
         }
     };
 
-    const LINE_HEIGHT_MULTIPLIER = 1.5;
-    const CHAPTER_FONT_SIZE = 24;
-
-    const COMMON_TEXT_STYLES = {
-        textAlign: 'justify',
-        writingDirection: 'rtl',
-        flexWrap: 'wrap'
-    };
-
-    const processText = (text) => {
-        if (!text) return text;
-        return text.replace(/\s+־/g, '־').replace(/־\s+/g, '־');
-    };
-
-    const fontClass = (() => {
+    const fontClass = useMemo(() => {
         if (columnIndex === 2) return "font-ezra";
         if (columnIndex === 3) return isCol2Empty ? "font-ezra" : "font-guttman";
         return "font-guttman";
-    })();
+    }, [columnIndex, isCol2Empty]);
 
-    const columnClasses = (() => {
+    const columnStyles = useMemo(() => {
         const getLineHeight = (size) => size * fontSize * LINE_HEIGHT_MULTIPLIER;
-        
-        if (columnIndex === 0 || columnIndex === 1) return { fontSize: 12 };
-        
-        if (columnIndex === 2) {
+        let baseStyles = {};
+
+        if (columnIndex === 0 || columnIndex === 1) {
+            baseStyles = { fontSize: 12 };
+        } else if (columnIndex === 2) {
             const baseSize = isCol2Empty ? 34 : 22.4;
-            return {
+            baseStyles = {
                 fontSize: baseSize * fontSize,
                 lineHeight: getLineHeight(baseSize),
                 letterSpacing: 0.5,
                 ...(isCol2Empty && { fontFamily: 'EzraSILSR' })
             };
-        }
-        if (columnIndex === 3) {
+        } else if (columnIndex === 3) {
             const baseSize = 24;
-            return {
+            baseStyles = {
                 fontSize: baseSize * fontSize,
                 lineHeight: getLineHeight(baseSize),
                 letterSpacing: 0.5
             };
+        } else {
+            baseStyles = {
+                fontSize: 20 * fontSize,
+                lineHeight: getLineHeight(20),
+                letterSpacing: 0.5
+            };
         }
-        return {
-            fontSize: 20 * fontSize,
-            lineHeight: getLineHeight(20),
-            letterSpacing: 0.5
-        };
-    })();
+
+        return { ...baseStyles, ...COMMON_TEXT_STYLES };
+    }, [columnIndex, fontSize, isCol2Empty]);
 
     if (hasChapter && columnIndex === 0) {
         const words = String(cellText).split(/\s+/);
@@ -102,7 +100,7 @@ export default function CellContent({
                     {chapterWord}
                 </ThemedText>
                 {otherWords.length > 0 && (
-                    <ThemedText className={fontClass} style={{ fontSize: columnClasses.fontSize }}>
+                    <ThemedText className={fontClass} style={{ fontSize: columnStyles.fontSize }}>
                         {otherWords.join(' ')}
                     </ThemedText>
                 )}
@@ -114,16 +112,10 @@ export default function CellContent({
         <View 
             ref={cellRef} 
             onLayout={handleLayout}
-            style={[styles.cellContainer, {overflow: 'visible'}]}
+            style={[styles.cellContainer, { overflow: 'visible' }]}
         >
             {cellText && (
-                <ThemedText 
-                    className={fontClass}
-                    style={{ 
-                        ...columnClasses,
-                        ...COMMON_TEXT_STYLES
-                    }}
-                >
+                <ThemedText className={fontClass} style={columnStyles}>
                     {processText(cellText)}
                 </ThemedText>
             )}
@@ -138,4 +130,6 @@ export default function CellContent({
             )}
         </View>
     );
-}
+});
+CellContent.displayName = 'CellContent';
+export default CellContent;

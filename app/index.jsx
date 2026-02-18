@@ -1,10 +1,11 @@
-import { useEffect, useRef } from 'react';
-import { Animated, Text, View, ImageBackground, useWindowDimensions, StatusBar } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useTheme } from '../context/ThemeContext';
 import Constants from 'expo-constants';
+import { useRouter } from 'expo-router';
+import { useEffect, useRef } from 'react';
+import { Animated, ImageBackground, StatusBar, useWindowDimensions, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import ThemedText from '../components/ThemedText';
 import ThemeToggle from '../components/ThemeToggle';
+import { useTheme } from '../context/ThemeContext';
 
 export default function SplashScreen() {
   const router = useRouter();
@@ -35,10 +36,10 @@ export default function SplashScreen() {
     }, 3400);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [fadeAnim, router]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar
         barStyle={theme === 'dark' ? 'light-content' : 'dark-content'}
       />
@@ -126,6 +127,6 @@ export default function SplashScreen() {
           </View>
         </Animated.View>
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 }

@@ -1,8 +1,9 @@
+import { memo } from 'react';
 import { useTheme } from '../../../context/ThemeContext';
 import ThemedText from '../../ThemedText';
 
-export const TextContent = ({ data }) => {
-    const { colors, fontSize } = useTheme();
+export const TextContent = memo(({ data }) => {
+    const { fontSize } = useTheme();
     
     const getSize = () => {
         switch (data.style) {
@@ -25,4 +26,5 @@ export const TextContent = ({ data }) => {
             {data.text}
         </ThemedText>
     );
-};
+});
+TextContent.displayName = 'TextContent';

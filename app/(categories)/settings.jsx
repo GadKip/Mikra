@@ -1,9 +1,7 @@
-import { View, ScrollView, TouchableOpacity } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useTheme } from '../../context/ThemeContext';
-import ThemedText from '../../components/ThemedText';
 import { Ionicons } from '@expo/vector-icons';
-import { useEffect } from 'react';
+import { ScrollView, TouchableOpacity, View } from 'react-native';
+import ThemedText from '../../components/ThemedText';
+import { useTheme } from '../../context/ThemeContext';
 
 export default function Settings() {
   const { colors, fontSize, setFontSize, theme, setTheme, visibleColumns, toggleColumn } = useTheme();

@@ -1,9 +1,9 @@
-import { View, Text, ScrollView, Pressable, StatusBar } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { useTheme } from '../../../context/ThemeContext';
 import { useEffect, useState } from 'react';
-import { listFiles } from '../../../lib/appwrite';
-import { client } from '../../../lib/appwrite';
+import { Pressable, ScrollView, StatusBar, View } from 'react-native';
+import { useTheme } from '../../../context/ThemeContext';
+import { client, listFiles } from '../../../lib/appwrite';
+
 import Loader from '../../../components/Loader';
 import ThemedText from '../../../components/ThemedText';
 import ThemeToggle from '../../../components/ThemeToggle';

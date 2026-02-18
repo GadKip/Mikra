@@ -15,7 +15,7 @@ export default function ThemeToggle({ style }) {
         left: 20,
         padding: 8,
         borderRadius: 20,
-        backgroundColor: `${colors.highlight}99`,
+        backgroundColor: `${colors.emphasisSec}99`,
         zIndex: 50
       }, style]}
     >

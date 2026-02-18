@@ -1,21 +1,44 @@
-import { View, ActivityIndicator, Dimensions, Platform, Text } from "react-native";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { useTheme } from '../context/ThemeContext';
 import ThemedText from "./ThemedText";
 
 export default function Loader({ isLoading }) {
   const { colors } = useTheme();
-  const osName = Platform.OS;
-  const screenHeight = Dimensions.get("screen").height;
 
   if (!isLoading) return null;
 
   return (
-    <View className="absolute inset-0 z-50 flex-1 items-center justify-center bg-black/50">
-      <View className="rounded-lg p-4" style={{ backgroundColor: colors.card }}>
-        <ThemedText style={{ fontSize: 18 }}>
+    <View style={[styles.overlay, { backgroundColor: colors.overlay }]}>
+      <View style={[styles.container, { backgroundColor: colors.card }]}>
+        <ActivityIndicator size="large" color={colors.highlight} />
+        <ThemedText style={styles.text}>
           טוען...
         </ThemedText>
       </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 999,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    padding: 24,
+    borderRadius: 16,
+    alignItems: 'center',
+    gap: 12, // Spaces out the spinner and the text
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+  },
+  text: {
+    fontSize: 18,
+    fontFamily: 'EzraSILSR',
+    marginTop: 8
+  }
+});

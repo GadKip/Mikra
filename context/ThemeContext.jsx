@@ -12,7 +12,10 @@ export const themes = {
     card: '#F5F5F5',
     border: '#E0E0E0',
     highlight: '#e0ffff',
-    statusBar: 'dark-content'
+    overlay: 'rgba(0, 0, 0, 0.4)',
+    statusBar: 'dark-content',
+    emphasis:'#D4AF37',
+    emphasisSec: '#B0C4DE'
   },
   dark: {
     text: '#FFFFFF',
@@ -22,7 +25,10 @@ export const themes = {
     card: '#1E1E1E',
     border: '#333333',
     highlight: '#011e42',
-    statusBar: 'light-content'
+    overlay: 'rgba(0, 0, 0, 0.7)',
+    statusBar: 'light-content',
+    emphasis:'#FFD700',
+    emphasisSec: '#4682B4'
   }
 };
 
@@ -87,9 +93,9 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     loadSettings();
-  }, []);
+  }, [loadSettings]);
 
-  const loadSettings = async () => {
+  const loadSettings = useCallback(async () => {
     try {
         const savedTheme = await AsyncStorage.getItem('theme');
         const savedFontSize = await AsyncStorage.getItem('fontSize');
@@ -106,7 +112,7 @@ export function ThemeProvider({ children }) {
     } catch (error) {
         console.error('Error loading settings:', error);
     }
-  };
+  }, []);
 
   const updateFontSize = async (newSize) => {
     try {

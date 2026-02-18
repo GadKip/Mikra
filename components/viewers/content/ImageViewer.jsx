@@ -1,8 +1,9 @@
-import { View } from 'react-native';
-import { StyleSheet } from 'react-native';
+import { memo } from 'react';
+import { View , StyleSheet } from 'react-native';
+
 import ZoomableImage from '../../ZoomableImage';
 
-export const ImageContent = ({ data }) => {
+export const ImageContent = memo(({ data }) => {
     if (!data?.src) {
         return null;
     }
@@ -19,7 +20,8 @@ export const ImageContent = ({ data }) => {
             </View>
         </View>
     );
-};
+});
+ImageContent.displayName = 'ImageContent';
 
 const styles = StyleSheet.create({
     imageContainer: {
