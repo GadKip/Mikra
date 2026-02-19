@@ -99,156 +99,158 @@ export default function FileViewer() {
     }
     };
 
-    const renderControls = () => (
-        <View style={{
-            position: 'absolute',
-            end: 10,
-            top: 40,
-            zIndex: 1000,
-            flexDirection: 'column',
-            alignItems: 'flex-end',
-        }}>
+const renderControls = () => (
+    <View style={{
+        position: 'absolute',
+        right: 10, // Physical right
+        top: 80,
+        zIndex: 1000,
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        gap: 12, // Space between the two main buttons
+    }}>
+        {/* 1. SEPARATE INDEX BUTTON */}
+        {headings.length > 0 && (
+            <TouchableOpacity
+                onPress={() => setShowIndex(!showIndex)}
+                style={{
+                    backgroundColor: colors.emphasisSec,
+                    opacity: 0.8,
+                    borderRadius: 25,
+                    width: 50,
+                    height: 50,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderWidth: 1,
+                    borderColor: colors.emphasisSec,
+                    elevation: 5,
+                    overflow: 'hidden',
+                }}
+            >
+                <Ionicons 
+                    name="list" 
+                    size={26} 
+                    color={showIndex ? colors.highlight : colors.text}
+                    style={{ transform: [{ scaleX: -1 }] }} 
+                />
+            </TouchableOpacity>
+        )}
+
+        {/* 2. MENU TOGGLE BUTTON */}
+        <View style={{ alignItems: 'flex-end' }}>
             <TouchableOpacity
                 onPress={() => setShowControlsMenu(!showControlsMenu)}
                 style={{
-                    backgroundColor: `${colors.emphasisSec}CC`,
+                    backgroundColor: colors.emphasisSec,
+                    opacity: 0.8,
                     borderRadius: 25,
-                    padding: 10,
-                    justifyContent: 'center'
+                    width: 50,
+                    height: 50,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderWidth: 1,
+                    borderColor: colors.emphasisSec,
+                    elevation: 5,
+                    overflow: 'hidden',
                 }}
             >
                 <Ionicons
                     name={showControlsMenu ? 'close' : 'options'}
                     size={24}
                     color={colors.text}
+                    style={{ transform: [{ scaleX: -1 }] }} 
                 />
             </TouchableOpacity>
 
+            {/* 3. EXPANDED SETTINGS MENU (Removed Index from here) */}
             {showControlsMenu && (
                 <View style={{
                     marginTop: 8,
                     backgroundColor: `${colors.emphasisSec}F2`,
                     borderRadius: 12,
-                    padding: 8,
-                    gap: 8,
+                    padding: 12,
+                    gap: 16,
+                    width: 160, // Give it a bit more breathing room
+                    borderWidth: 1,
+                    borderColor: colors.emphasisSec,
                 }}>
-                    {/* Index Toggle */}
-                    {headings.length > 0 && (
-                        <View>
-                            <TouchableOpacity
-                                onPress={() => setShowIndex(!showIndex)}
-                                style={{
-                                    flexDirection: 'row-reverse',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    gap: 8,
-                                    padding: 8,
-                                    backgroundColor: showIndex ? colors.highlight : 'transparent',
-                                    borderRadius: 8,
-                                }}
-                            >
-                                <Ionicons name="list" size={20} color={colors.text} />
-                                <ThemedText style={{ fontSize: 16 }}>
-                                    דלג אל... 
-                                </ThemedText>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-
                     {/* Theme Toggle */}
                     <View>
-                        <ThemedText style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}>
+                        <ThemedText style={{ fontSize: 12, marginBottom: 6, textAlign: 'center', opacity: 0.7 }}>
                             ערכת נושא
                         </ThemedText>
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            gap: 8,
-                            padding: 4
-                        }}>
-                            <TouchableOpacity 
-                                onPress={toggleTheme}
-                                style={{ padding: 4 }}
-                            >
-                                <Ionicons 
-                                    name={theme === 'light' ? 'moon' : 'sunny'} 
-                                    size={24} 
-                                    color={colors.text}
-                                />
-                            </TouchableOpacity>
-                        </View>
+                        <TouchableOpacity 
+                            onPress={toggleTheme}
+                            style={{ 
+                                flexDirection: 'row', 
+                                justifyContent: 'center', 
+                                backgroundColor: `${colors.text}10`,
+                                padding: 8,
+                                borderRadius: 8 
+                            }}
+                        >
+                            <Ionicons 
+                                name={theme === 'light' ? 'moon' : 'sunny'} 
+                                size={22} 
+                                color={colors.text}
+                            />
+                        </TouchableOpacity>
                     </View>
 
                     {/* Font Size Controls */}
                     <View>
-                        <ThemedText style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}>
+                        <ThemedText style={{ fontSize: 12, marginBottom: 6, textAlign: 'center', opacity: 0.7 }}>
                             גודל טקסט
                         </ThemedText>
-
-                        <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'center',
-                            gap: 8,
-                            padding: 4
-                        }}>
-                            <AntDesign name="font-size" size={20} color={colors.text} />
-                            <TouchableOpacity 
-                                onPress={() => {
-                                    const newSize = Math.max(0.4, fontSize - 0.2);
-                                    setFontSize(newSize);
-                                }}
-                            >
-                                <Ionicons name="remove" size={24} color={colors.text} />
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <TouchableOpacity onPress={() => setFontSize(Math.max(0.4, fontSize - 0.2))}>
+                                <Ionicons name="remove-circle-outline" size={28} color={colors.text} />
                             </TouchableOpacity>
-                            <TouchableOpacity 
-                                onPress={() => {
-                                    const newSize = Math.min(1.6, fontSize + 0.2);
-                                    setFontSize(newSize);
-                                }}
-                            >
-                                <Ionicons name="add" size={24} color={colors.text} />
+                            <AntDesign name="font-size" size={18} color={colors.text} />
+                            <TouchableOpacity onPress={() => setFontSize(Math.min(1.6, fontSize + 0.2))}>
+                                <Ionicons name="add-circle-outline" size={28} color={colors.text} />
                             </TouchableOpacity>
                         </View>
                     </View>
 
                     {/* Column Controls */}
                     <View>
-                        <ThemedText style={{ fontSize: 14, marginBottom: 4, textAlign: 'center' }}>
+                        <ThemedText style={{ fontSize: 12, marginBottom: 6, textAlign: 'center', opacity: 0.7 }}>
                             הצג/הסתר עמודות
                         </ThemedText>
-                        {[
-                            { id: 0, label: 'פרק' },
-                            { id: 1, label: 'פסוק' },
-                            { id: 2, label: 'מקרא' },
-                            { id: 3, label: 'תרגום' }
-                        ].map(col => (
-                            <TouchableOpacity
-                                key={col.id}
-                                onPress={() => toggleColumn(col.id)}
-                                style={{
-                                    flexDirection: 'row-reverse',
-                                    gap: 8,
-                                    padding: 4
-                                }}
-                            >
-                                <Ionicons
-                                    name={visibleColumns[col.id] ? 'eye' : 'eye-off'}
-                                    size={20}
-                                    color={colors.text}
-                                />
-                                <ThemedText style={{ fontSize: 16 }}>
-                                    {col.label}
-                                </ThemedText>
-                            </TouchableOpacity>
-                        ))}
-                        {columnLoading && (
-                            <ActivityIndicator size="small" color={colors.text} />
-                        )}
+                        <View style={{ gap: 4 }}>
+                            {[
+                                { id: 0, label: 'פרק' },
+                                { id: 1, label: 'פסוק' },
+                                { id: 2, label: 'מקרא' },
+                                { id: 3, label: 'תרגום' }
+                            ].map(col => (
+                                <TouchableOpacity
+                                    key={col.id}
+                                    onPress={() => toggleColumn(col.id)}
+                                    style={{
+                                        flexDirection: 'row-reverse',
+                                        alignItems: 'center',
+                                        justifyContent: 'space-between',
+                                        paddingVertical: 4,
+                                        paddingHorizontal: 4
+                                    }}
+                                >
+                                    <ThemedText style={{ fontSize: 15 }}>{col.label}</ThemedText>
+                                    <Ionicons
+                                        name={visibleColumns[col.id] ? 'eye' : 'eye-off'}
+                                        size={18}
+                                        color={visibleColumns[col.id] ? colors.text : `${colors.text}40`}
+                                    />
+                                </TouchableOpacity>
+                            ))}
+                        </View>
                     </View>
                 </View>
             )}
         </View>
-    );
+    </View>
+);
 
     useEffect(() => {
     fetchContent();
@@ -311,6 +313,7 @@ export default function FileViewer() {
                 onJump={handleJump}
                 onClose={() => setShowIndex(false)}
                 isOpen={showIndex}
+                direction={'ltr'}
             />
             {showScrollButton && (
                 <TouchableOpacity
