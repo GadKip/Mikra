@@ -31,7 +31,8 @@ export default function FileViewer() {
         try {
             const response = await getDocumentContent(id);
             if (response && response.content) {
-                const jsonContent = JSON.parse(response.content);
+                // Content is already an object from getDocumentContent, no need to parse
+                const jsonContent = response.content;
 
             setTableData(jsonContent);
             setLayoutMap({}); // Reset layout map on new content

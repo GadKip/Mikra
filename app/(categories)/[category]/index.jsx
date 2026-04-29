@@ -2,7 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StatusBar, View } from 'react-native';
 import { useTheme } from '../../../context/ThemeContext';
-import { client, listFiles } from '../../../lib/appwrite';
+import { listFiles } from '../../../lib/appwrite';
 
 import Loader from '../../../components/Loader';
 import ThemedText from '../../../components/ThemedText';
@@ -18,7 +18,7 @@ export default function BookList() {
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const data = await listFiles(client);
+        const data = await listFiles();
         setBooks(data[category] || {}); // Change from 'id' to 'category'
       } catch (error) {
         console.error('Error fetching books:', error);

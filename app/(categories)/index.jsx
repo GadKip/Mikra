@@ -2,7 +2,7 @@ import { View, ScrollView, Pressable, Image, StatusBar } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '../../context/ThemeContext';
 import ThemedText from '../../components/ThemedText';
-import { listFiles , client } from '../../lib/appwrite';
+import { listFiles } from '../../lib/appwrite';
 
 import { useState, useEffect } from 'react';
 import ThemeToggle from '../../components/ThemeToggle';
@@ -18,7 +18,7 @@ export default function CategoryList() {
     // Fetch the introduction file ID when component mounts
     const fetchIntroductionId = async () => {
       try {
-        const data = await listFiles(client);
+        const data = await listFiles();
         if (data['הקדמה והסכמות']) {
           const introBooks = Object.values(data['הקדמה והסכמות'])[0];
           if (introBooks && introBooks.length > 0) {

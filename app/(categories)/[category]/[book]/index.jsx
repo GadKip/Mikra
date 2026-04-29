@@ -2,7 +2,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { useTheme } from '../../../../context/ThemeContext';
-import { client, listFiles } from '../../../../lib/appwrite';
+import { listFiles } from '../../../../lib/appwrite';
 
 import Loader from '../../../../components/Loader';
 import ThemedText from '../../../../components/ThemedText';
@@ -20,7 +20,7 @@ export default function EpisodeList() {
   
   const fetchEpisodes = useCallback(async (currentOffset = 0) => {
     try {
-      const response = await listFiles(client);
+      const response = await listFiles();
       // First check if the category and book exist in the response
       if (!response[category] || !response[category][book]) {
         console.error('Category or book not found:', { category, book });
