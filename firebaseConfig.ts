@@ -3,7 +3,7 @@ import { getAuth, signInAnonymously, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDnrFF5VYcIezxj8t9Q47nq93tnUAIHipA",
+  apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
   authDomain: "mikra-181ba.firebaseapp.com",
   projectId: "mikra-181ba",
   storageBucket: "mikra-181ba.firebasestorage.app",
