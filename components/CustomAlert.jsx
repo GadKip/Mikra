@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import ThemedText from './ThemedText';
+import { useTheme } from '../context/ThemeContext';
 
 const CustomAlert = ({ visible, title, message, onClose, onConfirm, confirmText = "Ok", cancelText = "Cancel", showCancel = false }) => {
   const [modalVisible, setModalVisible] = useState(visible);
+  const { colors } = useTheme();
 
   useEffect(() => {
     setModalVisible(visible);
@@ -31,7 +33,7 @@ const CustomAlert = ({ visible, title, message, onClose, onConfirm, confirmText 
       onRequestClose={handleClose}
     >
       <View style={styles.centeredView}>
-        <View style={styles.modalView}>
+        <View style={[styles.modalView, { backgroundColor: colors.card, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }]}>
           <ThemedText style={styles.modalTitle}>{title}</ThemedText>
           <ThemedText style={styles.modalMessage}>{message}</ThemedText>
           <View style={styles.buttonContainer}>
